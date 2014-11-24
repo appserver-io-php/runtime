@@ -438,7 +438,7 @@
     <!-- Get PECL appserver source package by given version number		          -->
     <!-- ==================================================================== -->
     <target name="get-ext-appserver-src" depends="check-ext-appserver-src-present" unless="ext-appserver-src.present" description="Get php ext appserver source package by given version number">
-        <get src="https://github.com/techdivision/php-ext-appserver/releases/download/v${appserver.ext-appserver.version}-beta/appserver-${appserver.ext-appserver.version}.tgz" dest="${lib.dir}/ext-appserver-${appserver.ext-appserver.version}.tgz" usetimestamp="true"/>
+        <get src="https://github.com/appserver-io-php/php-ext-appserver/releases/download/v${appserver.ext-appserver.version}-beta/appserver-${appserver.ext-appserver.version}.tgz" dest="${lib.dir}/ext-appserver-${appserver.ext-appserver.version}.tgz" usetimestamp="true"/>
     </target>
 
     <!-- ==================================================================== -->
@@ -1854,7 +1854,7 @@
             <arg line="clone https://github.com/techdivision/TechDivision_LemCacheContainer.git"/>
         </exec>
         <exec executable="${git.bin}" dir="${github.backup.dir}/backup-${date}">
-            <arg line="clone https://github.com/techdivision/php-ext-appserver.git"/>
+            <arg line="clone https://github.com/appserver-io-php/php-ext-appserver.git"/>
         </exec>
         <exec executable="${git.bin}" dir="${github.backup.dir}/backup-${date}">
             <arg line="clone https://github.com/techdivision/TechDivision_ApplicationServerApi.git"/>
