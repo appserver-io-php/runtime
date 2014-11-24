@@ -1,4 +1,4 @@
-language: java
+language: php
 
 before_install:
   - wget https://scrutinizer-ci.com/ocular.phar
