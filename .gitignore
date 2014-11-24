@@ -11,6 +11,7 @@
 /.settings
 .DS_Store
 ._.DS_Store
+vendor
 /src/var/www/keep-alive-ssl-cert.pem
 url-pattern.txt
 Cheffile.lock

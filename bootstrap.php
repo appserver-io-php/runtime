@@ -22,4 +22,4 @@
  */
 
 $loader = require 'vendor/autoload.php';
-$loader->add('AppserverIo\\Php\\Runtim', 'src');
+$loader->add('AppserverIo\\Php\\Runtime', 'src');

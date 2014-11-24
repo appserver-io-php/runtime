@@ -1,8 +1,8 @@
-# TechDivision_Runtime
+# Multithreaded PHP runtime environment
 
-This package provides a system independent runtime that includes a thread-safe compiled PHP environment.
+This package provides functionality to build a system independent runtime that includes a thread-safe compiled PHP environment.
 
-[![Build Status](https://scrutinizer-ci.com/g/techdivision/TechDivision_Runtime/badges/build.png?b=master)](https://scrutinizer-ci.com/g/techdivision/TechDivision_Runtime/build-status/master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/techdivision/TechDivision_Runtime/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/techdivision/TechDivision_Runtime/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/appserver-io-php/runtime/badges/build.png?b=master)](https://scrutinizer-ci.com/g/appserver-io-php/runtime/build-status/master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/appserver-io-php/runtime/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/appserver-io-php/runtime/?branch=master)
 
 # External Links
 
