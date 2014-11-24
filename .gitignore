@@ -12,6 +12,8 @@
 .DS_Store
 ._.DS_Store
 vendor
+composer.lock
+composer.phar
 /src/var/www/keep-alive-ssl-cert.pem
 url-pattern.txt
 Cheffile.lock
