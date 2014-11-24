@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<para  xsi:schemaLocation="http://www.example.org/chapter chapter.xsd">
+	<row>
+		<entry>The Grapes of Wrath</entry>
+		<entry>John Steinbeck</entry>
+		<entry>en</entry>
+		<entry>0140186409</entry>
+	</row>
+	<row>
+		<entry>The Pearl</entry>
+		<entry>John Steinbeck</entry>
+		<entry>en</entry>
+		<entry>014017737X</entry>
+	</row>
+	<row>
+		<entry>Samarcande</entry>
+		<entry>Amine Maalouf</entry>
+		<entry>fr</entry>
+		<entry>2253051209</entry>
+	</row>
+</para>

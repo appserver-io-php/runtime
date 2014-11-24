@@ -1,0 +1,14 @@
+
+[Unit]
+Description=appserver-php5-fpm
+After=syslog.target network.target
+
+[Service]
+Type=notify
+PIDFile=/run/appserver-php5-fpm.pid
+ExecStart=/opt/appserver/sbin/php-fpm -F -c /opt/appserver/etc/ -y /opt/appserver/etc/php-fpm.conf
+ExecReload=/bin/kill -USR2 $MAINPID
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,30 @@
+{
+    "environment": "production",
+
+    "autoloader": {
+
+        "dirs": [
+            "/opt/appserver/app/code",
+            "/opt/appserver/webapps"
+        ],
+
+        "omit": [
+            "TechDivision\\PBC",
+            "Doctrine",
+            "Ratchet",
+            "Symfony"
+        ]
+    },
+
+    "cache": {
+
+        "dir": "/opt/appserver/var/tmp/pbc/cache"
+    },
+
+    "enforcement": {
+
+        "dirs": [
+            "/opt/appserver/app/code/vendor/techdivision"
+        ]
+    }
+}

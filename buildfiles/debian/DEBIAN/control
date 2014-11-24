@@ -1,0 +1,43 @@
+Package: appserver
+Section: php
+Priority: optional
+Maintainer: Philipp Dittert <p.dittert@techdivision.com>
+Depends: libc6,
+  libbz2-1.0,
+  libcomerr2,
+  libdb4.8|libdb5.1,
+  libgcc1,
+  libgssapi-krb5-2,
+  libk5crypto3,
+  libkrb5-3,
+  libmagic1,
+  libonig2,
+  libpcre3,
+  libqdbm14,
+  libssl0.9.8|libssl1.0.0,
+  libxml2,
+  mime-support,
+  tzdata,
+  ucf,
+  zlib1g,
+  libmcrypt4,
+  libpng12-0,
+  libjpeg62,
+  libcurl3,
+  libltdl7,
+  libjpeg8,
+  libmemcached-dev,
+  libevent-dev,
+  libev-dev,
+  libcloog-ppl0 | libcloog-ppl1,
+  curl,
+  make,
+  autoconf,
+  git,
+  memcached,
+  libldap2-dev,
+  libxslt1.1
+Architecture: ${appserver.architecture}
+Version: ${appserver.version}-${appserver.version.suffix}${build.number}
+Homepage: http://appserver.io
+Description: appserver.io provides a multithreaded application server for PHP, written in PHP. The package basically provides either a webserver, a servlet-engine, a persistence-container and a message-queue.

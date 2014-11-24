@@ -1,0 +1,9 @@
+
+[Unit]
+Description=appserver watcher
+
+[Service]
+ExecStart=/opt/appserver/bin/appserver-watcher -D FOREGROUND
+
+[Install]
+WantedBy=multi-user.target

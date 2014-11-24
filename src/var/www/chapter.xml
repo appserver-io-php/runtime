@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter  xmlns="http://www.example.org/chapter" xmlns:xi="http://www.w3.org/2001/XInclude" xsi:schemaLocation="http://www.example.org/chapter chapter.xsd">
+	<title>Books of the other guy..</title>
+	<xi:include href="book.xml">
+		<xi:fallback>
+			<error>xinclude: book.xml not found</error>
+		</xi:fallback>
+	</xi:include>
+</chapter>
