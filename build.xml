@@ -33,7 +33,7 @@
     <!-- ==================================================================== -->
     <!-- Import the common build configuration file                           -->
     <!-- ==================================================================== -->
-    <import file="${build.dir}/common.xml" optional="true"/>
+    <import file="${build.dir}/common.xml"/>
 
     <!-- ==================================================================== -->
     <!-- Create some basic properties which we need for further processing    -->
