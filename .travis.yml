@@ -1,12 +1,12 @@
 language: php
 
-php:
-  - 5.4
-  - 5.5
+before_install:
+  - phpenv rehash
+  - wget https://scrutinizer-ci.com/ocular.phar
  
 script:
-  - sudo ant composer-init
-  - sudo ant build
+  - ant composer-init
+  - ant build
   - php ocular.phar code-coverage:upload --format=php-clover $TRAVIS_BUILD_DIR/target/reports/unit/clover.xml
 
 notifications:
