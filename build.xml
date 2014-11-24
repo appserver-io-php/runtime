@@ -1094,11 +1094,11 @@
 	<target name="install-sources" unless="${runtime.only}" depends="install-composer" description="Install ApplicationServer packages.">
 		<!-- clone the sources from github -->
 		<exec dir="${php-target.dir}" executable="git">
-			<arg line="clone ${meta.url} --branch=${meta.version} meta" />
+			<arg line="clone ${appserver.url} --branch=${appserver.version} download" />
 		</exec>
 		<!-- copy the sources to the target directory -->
 		<copy todir="${appserver.compile.prefix}">
-			<fileset dir="${php-target.dir}/meta" defaultexcludes="false" includes="**/*"/>
+			<fileset dir="${php-target.dir}/download" defaultexcludes="false" includes="**/*"/>
 		</copy>
 		<!-- install the sources -->
         <exec dir="${appserver.compile.prefix}" executable="${appserver.compile.prefix}/bin/php">
@@ -1756,11 +1756,11 @@
         </exec>
         <!-- clone the sources from github -->
         <exec dir="${php-target.dir}" executable="git">
-            <arg line="clone ${meta.url} --branch=${meta.version} meta" />
+            <arg line="clone ${appserver.url} --branch=${appserver.version} download" />
         </exec>
         <!-- copy the sources to the target directory -->
         <copy todir="${php-target.dir}/appserver">
-            <fileset dir="${php-target.dir}/meta" defaultexcludes="false" includes="**/*"/>
+            <fileset dir="${php-target.dir}/download" defaultexcludes="false" includes="**/*"/>
         </copy>
         <!-- install the sources -->
         <exec dir="${php-target.dir}/appserver" executable="${php-target.dir}/appserver/php/php">
