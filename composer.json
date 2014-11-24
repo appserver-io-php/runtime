@@ -1,45 +1,58 @@
 {
-	"name" : "appserver-io-php/runtime",
-	"type" : "package",
-	"description" : "Provides functionalit to build a system independent, multithreaded PHP runtime environment.",
-	"homepage" : "https://github.com/appserver-io-php/runtime",
-	"license" : "OSL-3.0",
-	"require" : {
-		"php" : ">=5.4.0"
-	},
-	"require-dev" : {
-		"phpunit/phpunit" : "3.7.*",
-		"appserver-io/build" : "0.1.*"
-	},
-	"autoload" : {
-		"psr-0" : {
-			"AppserverIo\\Php\\Runtime" : [
-				"src/",
-				"tests/"
-			]
-		}
-	},
-	"config" : {
-		"github-oauth" : {
-			"github.com" : "604a3b5943228e434a5b52c2ba3cf72286d30db9"
-		}
-	},
-	"authors" : [{
-			"name" : "Tim Wagner",
-			"email" : "tw@appserver.io",
-			"homepage" : "https://github.com/wagnert",
-			"role" : "Developer"
-		}
-	],
-	"support" : {
-		"email" : "t.wagner@techdivision.com",
-		"issues" : "https://github.com/appserver-io-php/runtime/issues",
-		"source" : "https://github.com/appserver-io-php/runtime"
-	},
-	"keywords" : [
-		"php",
-		"runtime",
-		"environment",
-		"multithreaded"
-	]
+    "name": "appserver-io-php/runtime",
+    "type": "package",
+    "description": "Provides functionalit to build a system independent, multithreaded PHP runtime environment.",
+    "homepage": "https://github.com/appserver-io-php/runtime",
+    "license": "OSL-3.0",
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*",
+        "appserver-io/build": "0.1.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "AppserverIo\\Php\\Runtime": [
+                "src/",
+                "tests/"
+            ]
+        }
+    },
+    "config": {
+        "github-oauth": {
+            "github.com": "604a3b5943228e434a5b52c2ba3cf72286d30db9"
+        }
+    },
+    "authors": [
+        {
+            "name": "Tim Wagner",
+            "email": "tw@appserver.io",
+            "homepage": "https://github.com/wagnert",
+            "role": "Developer"
+        },
+        {
+            "name": "Johann Zelger",
+            "email": "jz@appserver.io",
+            "homepage": "https://github.com/zelgerj",
+            "role": "Developer"
+        },
+        {
+            "name": "Bernhard Wick",
+            "email": "bw@appserver.io",
+            "homepage": "https://github.com/wick-ed",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "t.wagner@techdivision.com",
+        "issues": "https://github.com/appserver-io-php/runtime/issues",
+        "source": "https://github.com/appserver-io-php/runtime"
+    },
+    "keywords": [
+        "php",
+        "runtime",
+        "environment",
+        "multithreaded"
+    ]
 }
