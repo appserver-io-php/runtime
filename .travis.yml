@@ -5,7 +5,6 @@ before_install:
  
 script:
   - sudo chown $USER /opt
-  - sudo ant -Dprepare.distribution.build=true prepare-linux-build-system
   - ant composer-init
   - ant -Dprepare.distribution.build=false build
   - php ocular.phar code-coverage:upload --format=php-clover $TRAVIS_BUILD_DIR/target/reports/unit/clover.xml
