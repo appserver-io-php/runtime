@@ -24,7 +24,7 @@
 namespace AppserverIo\Php\Runtime;
 
 /**
- * Dummy test implementation.
+ * Runtime test implementations.
  *
  * @category   Appserver
  * @package    Psr
@@ -39,12 +39,27 @@ class RuntimeTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * A dummy test implementation.
+     * Tests if pthreads is available.
      *
      * @return void
      */
-    public function testDummy()
+    public function testPthreadsAvailable()
     {
-        $this->assertTrue(true);
+        $this->assertTrue(extension_loaded('pthreads'));
+    }
+
+    /**
+     * Tests if the threaded classes are available.
+     *
+     * @return void
+     */
+    public function testThreadClassAvailable()
+    {
+        $this->assertTrue(class_exists('\Pool'));
+        $this->assertTrue(class_exists('\Cond'));
+        $this->assertTrue(class_exists('\Mutex'));
+        $this->assertTrue(class_exists('\Thread'));
+        $this->assertTrue(class_exists('\Worker'));
+        $this->assertTrue(class_exists('\Stackable'));
     }
 }
