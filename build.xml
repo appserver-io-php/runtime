@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE project>
-<project name="appserver-io-php/runtime" default="deploy" basedir=".">
+<project name="appserver-io-php/runtime" default="build" basedir=".">
 
     <!-- ==================================================================== -->
     <!-- Load the environment variables into our properties                   -->
@@ -31,6 +31,11 @@
     <property name="build.dir" value="${vendor.dir}/appserver-io/build" />
 
     <!-- ==================================================================== -->
+    <!-- Import the common build configuration file                           -->
+    <!-- ==================================================================== -->
+    <import file="${build.dir}/common.xml" optional="true"/>
+
+    <!-- ==================================================================== -->
     <!-- Create some basic properties which we need for further processing    -->
     <!-- The property hub.scp-user is missing on purpose and has to be        -->
     <!-- provided within the build environment                                -->
@@ -47,12 +52,6 @@
     <!-- ==================================================================== -->
     <property name="package.name" value="appserver-${appserver.version}-${appserver.version.suffix}${build.number}.${os.qualified.name}.${os.architecture}.${os.package-extension}"/>
     <property name="package.specific-dir" value="${php-target.dir}/"/>
-
-    
-    <!-- ==================================================================== -->
-    <!-- Import the common build configuration file                           -->
-    <!-- ==================================================================== -->
-    <import file="${build.dir}/common.xml" optional="true"/>
 
     <!-- ==================================================================== -->
     <!-- Checks if composer has installed it's dependencies                   -->
@@ -439,7 +438,7 @@
     <!-- Get PECL appserver source package by given version number		          -->
     <!-- ==================================================================== -->
     <target name="get-ext-appserver-src" depends="check-ext-appserver-src-present" unless="ext-appserver-src.present" description="Get php ext appserver source package by given version number">
-        <get src="https://github.com/techdivision/php-ext-appserver/releases/download/v${appserver.ext-appserver.version}-beta/appserver-${appserver.ext-appserver.version}.tgz" dest="${lib.dir}/ext-appserver-${appserver.ext-appserver.version}.tgz" usetimestamp="true"/>
+        <get src="https://github.com/appserver-io-php/php-ext-appserver/releases/download/v${appserver.ext-appserver.version}-beta/appserver-${appserver.ext-appserver.version}.tgz" dest="${lib.dir}/ext-appserver-${appserver.ext-appserver.version}.tgz" usetimestamp="true"/>
     </target>
 
     <!-- ==================================================================== -->
@@ -1855,7 +1854,7 @@
             <arg line="clone https://github.com/techdivision/TechDivision_LemCacheContainer.git"/>
         </exec>
         <exec executable="${git.bin}" dir="${github.backup.dir}/backup-${date}">
-            <arg line="clone https://github.com/techdivision/php-ext-appserver.git"/>
+            <arg line="clone https://github.com/appserver-io-php/php-ext-appserver.git"/>
         </exec>
         <exec executable="${git.bin}" dir="${github.backup.dir}/backup-${date}">
             <arg line="clone https://github.com/techdivision/TechDivision_ApplicationServerApi.git"/>
