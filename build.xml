@@ -145,8 +145,8 @@
     <!-- Builds the runtime                                                   -->
     <!-- ==================================================================== -->
     <target name="build" description="Runs the PHPUnit tests and generates a report.">
-        <antcall target="phpmd"/>
-        <antcall target="run-tests"/>
+        <antcall target="build-runtime"/>
+        <antcall target="run-integration-tests"/>
     </target>
 	
     <!-- ==================================================================== -->
@@ -1105,6 +1105,15 @@
             <arg line="${appserver.compile.prefix}/bin/composer.phar install"/>
         </exec>
 	</target>
+
+    <!-- ==================================================================== -->
+    <!-- Runs the PHPUnit integration tests                                   -->
+    <!-- ==================================================================== -->
+    <target name="run-integration-tests" description="Runs the PHPUnit integration tests.">
+        <exec executable="${appserver.compile.prefix}/bin/php" dir="${basedir}" failonerror="true">
+            <arg line="${vendor.dir}/bin/phpunit --bootstrap bootstrap.php --configuration phpunit.xml" />
+        </exec>
+    </target>
 
     <!-- ==================================================================== -->
     <!-- Deploys the ApplicationServer default webapps               		  -->
