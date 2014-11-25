@@ -95,6 +95,41 @@
             </fileset>
         </copy>
     </target>
+
+    <!-- ==================================================================== -->
+    <!-- Checks if composer has installed it's dependencies                   -->
+    <!-- ==================================================================== -->
+    <target name="is-composer-installed">
+        <condition property="composer.present">
+            <available file="${build.dir}" type="dir"/>
+        </condition>
+    </target>
+    
+    <!-- ==================================================================== -->
+    <!-- Installs all dependencies defined in composer.json                   -->
+    <!-- ==================================================================== -->
+    <target name="composer-install" depends="is-composer-installed" unless="composer.present" description="Installs all dependencies defined in composer.json">
+        <exec dir="${basedir}" executable="composer">
+            <arg line="--no-interaction --dev install"/>
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Updates composer dependencies defined in composer.json               -->
+    <!-- ==================================================================== -->
+    <target name="composer-update" depends="is-composer-installed" if="composer.present" description="Updates composer dependencies defined in composer.json">
+        <exec dir="${basedir}" executable="composer">
+            <arg line="--no-interaction --dev update"/>
+        </exec>
+    </target>
+
+    <!-- ===================================================================== -->
+    <!-- Checks if the build- and deployment stub has already been initialized -->
+    <!-- ===================================================================== -->
+    <target name="composer-init">
+        <antcall target="composer-install"/>
+        <antcall target="composer-update"/>
+    </target>
     
     <!-- ==================================================================== -->
     <!-- Builds the runtime                                                   -->
