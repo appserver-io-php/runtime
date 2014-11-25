@@ -1067,10 +1067,13 @@
     <!-- Runs the PHPUnit integration tests                                   -->
     <!-- ==================================================================== -->
     <target name="run-integration-tests" description="Runs the PHPUnit integration tests.">
-        <!-- install the sources -->
+        <!-- copy the composer.json file to the installation directory -->
+        <copy file="${basedir}/composer.json" todir="${appserver.compile.prefix}"/>
+        <!-- install the build utilities (PHPUnit etc.) -->
         <exec dir="${appserver.compile.prefix}" executable="${appserver.compile.prefix}/bin/php">
             <arg line="${appserver.compile.prefix}/bin/composer.phar install"/>
         </exec>
+    	<!-- run the PHPUnit test for the runtime -->
         <exec executable="${appserver.compile.prefix}/bin/php" dir="${basedir}" failonerror="true">
             <arg line="${appserver.compile.prefix}/bin/phpunit --bootstrap bootstrap.php --configuration phpunit.xml" />
         </exec>
