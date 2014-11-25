@@ -22,18 +22,6 @@
     <property file="${basedir}/build.default.properties"/>
     <property file="${basedir}/build.${os.family}.${os.distribution}.properties"/>
     <property file="${basedir}/build.${os.family}.properties"/>
-    
-    <!-- initialize the library specific properties -->
-    <property name="codepool" value="vendor"/>
-    
-    <!-- initialize the directory where we can find the real build files -->
-    <property name="vendor.dir" value ="${basedir}/${codepool}" />
-    <property name="build.dir" value="${vendor.dir}/appserver-io/build" />
-
-    <!-- ==================================================================== -->
-    <!-- Import the common build configuration file                           -->
-    <!-- ==================================================================== -->
-    <import file="${build.dir}/common.xml" optional="true"/>
 
     <!-- ==================================================================== -->
     <!-- Create some basic properties which we need for further processing    -->
@@ -43,6 +31,9 @@
     <property name="lib.dir" value="${basedir}/lib" />
     <property name="hub.address" value="appserver.io"/>
     <property name="custom-lib.dir" value="${basedir}/custom-lib" />
+    <property name="php-src.dir" value="${basedir}/src" />
+    <property name="php-test.dir" value="${basedir}/tests" />
+    <property name="php-target.dir" value="${basedir}/target"/>
     <property name="hub.snapshot-path" value="/var/www/builds.appserver.io/${os.qualified.path}"/>
 
     <!-- ==================================================================== -->
@@ -54,49 +45,14 @@
     <property name="package.specific-dir" value="${php-target.dir}/"/>
 
     <!-- ==================================================================== -->
-    <!-- Checks if composer has installed it's dependencies                   -->
-    <!-- ==================================================================== -->
-    <target name="is-composer-installed">
-        <condition property="composer.present">
-            <available file="${build.dir}" type="dir"/>
-        </condition>
-    </target>
-    
-    <!-- ==================================================================== -->
-    <!-- Installs all dependencies defined in composer.json                   -->
-    <!-- ==================================================================== -->
-    <target name="composer-install" depends="is-composer-installed" unless="composer.present" description="Installs all dependencies defined in composer.json">
-        <exec dir="${basedir}" executable="composer">
-            <arg line="--no-interaction --dev install"/>
-        </exec>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Updates composer dependencies defined in composer.json               -->
-    <!-- ==================================================================== -->
-    <target name="composer-update" depends="is-composer-installed" if="composer.present" description="Updates composer dependencies defined in composer.json">
-        <exec dir="${basedir}" executable="composer">
-            <arg line="--no-interaction --dev update"/>
-        </exec>
-    </target>
-
-    <!-- ===================================================================== -->
-    <!-- Checks if the build- and deployment stub has already been initialized -->
-    <!-- ===================================================================== -->
-    <target name="composer-init">
-        <antcall target="composer-install"/>
-        <antcall target="composer-update"/>
-    </target>
-    
-    <!-- ==================================================================== -->
-    <!-- Deletes the directory with the generated artefacts                   -->
+    <!-- Cleans the directories with the generated source files               -->
     <!-- ==================================================================== -->
     <target name="clean" description="Cleans build directory in preparation for new build.">
         <delete dir="${php-target.dir}" includeemptydirs="true" quiet="false" verbose="true" failonerror="true"/>
     </target>
-    
+
     <!-- ==================================================================== -->
-    <!-- Prepares the directory to temporarily store generated artefacts      -->
+    <!-- Prepares all the required directories                                -->
     <!-- ==================================================================== -->
     <target name="prepare" depends="clean" description="Prepares all the required directories.">
         <mkdir dir="${php-target.dir}" />
