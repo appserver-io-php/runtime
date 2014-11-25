@@ -1084,7 +1084,7 @@
 	<target name="install-sources" unless="${runtime.only}" depends="install-composer" description="Install ApplicationServer packages.">
 		<!-- clone the sources from github -->
 		<exec dir="${php-target.dir}" executable="git">
-			<arg line="clone ${appserver.url} --branch=${appserver.version} download" />
+			<arg line="clone ${appserver.url} --branch=${appserver.tag} download" />
 		</exec>
 		<!-- copy the sources to the target directory -->
 		<copy todir="${appserver.compile.prefix}">
