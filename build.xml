@@ -1072,7 +1072,7 @@
             <arg line="${appserver.compile.prefix}/bin/composer.phar install"/>
         </exec>
         <exec executable="${appserver.compile.prefix}/bin/php" dir="${basedir}" failonerror="true">
-            <arg line="${vendor.dir}/bin/phpunit --bootstrap bootstrap.php --configuration phpunit.xml" />
+            <arg line="${appserver.compile.prefix}/bin/phpunit --bootstrap bootstrap.php --configuration phpunit.xml" />
         </exec>
     </target>
 
