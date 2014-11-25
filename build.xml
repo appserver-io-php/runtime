@@ -329,8 +329,10 @@
     <!-- Get the latest versions of the default webapps                       -->
     <!-- ==================================================================== -->
     <target name="get-default-webapps" depends="prepare" description="Get the latest versions of the default webapps">
-        <get src="${webapps.download.baseurl}${webapps.name.admin}/${webapps.name.admin}-${webapps.version.admin}.phar" dest="${basedir}/webapps/${webapps.name.admin}.phar" usetimestamp="true"/>
+        <!--
+    	<get src="${webapps.download.baseurl}${webapps.name.admin}/${webapps.name.admin}-${webapps.version.admin}.phar" dest="${basedir}/webapps/${webapps.name.admin}.phar" usetimestamp="true"/>
         <get src="${webapps.download.baseurl}${webapps.name.api}/${webapps.name.api}-${webapps.version.api}.phar" dest="${basedir}/webapps/${webapps.name.api}.phar" usetimestamp="true"/>
+        -->
         <get src="${webapps.download.baseurl}${webapps.name.example}/${webapps.name.example}-${webapps.version.example}.phar" dest="${basedir}/webapps/${webapps.name.example}.phar" usetimestamp="true"/>
     </target>
 
