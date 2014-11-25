@@ -1067,8 +1067,14 @@
     <!-- Runs the PHPUnit integration tests                                   -->
     <!-- ==================================================================== -->
     <target name="run-integration-tests" description="Runs the PHPUnit integration tests.">
-        <!-- copy the composer.json file to the installation directory -->
-        <copy file="${basedir}/composer.json" todir="${appserver.compile.prefix}"/>
+        <!-- copy the build files to the installation directory -->
+        <copy file="${appserver.compile.prefix}">
+            <fileset dir="${basedir}">
+                <include name="phpunit.xml"/>
+            	<include name="composer.json"/>
+                <include name="bootstrap.php"/>
+        	</fileset>
+        </copy>
         <!-- install the build utilities (PHPUnit etc.) -->
         <exec dir="${appserver.compile.prefix}" executable="${appserver.compile.prefix}/bin/php">
             <arg line="${appserver.compile.prefix}/bin/composer.phar install"/>
