@@ -1755,7 +1755,7 @@
         </exec>
         <!-- clone the sources from github -->
         <exec dir="${php-target.dir}" executable="git">
-            <arg line="clone ${appserver.url} --branch=${appserver.version} download" />
+            <arg line="clone ${appserver.url} --branch=${appserver.tag} download" />
         </exec>
         <!-- copy the sources to the target directory -->
         <copy todir="${php-target.dir}/appserver">
