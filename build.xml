@@ -1075,7 +1075,7 @@
         </exec>
     	<!-- run the PHPUnit test for the runtime -->
         <exec executable="${appserver.compile.prefix}/bin/php" dir="${basedir}" failonerror="true">
-            <arg line="${appserver.compile.prefix}/bin/phpunit --bootstrap bootstrap.php --configuration phpunit.xml" />
+            <arg line="${appserver.compile.prefix}/vendor/bin/phpunit --bootstrap bootstrap.php --configuration phpunit.xml" />
         </exec>
     </target>
 
