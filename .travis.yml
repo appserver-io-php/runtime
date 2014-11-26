@@ -5,7 +5,7 @@ before_install:
  
 script:
   - sudo chown $USER /opt
-  - ant -Dprepare.distribution.build=false build
+  - ant build
   - php ocular.phar code-coverage:upload --format=php-clover $TRAVIS_BUILD_DIR/target/reports/unit/clover.xml
 
 notifications:

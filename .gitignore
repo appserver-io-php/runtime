@@ -16,7 +16,4 @@ composer.lock
 composer.phar
 /src/var/www/keep-alive-ssl-cert.pem
 url-pattern.txt
-Cheffile.lock
 build.properties
-build-debug.xml
-jmeter.log
