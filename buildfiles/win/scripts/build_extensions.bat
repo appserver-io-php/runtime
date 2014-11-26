@@ -18,7 +18,7 @@ call "phpsdk_setvars.bat"
 call "phpsdk_buildtree.bat" phpdev
 
 :: Go to the PHP src dir and do the actual building
-cd "${win.php-buildtree.dir}\php-${appserver.php.version}"
+cd "${win.php-buildtree.dir}\php-${runtime.php.version}"
 call "buildconf"
 call "configure" ${win.binaries.config-string}
 call "nmake"
