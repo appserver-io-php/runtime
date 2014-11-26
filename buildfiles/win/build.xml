@@ -347,11 +347,6 @@
                 <include name="**/*" />
             </fileset>
         </copy>
-        <copy todir="${target.dir}/appserver" preservelastmodified="true" overwrite="true">
-            <fileset dir="${src.dir}/${os.family}/${os.distribution}">
-                <include name="**/*" />
-            </fileset>
-        </copy>
     </target>
 
     <!-- ==================================================================== -->
