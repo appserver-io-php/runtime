@@ -369,7 +369,7 @@
             <arg line="${target.dir}/appserver/bin/composer.phar install"/>
         </exec> 
         <!-- execute the integration tests for the runtime -->
-        <exec executable="${appserver.compile.prefix}/bin/php" dir="${basedir}" failonerror="true">
+        <exec executable="${target.dir}/appserver/php/php" dir="${basedir}" failonerror="true">
             <arg line="${basedir}/vendor/bin/phpunit --bootstrap bootstrap.php --configuration phpunit.xml" />
         </exec>
         <!-- exectue PHP unit tests here -->
