@@ -1068,7 +1068,7 @@
     <!-- ==================================================================== -->
     <target name="run-integration-tests" description="Runs the PHPUnit integration tests.">
         <!-- copy the build files to the installation directory -->
-        <copy file="${appserver.compile.prefix}">
+        <copy todir="${appserver.compile.prefix}">
             <fileset dir="${basedir}">
                 <include name="phpunit.xml"/>
             	<include name="composer.json"/>
