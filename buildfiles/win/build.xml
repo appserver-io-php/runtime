@@ -222,11 +222,12 @@
     </target>
 
     <!-- ======================================================================= -->
-    <!-- Will expand the properties of the scripts and store them in custom-libs -->
+    <!-- Will expand the properties of the scripts and store them in the target  -->
+	<!-- directory.                                                              -->
     <!-- ======================================================================= -->
-    <target name="expand-scripts" description="Will expand the properties of the scripts and store them in custom-libs.">
+    <target name="expand-scripts" description="Will expand the properties of the scripts and store them in target directory.">
         <!-- We have to expand the scripts here, as we are going to use them -->
-        <copy todir="${custom-lib.dir}">
+        <copy todir="${target.dir}">
             <fileset dir="${src.dir}">
                 <include name="scripts/**"/>
             </fileset>
@@ -247,7 +248,7 @@
         <!-- Unzip the php sdk into the development environment -->
         <unzip src="${build-workspace.dir}/php-sdk-binary-tools-${php-sdk.timestamp}.zip" dest="${php-sdk.dir}"/>
         <!-- Set the build environment vars and create the build tree -->
-        <exec dir="${custom-lib.dir}/scripts" executable="cmd" failonerror="true">
+        <exec dir="${basedir}/buildfiles/${os.family}/scripts" executable="cmd" failonerror="true">
             <arg value="/C"/>
             <arg value="prepare_php_sdk.bat"/>
         </exec>
@@ -260,18 +261,18 @@
         <!-- Prepare the appserve src as we need it -->
         <antcall target="prepare-ext-appserver-src"/>
         <!-- Do the thing -->
-        <exec dir="${custom-lib.dir}/scripts" executable="cmd" failonerror="true">
+        <exec dir="${basedir}/buildfiles/${os.family}/scripts" executable="cmd" failonerror="true">
             <arg value="/C"/>
             <arg value="build_extensions.bat"/>
         </exec>
-        <!-- Finally move the created dll files into the "custom-lib" dir where they get picked up -->
-        <copy todir="${custom-lib.dir}" preservelastmodified="true" overwrite="true">
+        <!-- Finally move the created dll files into the "target" dir where they get picked up -->
+        <copy todir="${target.dir}" preservelastmodified="true" overwrite="true">
             <fileset dir="${php-buildtree.dir}/php-${runtime.php.version}/Release_TS">
                 <include name="**/*.dll" />
             </fileset>
         </copy>
         <!-- For some special extensions we have to attach version numbers -->
-        <move file="${custom-lib.dir}/php_appserver.dll" tofile="${custom-lib.dir}/php_appserver-${runtime.ext-appserver.version}.dll"/>
+        <move file="${target.dir}/php_appserver.dll" tofile="${target.dir}/php_appserver-${runtime.ext-appserver.version}.dll"/>
         <!-- Fail if certain binaries did not get built -->
         <antcall target="check-ext-appserver-built"/>
     </target>
