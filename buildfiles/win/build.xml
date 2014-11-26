@@ -79,6 +79,34 @@
     </target>
 
     <!-- ==================================================================== -->
+    <!-- Check if PHP source package has been downloaded yet                  -->
+    <!-- ==================================================================== -->
+    <target name="check-php-src-present" description="Check if PHP Source Package has been downloaded yet.">
+        <available file="${lib.dir}/php-${runtime.php.version}.tar.gz" property="php-src.present"/>
+    </target>	
+
+    <!-- ==================================================================== -->
+    <!-- Check if ext-appserver sources has been downloaded yet               -->
+    <!-- ==================================================================== -->
+    <target name="check-ext-appserver-src-present" description="Check if ext appserver sources has been downloaded yet.">
+        <available file="${lib.dir}/ext-appserver-${runtime.ext-appserver.version}.tgz" property="ext-appserver-src.present"/>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Get PHP source package by given version number                       -->
+    <!-- ==================================================================== -->
+    <target name="get-php-src" depends="check-php-src-present" unless="php-src.present" description="Get PHP source package by given version number">
+        <get src="http://de1.php.net/get/php-${runtime.php.version}.tar.gz/from/this/mirror" dest="${lib.dir}/php-${runtime.php.version}.tar.gz" usetimestamp="true"/>
+    </target>
+	
+    <!-- ==================================================================== -->
+    <!-- Get PECL appserver source package by given version number                -->
+    <!-- ==================================================================== -->
+    <target name="get-ext-appserver-src" depends="check-ext-appserver-src-present" unless="ext-appserver-src.present" description="Get php ext appserver source package by given version number">
+        <get src="https://github.com/appserver-io-php/php-ext-appserver/releases/download/v${runtime.ext-appserver.version}-beta/appserver-${runtime.ext-appserver.version}.tgz" dest="${lib.dir}/ext-appserver-${runtime.ext-appserver.version}.tgz" usetimestamp="true"/>
+    </target>
+	
+    <!-- ==================================================================== -->
     <!-- Get Windows pthreads binaries package by given version number        -->
     <!-- ==================================================================== -->
     <target name="get-pthreads-binaries" depends="check-pthreads-binaries-present" unless="pthreads-binaries.present" description="Get Windows pthreads binaries package by given version number.">
