@@ -13,6 +13,13 @@
     <!-- properties.                                                          -->
     <!-- ==================================================================== -->
     <property file="${basedir}/buildfiles/${os.family}/build.default.properties" />
+
+    <!-- ==================================================================== -->
+    <!-- Create some basic properties which we need for further processing    -->
+    <!-- The property hub.scp-user is missing on purpose and has to be        -->
+    <!-- provided within the build environment                                -->
+    <!-- ==================================================================== -->
+    <property name="custom-lib.dir" value="${basedir}/buildfiles/${os.family}/custom-lib" />
     
     <!-- ==================================================================== -->
     <!-- Copies any built package to the snapshot hosting server.             -->
@@ -310,7 +317,7 @@
         <copy file="${target.dir}/event/php_event.dll" todir="${target.dir}/appserver/php/ext"/>
     	
         <!-- copy the appserver DLL to the PHP ext directory -->
-        <copy file="${custom-lib.dir}/php_appserver-${runtime.ext-appserver.version}.dll" tofile="${target.dir}/appserver/php/ext/php_appserver.dll"/>
+        <copy file="${target.dir}/php_appserver-${runtime.ext-appserver.version}.dll" tofile="${target.dir}/appserver/php/ext/php_appserver.dll"/>
         <copy file="${custom-lib.dir}/php_pthreads-${runtime.pthreads.version}.dll" tofile="${target.dir}/appserver/php/ext/php_pthreads.dll"/>
         <copy file="${custom-lib.dir}/pthreadVC2.dll" tofile="${target.dir}/appserver/php/pthreadVC2.dll"/>
 
