@@ -195,7 +195,7 @@
     <!-- ==================================================================== -->
     <target name="check-ext-appserver-built" description="Checks if the appserver extension got built as it should.">
         <!-- Set property if the dll exists -->
-        <available file="${custom-lib.dir}/php_appserver-${runtime.ext-appserver.version}.dll" property="ext-appserver.present"/>
+        <available file="${target.dir}/php_appserver-${runtime.ext-appserver.version}.dll" property="ext-appserver.present"/>
         <!-- Fail if property was not set -->
         <fail unless="ext-appserver.present"/>
     </target>
