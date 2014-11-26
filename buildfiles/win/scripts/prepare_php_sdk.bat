@@ -8,11 +8,11 @@
 :: @author Bernhard Wick b.wick@techdivision.com
 
 :: Call the Visual Studio command prompt to set our environment
-cd "${win.native-tools-cmd.dir}"
-call "vcvarsall.bat" ${win.os.architecture}
+cd "${native-tools-cmd.dir}"
+call "vcvarsall.bat" ${os.architecture}
 
 :: Go back to the PHP SDK dir and set the environment there
-cd "${win.php-sdk.dir}\bin"
+cd "${php-sdk.dir}\bin"
 call "phpsdk_setvars.bat"
 
 :: Trigger buildtree buildup
