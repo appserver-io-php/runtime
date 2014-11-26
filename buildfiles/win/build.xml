@@ -365,11 +365,11 @@
     <!-- ==================================================================== -->
     <target name="run-integration-tests" description="Runs the PHPUnit integration tests.">
         <!-- install the build utilities (PHPUnit etc.) -->
-        <exec dir="${target.dir}/appserver" executable="${target.dir}/appserver/php/php">
+        <exec dir="${basedir}" executable="${target.dir}/appserver/php/php">
             <arg line="${target.dir}/appserver/bin/composer.phar install"/>
         </exec> 
         <!-- execute the integration tests for the runtime -->
-        <exec executable="${target.dir}/appserver/php/php" dir="${basedir}" failonerror="true">
+        <exec executable="${appserver.compile.prefix}/bin/php" dir="${basedir}" failonerror="true">
             <arg line="${basedir}/vendor/bin/phpunit --bootstrap bootstrap.php --configuration phpunit.xml" />
         </exec>
         <!-- exectue PHP unit tests here -->
