@@ -984,7 +984,7 @@
         ]]></script>
         <!-- prepare the property package.name -->
         <property name="package.name" 
-            value="appserver-runtime-${GIT_TAG}-${build.number}.${os.qualified.name}.${os.architecture}.${os.package-extension}"/>
+            value="appserver-runtime-${GIT_TAG}.${build.number}.${os.qualified.name}.${os.architecture}.${os.package-extension}"/>
     </target>
 
     <!-- ==================================================================== -->
