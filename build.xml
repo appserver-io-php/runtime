@@ -43,7 +43,7 @@
     <!-- CAUTION, THIS SYNTAX IS DOUBLED IN THE rpmbuild SPECS FILE!          -->
     <!-- ==================================================================== -->
     <property name="hub.snapshot-path" value="/var/www/builds.appserver.io/${os.qualified.path}"/>
-    <property name="package.name" value="appserver-${runtime.version}-${runtime.version.suffix}${build.number}.${os.qualified.name}.${os.architecture}.${os.package-extension}"/>
+    <property name="package.name" value="appserver-runtime-${runtime.version}-${runtime.version.suffix}${build.number}.${os.qualified.name}.${os.architecture}.${os.package-extension}"/>
     <property name="package.specific-dir" value="${target.dir}/"/>
 	
     <!-- ==================================================================== -->
