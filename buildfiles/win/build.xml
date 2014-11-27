@@ -24,7 +24,7 @@
     <!-- ==================================================================== -->
     <!-- Copies any built package to the snapshot hosting server.             -->
     <!-- ==================================================================== -->
-    <target name="copy-to-hub" description="Copies any built package to the snapshot hosting server.">
+    <target name="copy-to-hub" depends="create-package" description="Copies any built package to the snapshot hosting server.">
         <echo message="Now try to upload ${package.specific-dir}${package.name} to snapshot server"/>
         <scp file="${package.specific-dir}${package.name}" todir="${hub.scp-user}@${hub.address}:${hub.snapshot-path}" keyfile="${user.home}/.ssh/id_rsa" />
     </target>
@@ -329,9 +329,24 @@
     </target>
 
     <!-- ==================================================================== -->
+    <!-- Prepares the build property package.name                             -->
+    <!-- ==================================================================== -->
+    <target name="prepare-package-name" description="Prepares the build property package.name">
+        <!-- inline JS to extract the tag from the GIT_BRANCH environment variable -->
+        <script language="javascript"><![CDATA[
+            gitBranch = project.getProperty("env.GIT_BRANCH");
+            gitTag = gitBranch.substring(gitBranch.lastIndexOf("/") + 1);
+            project.setProperty("GIT_TAG", gitTag);
+        ]]></script>
+        <!-- prepare the property package.name -->
+        <property name="package.name" 
+            value="appserver-runtime-${GIT_TAG}-${runtime.version.suffix}${build.number}.${os.qualified.name}.${os.architecture}.${os.package-extension}"/>
+    </target>
+
+    <!-- ==================================================================== -->
     <!-- Creates the .zip package file                                        -->
     <!-- ==================================================================== -->
-    <target name="create-package" description="Creates the .zip package file.">
+    <target name="create-package" depends="prepare-package-name" description="Creates the .zip package file.">
     	<zip destfile="${package.specific-dir}${package.name}" compress="true">
     		<zipfileset dir="${target.dir}" includes="appserver/**/*" />
     	</zip>
