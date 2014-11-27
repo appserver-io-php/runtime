@@ -97,4 +97,12 @@
         <antcall target="run-integration-tests" />
     </target>
 
+	<target name="test">
+		<script language="javascript"><![CDATA[
+			gitBranch = project.getProperty("env.GIT_BRANCH");
+			gitTag = gitBranch.substring(gitBranch.indexOf("/") + 1);
+			project.setProperty("GIT_TAG", gitTag);
+		]]></script>
+		<echo message="Found: ${GIT_TAG}"/>
+	</target>
 </project>
