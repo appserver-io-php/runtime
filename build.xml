@@ -66,18 +66,14 @@
     <!-- ==================================================================== -->
     <target name="copy" depends="prepare" description="Copies the sources to the target directory.">
         <copy todir="${target.dir}" preservelastmodified="true" overwrite="true">
-            <fileset dir="${src.dir}">
+            <fileset dir="${src.dir}/${os.family}/generic">
                 <include name="**/*" />
-                <exclude name="etc/**/*"/>
             </fileset>
         </copy>
         <copy todir="${target.dir}" preservelastmodified="true" overwrite="true">
-            <fileset dir="${src.dir}">
-                <include name="etc/**/*"/>
+            <fileset dir="${src.dir}/${os.family}/${os.distribution}">
+                <include name="**/*" />
             </fileset>
-            <filterchain>
-                <expandproperties/>
-            </filterchain>
         </copy>
     </target>
     
@@ -85,11 +81,6 @@
     <!-- Copies the sources to the deploy directory                           -->
     <!-- ==================================================================== -->
     <target name="deploy" depends="copy" description="Copies the sources to the deploy directory.">
-    	<!-- validate the schema against the configuration file -->
-        <schemavalidate file="${target.dir}/etc/appserver/appserver.xml" failonerror="true">
-            <schema namespace="http://www.appserver.io/appserver" file="${target.dir}/app/resources/schema/appserver.xsd" />
-        </schemavalidate>
-        <!-- copies the files to the installation directory -->
         <copy todir="${dir.www}/${deploy.dir}" preservelastmodified="true" overwrite="true">
             <fileset dir="${target.dir}">
                 <include name="**/*"/>
