@@ -100,8 +100,7 @@
 	<target name="test">
 		<script language="javascript"><![CDATA[
 			gitBranch = project.getProperty("env.GIT_BRANCH");
-            gitTag = gitBranch.replace("origin/", "");
-			gitTag = gitBranch.replace("tags/", "");
+			gitTag = gitBranch.substring(gitBranch.lastIndexOf("/") + 1);
 			project.setProperty("GIT_TAG", gitTag);
 		]]></script>
 		<echo message="Found: ${GIT_TAG}"/>
