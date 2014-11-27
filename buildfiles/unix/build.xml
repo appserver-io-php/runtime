@@ -40,7 +40,7 @@
     <!-- Check if PECL memcached sources has been downloaded yet  		 	  -->
     <!-- ==================================================================== -->
     <target name="check-memcached-src-present" description="Check if PECL memcached sources has been downloaded yet.">
-        <available file="${lib.dir}/memcached-${appserver.memcached.version}.tgz" property="memcached-src.present"/>
+        <available file="${lib.dir}/memcached-${runtime.memcached.version}.tgz" property="memcached-src.present"/>
     </target>
 
     <!-- ==================================================================== -->
@@ -208,7 +208,7 @@
     <!-- Get PECL memcached source package by given version number		      -->
     <!-- ==================================================================== -->
     <target name="get-memcached-src" depends="check-memcached-src-present" unless="memcached-src.present" description="Get PECL memcached source package by given version number">
-        <get src="http://pecl.php.net/get/memcached-${appserver.memcached.version}.tgz" dest="${lib.dir}/memcached-${appserver.memcached.version}.tgz" usetimestamp="true"/>
+        <get src="http://pecl.php.net/get/memcached-${runtime.memcached.version}.tgz" dest="${lib.dir}/memcached-${runtime.memcached.version}.tgz" usetimestamp="true"/>
     </target>
 
     <!-- ==================================================================== -->
@@ -388,9 +388,9 @@
         </move>
         <!-- prepare PECL memcached sources sources for static compilation -->
         <antcall target="get-memcached-src"/>
-        <untar src="${lib.dir}/memcached-${appserver.memcached.version}.tgz" dest="${target.dir}" compression="gzip"/>
+        <untar src="${lib.dir}/memcached-${runtime.memcached.version}.tgz" dest="${target.dir}" compression="gzip"/>
         <move todir="${target.dir}/php-${runtime.php.version}/ext/memcached">
-            <fileset dir="${target.dir}/memcached-${appserver.memcached.version}"/>
+            <fileset dir="${target.dir}/memcached-${runtime.memcached.version}"/>
         </move>
         <!-- prepare PECL pthread sources for static compilation -->
         <antcall target="get-pthreads-src"/>
@@ -445,7 +445,7 @@
         <exec dir="${target.dir}/jpeg-${libjpeg.version}" executable="sh">
             <env key="CC" value="${libjpeg.cc}"/>
             <arg value="configure"/>
-            <arg value="--prefix=${appserver.compile.prefix}"/>
+            <arg value="--prefix=${runtime.compile.prefix}"/>
         </exec>
         <chmod perm="755" dir="${target.dir}/jpeg-${libjpeg.version}" includes="install-sh"/>
         <exec dir="${target.dir}/jpeg-${libjpeg.version}" executable="make"/>
@@ -463,7 +463,7 @@
         <exec dir="${target.dir}/libpng-${libpng.version}" executable="sh">
             <env key="CC" value="${libpng.cc}"/>
             <arg value="configure"/>
-            <arg value="--prefix=${appserver.compile.prefix}"/>
+            <arg value="--prefix=${runtime.compile.prefix}"/>
         </exec>
         <chmod perm="755" dir="${target.dir}/libpng-${libpng.version}" includes="install-sh"/>
         <exec dir="${target.dir}/libpng-${libpng.version}" executable="make"/>
@@ -482,7 +482,7 @@
         <exec dir="${target.dir}/freetype-${libfreetype.version}" executable="sh">
             <env key="CC" value="${libfreetype.cc}"/>
             <arg value="configure"/>
-            <arg value="--prefix=${appserver.compile.prefix}"/>
+            <arg value="--prefix=${runtime.compile.prefix}"/>
         </exec>
         <exec dir="${target.dir}/freetype-${libfreetype.version}" executable="make"/>
         <exec dir="${target.dir}/freetype-${libfreetype.version}" executable="make">
@@ -500,7 +500,7 @@
         <exec dir="${target.dir}/libmemcached-${libmemcached.version}" executable="sh">
             <env key="CC" value="${libmemcached.cc}"/>
             <arg value="configure"/>
-            <arg value="--prefix=${appserver.compile.prefix}"/>
+            <arg value="--prefix=${runtime.compile.prefix}"/>
         </exec>
         <exec dir="${target.dir}/libmemcached-${libmemcached.version}" executable="make"/>
         <exec dir="${target.dir}/libmemcached-${libmemcached.version}" executable="make">
@@ -517,7 +517,7 @@
         <exec dir="${target.dir}/libmcrypt-${libmcrypt.version}" executable="sh">
             <env key="CC" value="${libmcrypt.cc}"/>
             <arg value="configure"/>
-            <arg value="--prefix=${appserver.compile.prefix}"/>
+            <arg value="--prefix=${runtime.compile.prefix}"/>
         </exec>
         <chmod perm="755" dir="${target.dir}/libmcrypt-${libmcrypt.version}" includes="install-sh"/>
         <exec dir="${target.dir}/libmcrypt-${libmcrypt.version}" executable="make"/>
@@ -535,7 +535,7 @@
         <exec dir="${target.dir}/readline-${readline.version}" executable="sh">
             <env key="CC" value="${readline.cc}"/>
             <arg value="configure"/>
-            <arg value="--prefix=${appserver.compile.prefix}"/>
+            <arg value="--prefix=${runtime.compile.prefix}"/>
         </exec>
     	<!-- BUGFIX: http://techdebug.com/blog/2009/01/03/compiling-readline-on-an-osx-105-intel-x86_64/ -->
     	<replace file="${target.dir}/readline-${readline.version}/shlib/Makefile" token="-dynamic" value="-dynamiclib"/>
@@ -554,7 +554,7 @@
         <exec dir="${target.dir}/libevent-${libevent.version}-stable" executable="sh">
             <env key="CC" value="${libevent.cc}"/>
             <arg value="configure"/>
-            <arg value="--prefix=${appserver.compile.prefix}"/>
+            <arg value="--prefix=${runtime.compile.prefix}"/>
         </exec>
         <chmod perm="755" dir="${target.dir}/libevent-${libevent.version}-stable" includes="install-sh"/>
         <exec dir="${target.dir}/libevent-${libevent.version}-stable" executable="make"/>
@@ -572,7 +572,7 @@
         <exec dir="${target.dir}/pcre-${pcre.version}" executable="sh">
             <env key="CC" value="${pcre.cc}"/>
             <arg value="configure"/>
-            <arg value="--prefix=${appserver.compile.prefix}"/>
+            <arg value="--prefix=${runtime.compile.prefix}"/>
         </exec>
         <chmod perm="755" dir="${target.dir}/pcre-${pcre.version}" includes="install-sh"/>
         <chmod perm="755" dir="${target.dir}/pcre-${pcre.version}" includes="configure"/>
@@ -608,7 +608,7 @@
         <exec dir="${target.dir}/icu/source" executable="sh">
             <arg value="runConfigureICU"/>
             <arg value="${libicu.target-env}"/>
-            <arg value="--prefix=${appserver.compile.prefix}"/>
+            <arg value="--prefix=${runtime.compile.prefix}"/>
         </exec>
         <exec dir="${target.dir}/icu/source" executable="make"/>
         <exec dir="${target.dir}/icu/source" executable="make">
@@ -632,12 +632,12 @@
     <!-- into the dist                                                        -->
     <!-- ==================================================================== -->
     <target name="copy-buildfiles" description="Prepares the appserver sources">
-        <copy todir="${appserver.compile.prefix}" preservelastmodified="true" overwrite="true">
+        <copy todir="${runtime.compile.prefix}" preservelastmodified="true" overwrite="true">
             <fileset dir="${src.dir}/${os.family}/generic">
                 <include name="**/*" />
             </fileset>
         </copy>
-        <copy todir="${appserver.compile.prefix}" preservelastmodified="true" overwrite="true">
+        <copy todir="${runtime.compile.prefix}" preservelastmodified="true" overwrite="true">
             <fileset dir="${src.dir}/${os.family}/${os.distribution}">
                 <include name="**/*" />
             </fileset>
@@ -653,8 +653,8 @@
             <arg line="-sS http://getcomposer.org/installer -o installer"/>
         </exec>
         <!-- install composer itself -->
-        <exec dir="${target.dir}" executable="${appserver.compile.prefix}/bin/php">
-            <arg line="installer -- --install-dir ${appserver.compile.prefix}/bin"/>
+        <exec dir="${target.dir}" executable="${runtime.compile.prefix}/bin/php">
+            <arg line="installer -- --install-dir ${runtime.compile.prefix}/bin"/>
         </exec>
     </target>
 	
@@ -673,7 +673,7 @@
     	<antcall target="prepare-source"/>
     	
         <!-- delete the application server directory -->
-        <delete dir="${appserver.compile.prefix}" includeemptydirs="true" quiet="false" verbose="true" failonerror="true"/>
+        <delete dir="${runtime.compile.prefix}" includeemptydirs="true" quiet="false" verbose="true" failonerror="true"/>
 
         <!-- build the necessary libraries -->
     	<antcall target="build-libjpeg"/>
@@ -701,13 +701,13 @@
         </exec>
 
     	<!-- log PHP compile configuration -->
-    	<echo message="Now compiling PHP using configure params: ${appserver.compile.configuration}"/>
+    	<echo message="Now compiling PHP using configure params: ${runtime.compile.configuration}"/>
 
     	<!-- configure, compile and install PHP binary -->
         <exec dir="${target.dir}/php-${runtime.php.version}" executable="sh">
-            <env key="CC" value="${appserver.cc}"/>
+            <env key="CC" value="${runtime.cc}"/>
             <env key="EXTRA_LIBS" value="-llber"/>
-            <arg line="configure ${appserver.compile.configuration}"/>
+            <arg line="configure ${runtime.compile.configuration}"/>
         </exec>
         <exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
             <arg value="-j8"/>
@@ -740,10 +740,10 @@
     <target name="pecl-build-pthreads" description="Builds the PECL pthreads as shared extension.">
         <antcall target="get-pthreads-src"/>
         <untar src="${lib.dir}/pthreads-${runtime.pthreads.version}.tgz" dest="${target.dir}" compression="gzip"/>
-        <exec dir="${target.dir}/pthreads-${runtime.pthreads.version}" executable="${appserver.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/pthreads-${runtime.pthreads.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
         <exec dir="${target.dir}/pthreads-${runtime.pthreads.version}" executable="sh">
             <arg value="configure"/>
-            <arg value="--with-php-config=${appserver.compile.prefix}/bin/php-config"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
         <exec dir="${target.dir}/pthreads-${runtime.pthreads.version}" executable="make"/>
         <exec dir="${target.dir}/pthreads-${runtime.pthreads.version}" executable="make">
@@ -757,10 +757,10 @@
     <target name="pecl-build-apcu" description="Builds the PECL apcu as shared extension.">
         <antcall target="get-apcu-src"/>
         <untar src="${lib.dir}/apcu-${runtime.apcu.version}.tgz" dest="${target.dir}" compression="gzip"/>
-        <exec dir="${target.dir}/apcu-${runtime.apcu.version}" executable="${appserver.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/apcu-${runtime.apcu.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
         <exec dir="${target.dir}/apcu-${runtime.apcu.version}" executable="sh">
             <arg value="configure"/>
-            <arg value="--with-php-config=${appserver.compile.prefix}/bin/php-config"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
         <exec dir="${target.dir}/apcu-${runtime.apcu.version}" executable="make"/>
         <exec dir="${target.dir}/apcu-${runtime.apcu.version}" executable="make">
@@ -773,15 +773,15 @@
     <!-- ==================================================================== -->
     <target name="pecl-build-memcached" description="Builds the PECL memcached as shared extension.">
         <antcall target="get-memcached-src"/>
-        <untar src="${lib.dir}/memcached-${appserver.memcached.version}.tgz" dest="${target.dir}" compression="gzip"/>
-        <exec dir="${target.dir}/memcached-${appserver.memcached.version}" executable="${appserver.compile.prefix}/bin/phpize"/>
-        <exec dir="${target.dir}/memcached-${appserver.memcached.version}" executable="sh">
+        <untar src="${lib.dir}/memcached-${runtime.memcached.version}.tgz" dest="${target.dir}" compression="gzip"/>
+        <exec dir="${target.dir}/memcached-${runtime.memcached.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/memcached-${runtime.memcached.version}" executable="sh">
             <arg value="configure"/>
-            <arg value="--with-php-config=${appserver.compile.prefix}/bin/php-config"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
             <arg value="--with-libmemcached-dir=${libmemcached.dir}"/>
         </exec>
-        <exec dir="${target.dir}/memcached-${appserver.memcached.version}" executable="make"/>
-        <exec dir="${target.dir}/memcached-${appserver.memcached.version}" executable="make">
+        <exec dir="${target.dir}/memcached-${runtime.memcached.version}" executable="make"/>
+        <exec dir="${target.dir}/memcached-${runtime.memcached.version}" executable="make">
             <arg value="install"/>
         </exec>
     </target>
@@ -792,10 +792,10 @@
     <target name="pecl-build-operator" description="Builds the PECL operator as shared extension.">
         <antcall target="get-operator-src"/>
         <untar src="${lib.dir}/operator-${runtime.operator.version}.tgz" dest="${target.dir}" compression="gzip"/>
-        <exec dir="${target.dir}/operator-${runtime.operator.version}" executable="${appserver.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/operator-${runtime.operator.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
         <exec dir="${target.dir}/operator-${runtime.operator.version}" executable="sh">
             <arg value="configure"/>
-            <arg value="--with-php-config=${appserver.compile.prefix}/bin/php-config"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
         <exec dir="${target.dir}/operator-${runtime.operator.version}" executable="make"/>
         <exec dir="${target.dir}/operator-${runtime.operator.version}" executable="make">
@@ -809,10 +809,10 @@
     <target name="pecl-build-pecl_http" description="Builds the PECL pecl_http as shared extension.">
         <antcall target="get-pecl_http-src"/>
         <untar src="${lib.dir}/pecl_http-${runtime.pecl_http.version}.tgz" dest="${target.dir}" compression="gzip"/>
-        <exec dir="${target.dir}/pecl_http-${runtime.pecl_http.version}" executable="${appserver.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/pecl_http-${runtime.pecl_http.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
         <exec dir="${target.dir}/pecl_http-${runtime.pecl_http.version}" executable="sh">
             <arg value="configure"/>
-            <arg value="--with-php-config=${appserver.compile.prefix}/bin/php-config"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
         <exec dir="${target.dir}/pecl_http-${runtime.pecl_http.version}" executable="make"/>
         <exec dir="${target.dir}/pecl_http-${runtime.pecl_http.version}" executable="make">
@@ -826,11 +826,11 @@
     <target name="pecl-build-libevent" description="Builds the PECL libevent as shared extension.">
         <antcall target="get-libevent-src"/>
         <untar src="${lib.dir}/libevent-${runtime.libevent.version}.tgz" dest="${target.dir}" compression="gzip"/>
-        <exec dir="${target.dir}/libevent-${runtime.libevent.version}" executable="${appserver.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/libevent-${runtime.libevent.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
         <exec dir="${target.dir}/libevent-${runtime.libevent.version}" executable="sh">
             <arg value="configure"/>
-            <arg value="--with-php-config=${appserver.compile.prefix}/bin/php-config"/>
-            <arg value="--with-libevent=${appserver.compile.libevent.libdir}"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
+            <arg value="--with-libevent=${runtime.compile.libevent.libdir}"/>
         </exec>
         <exec dir="${target.dir}/libevent-${runtime.libevent.version}" executable="make"/>
         <exec dir="${target.dir}/libevent-${runtime.libevent.version}" executable="make">
@@ -844,10 +844,10 @@
     <target name="pecl-build-libev" description="Builds the PECL libev as shared extension.">
         <antcall target="get-libev-src"/>
         <unzip src="${lib.dir}/libev-${runtime.libev.version}.zip" dest="${target.dir}"/>
-        <exec dir="${target.dir}/php-libev-${runtime.libev.version}" executable="${appserver.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/php-libev-${runtime.libev.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
         <exec dir="${target.dir}/php-libev-${runtime.libev.version}" executable="sh">
             <arg value="configure"/>
-            <arg value="--with-php-config=${appserver.compile.prefix}/bin/php-config"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
         <exec dir="${target.dir}/php-libev-${runtime.libev.version}" executable="make"/>
         <exec dir="${target.dir}/php-libev-${runtime.libev.version}" executable="make">
@@ -861,11 +861,11 @@
     <target name="pecl-build-event" description="Builds the PECL event as shared extension.">
         <antcall target="get-event-src"/>
         <untar src="${lib.dir}/event-${runtime.event.version}.tgz" dest="${target.dir}" compression="gzip"/>
-        <exec dir="${target.dir}/event-${runtime.event.version}" executable="${appserver.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/event-${runtime.event.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
         <exec dir="${target.dir}/event-${runtime.event.version}" executable="sh">
             <arg value="configure"/>
-            <arg value="--with-php-config=${appserver.compile.prefix}/bin/php-config"/>
-        	<arg value="--with-event-libevent-dir=${appserver.compile.prefix}"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
+        	<arg value="--with-event-libevent-dir=${runtime.compile.prefix}"/>
         </exec>
         <exec dir="${target.dir}/event-${runtime.event.version}" executable="make"/>
         <exec dir="${target.dir}/event-${runtime.event.version}" executable="make">
@@ -879,10 +879,10 @@
     <target name="pecl-build-ev" description="Builds the PECL ev as shared extension.">
         <antcall target="get-ev-src"/>
         <untar src="${lib.dir}/ev-${runtime.ev.version}.tgz" dest="${target.dir}" compression="gzip"/>
-        <exec dir="${target.dir}/ev-${runtime.ev.version}" executable="${appserver.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/ev-${runtime.ev.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
         <exec dir="${target.dir}/ev-${runtime.ev.version}" executable="sh">
             <arg value="configure"/>
-            <arg value="--with-php-config=${appserver.compile.prefix}/bin/php-config"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
         <exec dir="${target.dir}/ev-${runtime.ev.version}" executable="make"/>
         <exec dir="${target.dir}/ev-${runtime.ev.version}" executable="make">
@@ -896,10 +896,10 @@
     <target name="pecl-build-AOP" description="Builds the PECL AOP as shared extension.">
         <antcall target="get-AOP-src"/>
         <untar src="${lib.dir}/AOP-${runtime.AOP.version}.tgz" dest="${target.dir}" compression="gzip"/>
-        <exec dir="${target.dir}/AOP-${runtime.AOP.version}" executable="${appserver.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/AOP-${runtime.AOP.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
         <exec dir="${target.dir}/AOP-${runtime.AOP.version}" executable="sh">
             <arg value="configure"/>
-            <arg value="--with-php-config=${appserver.compile.prefix}/bin/php-config"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
         <exec dir="${target.dir}/AOP-${runtime.AOP.version}" executable="make"/>
         <exec dir="${target.dir}/AOP-${runtime.AOP.version}" executable="make">
@@ -913,10 +913,10 @@
     <target name="pecl-build-xdebug" description="Builds the PECL xdebug as shared extension.">
         <antcall target="get-xdebug-src"/>
         <untar src="${lib.dir}/xdebug-${runtime.xdebug.version}.tgz" dest="${target.dir}" compression="gzip"/>
-        <exec dir="${target.dir}/xdebug-${runtime.xdebug.version}" executable="${appserver.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/xdebug-${runtime.xdebug.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
         <exec dir="${target.dir}/xdebug-${runtime.xdebug.version}" executable="sh">
             <arg value="configure"/>
-            <arg value="--with-php-config=${appserver.compile.prefix}/bin/php-config"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
         <exec dir="${target.dir}/xdebug-${runtime.xdebug.version}" executable="make"/>
         <exec dir="${target.dir}/xdebug-${runtime.xdebug.version}" executable="make">
@@ -930,10 +930,10 @@
     <target name="pecl-build-redis" description="Builds the PECL redis as shared extension.">
         <antcall target="get-redis-src"/>
         <untar src="${lib.dir}/redis-${runtime.redis.version}.tgz" dest="${target.dir}" compression="gzip"/>
-        <exec dir="${target.dir}/redis-${runtime.redis.version}" executable="${appserver.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/redis-${runtime.redis.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
         <exec dir="${target.dir}/redis-${runtime.redis.version}" executable="sh">
             <arg value="configure"/>
-            <arg value="--with-php-config=${appserver.compile.prefix}/bin/php-config"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
         <exec dir="${target.dir}/redis-${runtime.redis.version}" executable="make"/>
         <exec dir="${target.dir}/redis-${runtime.redis.version}" executable="make">
@@ -947,10 +947,10 @@
     <target name="pecl-build-appserver" description="Builds the PECL appserver as shared extension.">
         <antcall target="get-ext-appserver-src"/>
         <untar src="${lib.dir}/ext-appserver-${runtime.ext-appserver.version}.tgz" dest="${target.dir}" compression="gzip"/>
-        <exec dir="${target.dir}/appserver-${runtime.ext-appserver.version}" executable="${appserver.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/appserver-${runtime.ext-appserver.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
         <exec dir="${target.dir}/appserver-${runtime.ext-appserver.version}" executable="sh">
             <arg value="configure"/>
-            <arg value="--with-php-config=${appserver.compile.prefix}/bin/php-config"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
         <exec dir="${target.dir}/appserver-${runtime.ext-appserver.version}" executable="make"/>
         <exec dir="${target.dir}/appserver-${runtime.ext-appserver.version}" executable="make">
@@ -964,7 +964,7 @@
     <target name="move-build-to-target" description="Copies build files to target directory.">
         <mkdir dir="${target.dir}/re/opt" />
         <exec dir="${target.dir}" executable="mv">
-            <arg value="${appserver.compile.prefix}"/>
+            <arg value="${runtime.compile.prefix}"/>
             <arg value="${target.dir}/re/opt"/>
         </exec>
     </target>
@@ -986,11 +986,11 @@
     <!-- ==================================================================== -->
     <target name="run-integration-tests" description="Runs the PHPUnit integration tests.">
         <!-- install the build utilities (PHPUnit etc.) -->
-        <exec dir="${basedir}" executable="${appserver.compile.prefix}/bin/php">
-            <arg line="${appserver.compile.prefix}/bin/composer.phar install"/>
+        <exec dir="${basedir}" executable="${runtime.compile.prefix}/bin/php">
+            <arg line="${runtime.compile.prefix}/bin/composer.phar install"/>
         </exec>
         <!-- execute the integration tests for the runtime -->
-        <exec executable="${appserver.compile.prefix}/bin/php" dir="${basedir}" failonerror="true">
+        <exec executable="${runtime.compile.prefix}/bin/php" dir="${basedir}" failonerror="true">
             <arg line="${basedir}/vendor/bin/phpunit --bootstrap bootstrap.php --configuration phpunit.xml" />
         </exec>
         <!-- exectue PHP unit tests here -->
