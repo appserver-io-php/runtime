@@ -100,6 +100,7 @@
 	<target name="test">
 		<script language="javascript"><![CDATA[
 			gitBranch = project.getProperty("env.GIT_BRANCH");
+            gitTag = gitBranch.replace("origin/", "");
 			gitTag = gitBranch.replace("tags/", "");
 			project.setProperty("GIT_TAG", gitTag);
 		]]></script>
