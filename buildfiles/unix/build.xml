@@ -636,6 +636,9 @@
             <fileset dir="${src.dir}/${os.family}/generic">
                 <include name="**/*" />
             </fileset>
+            <filterchain>
+                <expandproperties/>
+            </filterchain>
         </copy>
         <copy todir="${runtime.compile.prefix}" preservelastmodified="true" overwrite="true">
             <fileset dir="${src.dir}/${os.family}/${os.distribution}">
