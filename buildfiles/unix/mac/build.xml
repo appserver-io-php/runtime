@@ -12,6 +12,7 @@
 	<!-- default properties.                                                  -->
     <!-- ==================================================================== -->
     <property file="${basedir}/buildfiles/${os.family}/${os.distribution}/build.default.properties"/>
+    <property file="${basedir}/buildfiles/${os.family}/build.default.properties"/>
 
     <!-- ==================================================================== -->
     <!-- Install the necessary libraries to build the debian runtime          -->
