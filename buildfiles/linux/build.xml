@@ -358,18 +358,6 @@
         <!-- delete the application server directory -->
         <delete dir="${runtime.compile.prefix}" includeemptydirs="true" quiet="false" verbose="true" failonerror="true"/>
 
-        <!-- build the necessary libraries -->
-    	<antcall target="build-libjpeg"/>
-        <antcall target="build-libpng"/>
-        <antcall target="build-libfreetype"/>
-        <antcall target="build-libmemcached"/>
-        <antcall target="build-libmcrypt"/>
-        <antcall target="build-readline"/>
-        <antcall target="build-libevent"/>
-        <antcall target="build-openssl"/>
-        <antcall target="build-pcre"/>
-        <antcall target="build-libicu"/>
-
     	<!-- prepare the PECL extensions -->
         <antcall target="prepare-pecl-extension"/>
 
