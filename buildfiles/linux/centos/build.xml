@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE project>
+<project name="appserver-io-php/runtime-linux-centos" basedir=".">
+
+    <!-- ==================================================================== -->
+    <!-- Load the environment variables into our properties                   -->
+    <!-- ==================================================================== -->
+    <property environment="env" />
+
+    <!-- ==================================================================== -->
+    <!-- Load the default properties. This allows recursive overriding of     -->
+    <!-- default properties.                                                  -->
+    <!-- ==================================================================== -->
+    <property file="${basedir}/buildfiles/${os.family}/${os.distribution}/build.default.properties"/>
+
+    <!-- ==================================================================== -->
+    <!-- Install the necessary libraries to build the centos runtime          -->
+    <!-- ==================================================================== -->
+    <target name="prepare-distribution-specific-build-system" description="Install the necessary libraries to build the centos runtime.">
+        <exec executable="yum" inputstring="Y">
+            <arg value="install"/>
+            <arg value="ant"/>
+            <arg value="autoconf"/>
+            <arg value="curl"/>
+            <arg value="bison"/>
+            <arg value="libxml2"/>
+            <arg value="libxml2-devel"/>
+            <arg value="openssl-devel"/>
+            <arg value="bzip2-devel"/>
+            <arg value="libjpeg-turbo-devel"/>
+            <arg value="libpng-devel"/>
+            <arg value="freetype-devel"/>
+            <arg value="libmcrypt-devel"/>
+            <arg value="libmemcached-devel"/>
+            <arg value="libXpm-devel"/>
+            <arg value="pcre-devel"/>
+            <arg value="libpng-devel"/>
+            <arg value="libcurl-devel"/>
+            <arg value="libevent-devel"/>
+            <arg value="gcc-c++"/>
+            <arg value="openldap-devel"/>
+            <arg value="rpm-build"/>
+            <arg value="libicu-devel"/>
+            <arg value="libxslt-devel"/>
+        </exec>
+    </target>
+
+</project>
