@@ -30,207 +30,9 @@
     </target>
 
     <!-- ==================================================================== -->
-    <!-- Check if PHP source package has been downloaded yet  		 	      -->
-    <!-- ==================================================================== -->
-    <target name="check-php-src-present" description="Check if PHP Source Package has been downloaded yet.">
-        <available file="${lib.dir}/php-${runtime.php.version}.tar.gz" property="php-src.present"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Check if PECL memcached sources has been downloaded yet  		 	  -->
-    <!-- ==================================================================== -->
-    <target name="check-memcached-src-present" description="Check if PECL memcached sources has been downloaded yet.">
-        <available file="${lib.dir}/memcached-${runtime.memcached.version}.tgz" property="memcached-src.present"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Check if PECL pthreads sources has been downloaded yet  		 	  -->
-    <!-- ==================================================================== -->
-    <target name="check-pthreads-src-present" description="Check if PECL pthreads sources has been downloaded yet.">
-        <available file="${lib.dir}/pthreads-${runtime.pthreads.version}.tgz" property="pthreads-src.present"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Check if PECL apcu sources has been downloaded yet               -->
-    <!-- ==================================================================== -->
-    <target name="check-apcu-src-present" description="Check if PECL apcu sources has been downloaded yet.">
-        <available file="${lib.dir}/apcu-${runtime.apcu.version}.tgz" property="apcu-src.present"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Check if PECL redis sources has been downloaded yet  		 	      -->
-    <!-- ==================================================================== -->
-    <target name="check-redis-src-present" description="Check if PECL redis sources has been downloaded yet.">
-        <available file="${lib.dir}/redis-${runtime.redis.version}.tgz" property="redis-src.present"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Check if PECL xdebug sources has been downloaded yet  		 	      -->
-    <!-- ==================================================================== -->
-    <target name="check-xdebug-src-present" description="Check if PECL xdebug sources has been downloaded yet.">
-        <available file="${lib.dir}/xdebug-${runtime.xdebug.version}.tgz" property="xdebug-src.present"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Check if PECL libevent sources has been downloaded yet  		 	  -->
-    <!-- ==================================================================== -->
-    <target name="check-libevent-src-present" description="Check if PECL libevent sources has been downloaded yet.">
-        <available file="${lib.dir}/libevent-${runtime.libevent.version}.tgz" property="libevent-src.present"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Check if PECL libev sources has been downloaded yet  		 	      -->
-    <!-- ==================================================================== -->
-    <target name="check-libev-src-present" description="Check if PECL libev sources has been downloaded yet.">
-        <available file="${lib.dir}/libev-${runtime.libev.version}.zip" property="libev-src.present"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Check if PECL ev sources has been downloaded yet  		 	      -->
-    <!-- ==================================================================== -->
-    <target name="check-ev-src-present" description="Check if PECL ev sources has been downloaded yet.">
-        <available file="${lib.dir}/ev-${runtime.ev.version}.zip" property="ev-src.present"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Check if PECL event sources has been downloaded yet  		 	      -->
-    <!-- ==================================================================== -->
-    <target name="check-event-src-present" description="Check if PECL event sources has been downloaded yet.">
-        <available file="${lib.dir}/event-${runtime.event.version}.zip" property="event-src.present"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Check if PECL operator sources has been downloaded yet  		 	  -->
-    <!-- ==================================================================== -->
-    <target name="check-operator-src-present" description="Check if PECL operator sources has been downloaded yet.">
-        <available file="${lib.dir}/operator-${runtime.operator.version}.tgz" property="operator-src.present"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Check if PECL pecl_http sources has been downloaded yet  		 	  -->
-    <!-- ==================================================================== -->
-    <target name="check-pecl_http-src-present" description="Check if PECL pecl_http sources has been downloaded yet.">
-        <available file="${lib.dir}/pecl_http-${runtime.pecl_http.version}.tgz" property="pecl_http-src.present"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Check if ext-appserver sources has been downloaded yet   		 	  -->
-    <!-- ==================================================================== -->
-    <target name="check-ext-appserver-src-present" description="Check if ext appserver sources has been downloaded yet.">
-        <available file="${lib.dir}/ext-appserver-${runtime.ext-appserver.version}.tgz" property="ext-appserver-src.present"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Check if PECL AOP sources has been downloaded yet  		 	      -->
-    <!-- ==================================================================== -->
-    <target name="check-AOP-src-present" description="Check if PECL AOP sources has been downloaded yet.">
-        <available file="${lib.dir}/AOP-${runtime.AOP.version}.tgz" property="AOP-src.present"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Get PHP source package by given version number		  		          -->
-    <!-- ==================================================================== -->
-    <target name="get-php-src" depends="check-php-src-present" unless="php-src.present" description="Get PHP source package by given version number">
-        <get src="http://de1.php.net/get/php-${runtime.php.version}.tar.gz/from/this/mirror" dest="${lib.dir}/php-${runtime.php.version}.tar.gz" usetimestamp="true"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Get PECL memcached source package by given version number		      -->
-    <!-- ==================================================================== -->
-    <target name="get-memcached-src" depends="check-memcached-src-present" unless="memcached-src.present" description="Get PECL memcached source package by given version number">
-        <get src="http://pecl.php.net/get/memcached-${runtime.memcached.version}.tgz" dest="${lib.dir}/memcached-${runtime.memcached.version}.tgz" usetimestamp="true"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Get PECL pthreads source package by given version number		      -->
-    <!-- ==================================================================== -->
-    <target name="get-pthreads-src" depends="check-pthreads-src-present" unless="pthreads-src.present" description="Get PECL pthreads source package by given version number">
-        <get src="https://github.com/appserver-io/pthreads/archive/v${runtime.pthreads.version}.tar.gz" dest="${lib.dir}/pthreads-${runtime.pthreads.version}.tgz" usetimestamp="true"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Get PECL apcu source package by given version number                 -->
-    <!-- ==================================================================== -->
-    <target name="get-apcu-src" depends="check-apcu-src-present" unless="apcu-src.present" description="Get PECL apcu source package by given version number">
-        <get src="http://pecl.php.net/get/apcu-${runtime.apcu.version}.tgz" dest="${lib.dir}/apcu-${runtime.apcu.version}.tgz" usetimestamp="true"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Get PECL redis source package by given version number		          -->
-    <!-- ==================================================================== -->
-    <target name="get-redis-src" depends="check-redis-src-present" unless="redis-src.present" description="Get PECL redis source package by given version number">
-        <get src="http://pecl.php.net/get/redis-${runtime.redis.version}.tgz" dest="${lib.dir}/redis-${runtime.redis.version}.tgz" usetimestamp="true"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Get PECL libevent source package by given version number		      -->
-    <!-- ==================================================================== -->
-    <target name="get-libevent-src" depends="check-libevent-src-present" unless="libevent-src.present" description="Get PECL libevent source package by given version number">
-        <get src="http://pecl.php.net/get/libevent-${runtime.libevent.version}.tgz" dest="${lib.dir}/libevent-${runtime.libevent.version}.tgz" usetimestamp="true"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Get PECL ev source package by given version number		              -->
-    <!-- ==================================================================== -->
-    <target name="get-ev-src" depends="check-ev-src-present" unless="ev-src.present" description="Get PECL ev source package by given version number">
-        <get src="http://pecl.php.net/get/ev-${runtime.ev.version}.tgz" dest="${lib.dir}/ev-${runtime.ev.version}.tgz" usetimestamp="true"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Get PECL event source package by given version number		          -->
-    <!-- ==================================================================== -->
-    <target name="get-event-src" depends="check-event-src-present" unless="event-src.present" description="Get PECL event source package by given version number">
-        <get src="http://pecl.php.net/get/event-${runtime.event.version}.tgz" dest="${lib.dir}/event-${runtime.event.version}.tgz" usetimestamp="true"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Get PECL libev source package by given version number		      -->
-    <!-- ==================================================================== -->
-    <target name="get-libev-src" depends="check-libev-src-present" unless="libev-src.present" description="Get PECL libev source package by given version number">
-        <get src="https://github.com/whatthejeff/php-libev/archive/${runtime.libev.version}.zip" dest="${lib.dir}/libev-${runtime.libev.version}.zip" usetimestamp="true"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Get PECL operator source package by given version number		      -->
-    <!-- ==================================================================== -->
-    <target name="get-operator-src" depends="check-operator-src-present" unless="operator-src.present" description="Get PECL operator source package by given version number">
-        <get src="http://pecl.php.net/get/operator-${runtime.operator.version}.tgz" dest="${lib.dir}/operator-${runtime.operator.version}.tgz" usetimestamp="true"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Get PECL pecl_http source package by given version number		      -->
-    <!-- ==================================================================== -->
-    <target name="get-pecl_http-src" depends="check-pecl_http-src-present" unless="pecl_http-src.present" description="Get PECL pecl_http source package by given version number">
-        <get src="http://pecl.php.net/get/pecl_http-${runtime.pecl_http.version}.tgz" dest="${lib.dir}/pecl_http-${runtime.pecl_http.version}.tgz" usetimestamp="true"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Get PECL AOP source package by given version number		          -->
-    <!-- ==================================================================== -->
-    <target name="get-AOP-src" depends="check-AOP-src-present" unless="AOP-src.present" description="Get PECL AOP source package by given version number">
-        <get src="http://pecl.php.net/get/AOP-${runtime.AOP.version}.tgz" dest="${lib.dir}/AOP-${runtime.AOP.version}.tgz" usetimestamp="true"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Get PECL xdebug source package by given version number		          -->
-    <!-- ==================================================================== -->
-    <target name="get-xdebug-src" depends="check-xdebug-src-present" unless="xdebug-src.present" description="Get PECL xdebug source package by given version number">
-        <get src="http://pecl.php.net/get/xdebug-${runtime.xdebug.version}.tgz" dest="${lib.dir}/xdebug-${runtime.xdebug.version}.tgz" usetimestamp="true"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Get PECL appserver source package by given version number		          -->
-    <!-- ==================================================================== -->
-    <target name="get-ext-appserver-src" depends="check-ext-appserver-src-present" unless="ext-appserver-src.present" description="Get php ext appserver source package by given version number">
-        <get src="https://github.com/appserver-io-php/php-ext-appserver/releases/download/v${runtime.ext-appserver.version}-beta/appserver-${runtime.ext-appserver.version}.tgz" dest="${lib.dir}/ext-appserver-${runtime.ext-appserver.version}.tgz" usetimestamp="true"/>
-    </target>
-
-    <!-- ==================================================================== -->
     <!-- Prepares the PHP sources for the runtime                             -->
     <!-- ==================================================================== -->
     <target name="prepare-source" description="Prepares the PHP sources for the runtime.">
-        <!-- load the PHP source -->
-        <antcall target="get-php-src"/>
         <!-- Untar the PHP source into the build environment -->
         <untar src="${lib.dir}/php-${runtime.php.version}.tar.gz" dest="${target.dir}" compression="gzip"/>
         <chmod perm="755" dir="${target.dir}/php-${runtime.php.version}/build" includes="**/*"/>
@@ -241,55 +43,46 @@
     <!-- ==================================================================== -->
     <target name="prepare-pecl-extension" description="Prepares the PECL sources for static compilation (not active!!)">
         <!-- prepare php ext appserver sources sources for static compilation -->
-        <antcall target="get-ext-appserver-src"/>
         <untar src="${lib.dir}/ext-appserver-${runtime.ext-appserver.version}.tgz" dest="${target.dir}" compression="gzip"/>
         <move todir="${target.dir}/php-${runtime.php.version}/ext/appserver">
             <fileset dir="${target.dir}/appserver-${runtime.ext-appserver.version}"/>
         </move>
         <!-- prepare PECL memcached sources sources for static compilation -->
-        <antcall target="get-memcached-src"/>
         <untar src="${lib.dir}/memcached-${runtime.memcached.version}.tgz" dest="${target.dir}" compression="gzip"/>
         <move todir="${target.dir}/php-${runtime.php.version}/ext/memcached">
             <fileset dir="${target.dir}/memcached-${runtime.memcached.version}"/>
         </move>
         <!-- prepare PECL pthread sources for static compilation -->
-        <antcall target="get-pthreads-src"/>
         <untar src="${lib.dir}/pthreads-${runtime.pthreads.version}.tgz" dest="${target.dir}" compression="gzip"/>
         <move todir="${target.dir}/php-${runtime.php.version}/ext/pthreads">
             <fileset dir="${target.dir}/pthreads-${runtime.pthreads.version}"/>
         </move>
         <!-- prepare PECL apcu sources for static compilation -->
-        <antcall target="get-apcu-src"/>
         <untar src="${lib.dir}/apcu-${runtime.apcu.version}.tgz" dest="${target.dir}" compression="gzip"/>
         <move todir="${target.dir}/php-${runtime.php.version}/ext/apcu">
             <fileset dir="${target.dir}/apcu-${runtime.apcu.version}"/>
         </move>
         <!-- prepare PECL operator sources for static compilation -->
-        <antcall target="get-operator-src"/>
         <untar src="${lib.dir}/operator-${runtime.operator.version}.tgz" dest="${target.dir}" compression="gzip"/>
         <move todir="${target.dir}/php-${runtime.php.version}/ext/operator">
             <fileset dir="${target.dir}/operator-${runtime.operator.version}"/>
         </move>
         <!-- prepare PECL pecl_http sources for static compilation -->
-        <antcall target="get-pecl_http-src"/>
         <untar src="${lib.dir}/pecl_http-${runtime.pecl_http.version}.tgz" dest="${target.dir}" compression="gzip"/>
         <move todir="${target.dir}/php-${runtime.php.version}/ext/http">
             <fileset dir="${target.dir}/pecl_http-${runtime.pecl_http.version}"/>
         </move>
         <!-- prepare PECL AOP sources for static compilation -->
-        <antcall target="get-AOP-src"/>
         <untar src="${lib.dir}/AOP-${runtime.AOP.version}.tgz" dest="${target.dir}" compression="gzip"/>
         <move todir="${target.dir}/php-${runtime.php.version}/ext/AOP">
             <fileset dir="${target.dir}/AOP-${runtime.AOP.version}"/>
         </move>
         <!-- prepare PECL libevent sources for static compilation -->
-        <antcall target="get-libevent-src"/>
         <untar src="${lib.dir}/libevent-${runtime.libevent.version}.tgz" dest="${target.dir}" compression="gzip"/>
         <move todir="${target.dir}/php-${runtime.php.version}/ext/libevent">
             <fileset dir="${target.dir}/libevent-${runtime.libevent.version}"/>
         </move>
         <!-- prepare PECL redis sources for static compilation -->
-        <antcall target="get-redis-src"/>
         <untar src="${lib.dir}/redis-${runtime.redis.version}.tgz" dest="${target.dir}" compression="gzip"/>
         <move todir="${target.dir}/php-${runtime.php.version}/ext/redis">
             <fileset dir="${target.dir}/redis-${runtime.redis.version}"/>
@@ -409,7 +202,6 @@
     <!-- Builds the PECL pthreads as shared extension                         -->
     <!-- ==================================================================== -->
     <target name="pecl-build-pthreads" description="Builds the PECL pthreads as shared extension.">
-        <antcall target="get-pthreads-src"/>
         <untar src="${lib.dir}/pthreads-${runtime.pthreads.version}.tgz" dest="${target.dir}" compression="gzip"/>
         <exec dir="${target.dir}/pthreads-${runtime.pthreads.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
         <exec dir="${target.dir}/pthreads-${runtime.pthreads.version}" executable="sh">
@@ -426,7 +218,6 @@
     <!-- Builds the PECL apcu as shared extension                             -->
     <!-- ==================================================================== -->
     <target name="pecl-build-apcu" description="Builds the PECL apcu as shared extension.">
-        <antcall target="get-apcu-src"/>
         <untar src="${lib.dir}/apcu-${runtime.apcu.version}.tgz" dest="${target.dir}" compression="gzip"/>
         <exec dir="${target.dir}/apcu-${runtime.apcu.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
         <exec dir="${target.dir}/apcu-${runtime.apcu.version}" executable="sh">
@@ -443,7 +234,6 @@
     <!-- Builds the PECL memcached as shared extension                        -->
     <!-- ==================================================================== -->
     <target name="pecl-build-memcached" description="Builds the PECL memcached as shared extension.">
-        <antcall target="get-memcached-src"/>
         <untar src="${lib.dir}/memcached-${runtime.memcached.version}.tgz" dest="${target.dir}" compression="gzip"/>
         <exec dir="${target.dir}/memcached-${runtime.memcached.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
         <exec dir="${target.dir}/memcached-${runtime.memcached.version}" executable="sh">
@@ -461,7 +251,6 @@
     <!-- Builds the PECL operator as shared extension                         -->
     <!-- ==================================================================== -->
     <target name="pecl-build-operator" description="Builds the PECL operator as shared extension.">
-        <antcall target="get-operator-src"/>
         <untar src="${lib.dir}/operator-${runtime.operator.version}.tgz" dest="${target.dir}" compression="gzip"/>
         <exec dir="${target.dir}/operator-${runtime.operator.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
         <exec dir="${target.dir}/operator-${runtime.operator.version}" executable="sh">
@@ -478,7 +267,6 @@
     <!-- Builds the PECL pecl_http as shared extension                         -->
     <!-- ==================================================================== -->
     <target name="pecl-build-pecl_http" description="Builds the PECL pecl_http as shared extension.">
-        <antcall target="get-pecl_http-src"/>
         <untar src="${lib.dir}/pecl_http-${runtime.pecl_http.version}.tgz" dest="${target.dir}" compression="gzip"/>
         <exec dir="${target.dir}/pecl_http-${runtime.pecl_http.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
         <exec dir="${target.dir}/pecl_http-${runtime.pecl_http.version}" executable="sh">
@@ -495,7 +283,6 @@
     <!-- Builds the PECL libevent as shared extension                         -->
     <!-- ==================================================================== -->
     <target name="pecl-build-libevent" description="Builds the PECL libevent as shared extension.">
-        <antcall target="get-libevent-src"/>
         <untar src="${lib.dir}/libevent-${runtime.libevent.version}.tgz" dest="${target.dir}" compression="gzip"/>
         <exec dir="${target.dir}/libevent-${runtime.libevent.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
         <exec dir="${target.dir}/libevent-${runtime.libevent.version}" executable="sh">
@@ -513,7 +300,6 @@
     <!-- Builds the PECL libev as shared extension                         -->
     <!-- ==================================================================== -->
     <target name="pecl-build-libev" description="Builds the PECL libev as shared extension.">
-        <antcall target="get-libev-src"/>
         <unzip src="${lib.dir}/libev-${runtime.libev.version}.zip" dest="${target.dir}"/>
         <exec dir="${target.dir}/php-libev-${runtime.libev.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
         <exec dir="${target.dir}/php-libev-${runtime.libev.version}" executable="sh">
@@ -530,7 +316,6 @@
     <!-- Builds the PECL event as shared extension                            -->
     <!-- ==================================================================== -->
     <target name="pecl-build-event" description="Builds the PECL event as shared extension.">
-        <antcall target="get-event-src"/>
         <untar src="${lib.dir}/event-${runtime.event.version}.tgz" dest="${target.dir}" compression="gzip"/>
         <exec dir="${target.dir}/event-${runtime.event.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
         <exec dir="${target.dir}/event-${runtime.event.version}" executable="sh">
@@ -548,7 +333,6 @@
     <!-- Builds the PECL ev as shared extension                               -->
     <!-- ==================================================================== -->
     <target name="pecl-build-ev" description="Builds the PECL ev as shared extension.">
-        <antcall target="get-ev-src"/>
         <untar src="${lib.dir}/ev-${runtime.ev.version}.tgz" dest="${target.dir}" compression="gzip"/>
         <exec dir="${target.dir}/ev-${runtime.ev.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
         <exec dir="${target.dir}/ev-${runtime.ev.version}" executable="sh">
@@ -565,7 +349,6 @@
     <!-- Builds the PECL AOP as shared extension                         -->
     <!-- ==================================================================== -->
     <target name="pecl-build-AOP" description="Builds the PECL AOP as shared extension.">
-        <antcall target="get-AOP-src"/>
         <untar src="${lib.dir}/AOP-${runtime.AOP.version}.tgz" dest="${target.dir}" compression="gzip"/>
         <exec dir="${target.dir}/AOP-${runtime.AOP.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
         <exec dir="${target.dir}/AOP-${runtime.AOP.version}" executable="sh">
@@ -582,7 +365,6 @@
     <!-- Builds the PECL xdebug as shared extension                           -->
     <!-- ==================================================================== -->
     <target name="pecl-build-xdebug" description="Builds the PECL xdebug as shared extension.">
-        <antcall target="get-xdebug-src"/>
         <untar src="${lib.dir}/xdebug-${runtime.xdebug.version}.tgz" dest="${target.dir}" compression="gzip"/>
         <exec dir="${target.dir}/xdebug-${runtime.xdebug.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
         <exec dir="${target.dir}/xdebug-${runtime.xdebug.version}" executable="sh">
@@ -599,7 +381,6 @@
     <!-- Builds the PECL redis as shared extension                            -->
     <!-- ==================================================================== -->
     <target name="pecl-build-redis" description="Builds the PECL redis as shared extension.">
-        <antcall target="get-redis-src"/>
         <untar src="${lib.dir}/redis-${runtime.redis.version}.tgz" dest="${target.dir}" compression="gzip"/>
         <exec dir="${target.dir}/redis-${runtime.redis.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
         <exec dir="${target.dir}/redis-${runtime.redis.version}" executable="sh">
@@ -616,7 +397,6 @@
     <!-- Builds the PECL appserver as shared extension                        -->
     <!-- ==================================================================== -->
     <target name="pecl-build-appserver" description="Builds the PECL appserver as shared extension.">
-        <antcall target="get-ext-appserver-src"/>
         <untar src="${lib.dir}/ext-appserver-${runtime.ext-appserver.version}.tgz" dest="${target.dir}" compression="gzip"/>
         <exec dir="${target.dir}/appserver-${runtime.ext-appserver.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
         <exec dir="${target.dir}/appserver-${runtime.ext-appserver.version}" executable="sh">

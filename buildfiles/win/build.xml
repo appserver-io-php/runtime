@@ -30,48 +30,6 @@
     </target>
 
     <!-- ==================================================================== -->
-    <!-- Check if Windows PHP binaries has been downloaded yet                -->
-    <!-- ==================================================================== -->
-    <target name="check-php-binaries-present" description="Check if Windows PHP binaries has been downloaded yet.">
-        <available file="${lib.dir}/php-${runtime.php.version}-Win32-VC${compiler-version}-${os.architecture}.zip" property="php-binaries.present"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Get Windows PHP binaries package by given version number             -->
-    <!-- ==================================================================== -->
-    <target name="get-php-binaries" depends="check-php-binaries-present" unless="php-binaries.present" description="Get Windows PHP binaries package by given version number.">
-        <get src="${php.download.url}" dest="${lib.dir}/php-${runtime.php.version}-Win32-VC${compiler-version}-${os.architecture}.zip"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Check if Windows apcu binaries has been downloaded yet               -->
-    <!-- ==================================================================== -->
-    <target name="check-apcu-binaries-present" description="Check if Windows apcu binaries has been downloaded yet.">
-        <available file="${lib.dir}/php_apcu-${runtime.apcu.version}-5.5-ts-vc${compiler-version}-${os.architecture}.zip" property="apcu-binaries.present"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Check if Windows event binaries has been downloaded yet              -->
-    <!-- ==================================================================== -->
-    <target name="check-event-binaries-present" description="Check if Windows event binaries has been downloaded yet.">
-        <available file="${lib.dir}/php_event-${runtime.event.version}-5.5-ts-vc${compiler-version}-${os.architecture}.zip" property="event-binaries.present"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Get Windows apcu binaries package by given version number            -->
-    <!-- ==================================================================== -->
-    <target name="get-apcu-binaries" depends="check-apcu-binaries-present" unless="apcu-binaries.present" description="Get Windows apcu binaries package by given version number.">
-        <get src="${apcu.download.url}" dest="${lib.dir}/php_apcu-${runtime.apcu.version}-5.5-ts-vc${compiler-version}-${os.architecture}.zip"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Check if Windows pthreads binaries has been downloaded yet           -->
-    <!-- ==================================================================== -->
-    <target name="check-pthreads-binaries-present" description="Check if Windows pthreads binaries has been downloaded yet.">
-        <available file="${lib.dir}/php_pthreads-${runtime.pthreads.version}-5.5-ts-vc${compiler-version}-${os.architecture}.zip" property="pthreads-binaries.present"/>
-    </target>
-
-    <!-- ==================================================================== -->
     <!-- Check if Windows PHP SDK has been downloaded yet                     -->
     <!-- ==================================================================== -->
     <target name="check-php-sdk-present" description="Check if Windows PHP SDK has been downloaded yet.">
@@ -83,48 +41,6 @@
     <!-- ==================================================================== -->
     <target name="check-php-build-deps-present" description="Check if Windows PHP build dependencies have been downloaded yet.">
         <available file="${build-workspace.dir}/deps-${runtime.php.major-version}-vc${compiler-version}-${os.architecture}.7z" property="php-build-deps.present"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Check if PHP source package has been downloaded yet                  -->
-    <!-- ==================================================================== -->
-    <target name="check-php-src-present" description="Check if PHP Source Package has been downloaded yet.">
-        <available file="${lib.dir}/php-${runtime.php.version}.tar.gz" property="php-src.present"/>
-    </target>	
-
-    <!-- ==================================================================== -->
-    <!-- Check if ext-appserver sources has been downloaded yet               -->
-    <!-- ==================================================================== -->
-    <target name="check-ext-appserver-src-present" description="Check if ext appserver sources has been downloaded yet.">
-        <available file="${lib.dir}/ext-appserver-${runtime.ext-appserver.version}.tgz" property="ext-appserver-src.present"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Get PHP source package by given version number                       -->
-    <!-- ==================================================================== -->
-    <target name="get-php-src" depends="check-php-src-present" unless="php-src.present" description="Get PHP source package by given version number">
-        <get src="http://de1.php.net/get/php-${runtime.php.version}.tar.gz/from/this/mirror" dest="${lib.dir}/php-${runtime.php.version}.tar.gz" usetimestamp="true"/>
-    </target>
-	
-    <!-- ==================================================================== -->
-    <!-- Get PECL appserver source package by given version number                -->
-    <!-- ==================================================================== -->
-    <target name="get-ext-appserver-src" depends="check-ext-appserver-src-present" unless="ext-appserver-src.present" description="Get php ext appserver source package by given version number">
-        <get src="https://github.com/appserver-io-php/php-ext-appserver/releases/download/v${runtime.ext-appserver.version}-beta/appserver-${runtime.ext-appserver.version}.tgz" dest="${lib.dir}/ext-appserver-${runtime.ext-appserver.version}.tgz" usetimestamp="true"/>
-    </target>
-	
-    <!-- ==================================================================== -->
-    <!-- Get Windows pthreads binaries package by given version number        -->
-    <!-- ==================================================================== -->
-    <target name="get-pthreads-binaries" depends="check-pthreads-binaries-present" unless="pthreads-binaries.present" description="Get Windows pthreads binaries package by given version number.">
-        <get src="${pthreads.download.url}" dest="${lib.dir}/php_pthreads-${runtime.pthreads.version}-5.5-ts-vc${compiler-version}-${os.architecture}.zip"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Get Windows event binaries package by given version number           -->
-    <!-- ==================================================================== -->
-    <target name="get-event-binaries" depends="check-event-binaries-present" unless="event-binaries.present" description="Get Windows event binaries package by given version number.">
-        <get src="${event.download.url}" dest="${lib.dir}/php_event-${runtime.event.version}-5.5-ts-vc${compiler-version}-${os.architecture}.zip"/>
     </target>
 
     <!-- ==================================================================== -->
@@ -145,9 +61,6 @@
     <!-- Untar the PHP source into the development dir                        -->
     <!-- ==================================================================== -->
     <target name="prepare-php-src" description="Untar the PHP source into the development dir.">
-    	<!-- load the PHP source -->
-    	<antcall target="get-php-src"/>
-        <!-- Untar the PHP source into the build environment -->
         <untar src="${lib.dir}/php-${runtime.php.version}.tar.gz" dest="${php-buildtree.dir}" compression="gzip"/>
     </target>
 
@@ -165,11 +78,9 @@
     <!-- Prepare the appserver extension source by including it in the build environment -->
     <!-- =============================================================================== -->
     <target name="prepare-ext-appserver-src" description="Prepare the appserver extension source by including it in the build environment.">
-        <!-- load the sources of appserver PECL extension -->
-    	<antcall target="get-ext-appserver-src" />
-    	<!-- Untar the appserver extension source into the sdk environment -->
+        <!-- untar the appserver extension source into the sdk environment -->
         <untar src="${lib.dir}/ext-appserver-${runtime.ext-appserver.version}.tgz" dest="${php-sdk.dir}" compression="gzip"/>
-        <!-- Move the src files into the folder they belong -->
+        <!-- move the src files into the folder they belong -->
         <copy todir="${php-buildtree.dir}/php-${runtime.php.version}/ext/appserver" preservelastmodified="true" overwrite="true">
             <fileset dir="${php-sdk.dir}/appserver-${runtime.ext-appserver.version}">
                 <include name="**/*" />
@@ -292,17 +203,8 @@
     	<!-- prepare the local build environment -->
     	<antcall target="prepare" />
         
-    	<!-- download the PHP/PECL binaries if not already available -->
-        <antcall target="get-php-binaries"/>
-        
     	<!-- Build binaries we cannot download ourselves (if not already present) -->
         <antcall target="build-binaries"/>
-        
-    	<!-- Get the apcu binaries -->
-        <antcall target="get-apcu-binaries"/>
-        
-    	<!-- antcall target="get-pthreads-binaries"/ -->
-        <antcall target="get-event-binaries"/>
         
     	<!-- extract the PHP/PECL binaries into the target folder -->
         <unzip src="${lib.dir}/php-${runtime.php.version}-Win32-VC${compiler-version}-${os.architecture}.zip" dest="${target.dir}/appserver/php"/>
