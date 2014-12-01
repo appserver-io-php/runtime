@@ -1,0 +1,465 @@
+<?xml version="1.0"?>
+<!DOCTYPE project>
+<project name="appserver-io-php/runtime-linux" basedir=".">
+
+    <!-- ==================================================================== -->
+    <!-- Load the environment variables into our properties                   -->
+    <!-- ==================================================================== -->
+    <property environment="env" />
+
+    <!-- ==================================================================== -->
+    <!-- Import the build.xml files, defined by os.distribution property      -->
+    <!-- ==================================================================== -->
+    <import file="${basedir}/buildfiles/${os.family}/${os.distribution}/build.xml" />
+
+    <!-- ==================================================================== -->
+    <!-- Load the default properties after loading default properties of the  -->
+    <!-- os.distribution. This allows recursive overriding of default         -->
+	<!-- properties.                                                          -->
+    <!-- ==================================================================== -->
+    <property file="${basedir}/buildfiles/${os.family}/build.default.properties" />
+
+    <!-- ==================================================================== -->
+    <!-- Copies any built package to the snapshot hosting server.             -->
+    <!-- ==================================================================== -->
+    <target name="copy-to-hub" depends="create-package" description="Copies any built package to the snapshot hosting server.">
+    	<echo message="Now try to upload ${package.specific-dir}${package.name} to snapshot server"/>
+    	<exec executable="scp" failonerror="true">
+            <arg line="-o StrictHostKeyChecking=no -i ${user.home}/.ssh/id_rsa ${package.specific-dir}${package.name} ${hub.scp-user}@${hub.address}:${hub.snapshot-path}"/>
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Prepares the PHP sources for the runtime                             -->
+    <!-- ==================================================================== -->
+    <target name="prepare-source" description="Prepares the PHP sources for the runtime.">
+        <!-- Untar the PHP source into the build environment -->
+        <untar src="${lib.dir}/php-${runtime.php.version}.tar.gz" dest="${target.dir}" compression="gzip"/>
+        <chmod perm="755" dir="${target.dir}/php-${runtime.php.version}/build" includes="**/*"/>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Prepares the PECL sources for static compilation (not active!!)      -->
+    <!-- ==================================================================== -->
+    <target name="prepare-pecl-extension" description="Prepares the PECL sources for static compilation (not active!!)">
+        <!-- prepare php ext appserver sources sources for static compilation -->
+        <untar src="${lib.dir}/ext-appserver-${runtime.ext-appserver.version}.tgz" dest="${target.dir}" compression="gzip"/>
+        <move todir="${target.dir}/php-${runtime.php.version}/ext/appserver">
+            <fileset dir="${target.dir}/appserver-${runtime.ext-appserver.version}"/>
+        </move>
+        <!-- prepare PECL memcached sources sources for static compilation -->
+        <untar src="${lib.dir}/memcached-${runtime.memcached.version}.tgz" dest="${target.dir}" compression="gzip"/>
+        <move todir="${target.dir}/php-${runtime.php.version}/ext/memcached">
+            <fileset dir="${target.dir}/memcached-${runtime.memcached.version}"/>
+        </move>
+        <!-- prepare PECL pthread sources for static compilation -->
+        <untar src="${lib.dir}/pthreads-${runtime.pthreads.version}.tgz" dest="${target.dir}" compression="gzip"/>
+        <move todir="${target.dir}/php-${runtime.php.version}/ext/pthreads">
+            <fileset dir="${target.dir}/pthreads-${runtime.pthreads.version}"/>
+        </move>
+        <!-- prepare PECL apcu sources for static compilation -->
+        <untar src="${lib.dir}/apcu-${runtime.apcu.version}.tgz" dest="${target.dir}" compression="gzip"/>
+        <move todir="${target.dir}/php-${runtime.php.version}/ext/apcu">
+            <fileset dir="${target.dir}/apcu-${runtime.apcu.version}"/>
+        </move>
+        <!-- prepare PECL operator sources for static compilation -->
+        <untar src="${lib.dir}/operator-${runtime.operator.version}.tgz" dest="${target.dir}" compression="gzip"/>
+        <move todir="${target.dir}/php-${runtime.php.version}/ext/operator">
+            <fileset dir="${target.dir}/operator-${runtime.operator.version}"/>
+        </move>
+        <!-- prepare PECL pecl_http sources for static compilation -->
+        <untar src="${lib.dir}/pecl_http-${runtime.pecl_http.version}.tgz" dest="${target.dir}" compression="gzip"/>
+        <move todir="${target.dir}/php-${runtime.php.version}/ext/http">
+            <fileset dir="${target.dir}/pecl_http-${runtime.pecl_http.version}"/>
+        </move>
+        <!-- prepare PECL AOP sources for static compilation -->
+        <untar src="${lib.dir}/AOP-${runtime.AOP.version}.tgz" dest="${target.dir}" compression="gzip"/>
+        <move todir="${target.dir}/php-${runtime.php.version}/ext/AOP">
+            <fileset dir="${target.dir}/AOP-${runtime.AOP.version}"/>
+        </move>
+        <!-- prepare PECL libevent sources for static compilation -->
+        <untar src="${lib.dir}/libevent-${runtime.libevent.version}.tgz" dest="${target.dir}" compression="gzip"/>
+        <move todir="${target.dir}/php-${runtime.php.version}/ext/libevent">
+            <fileset dir="${target.dir}/libevent-${runtime.libevent.version}"/>
+        </move>
+        <!-- prepare PECL redis sources for static compilation -->
+        <untar src="${lib.dir}/redis-${runtime.redis.version}.tgz" dest="${target.dir}" compression="gzip"/>
+        <move todir="${target.dir}/php-${runtime.php.version}/ext/redis">
+            <fileset dir="${target.dir}/redis-${runtime.redis.version}"/>
+        </move>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Install the necessary libraries to build the debian runtime          -->
+    <!--                                                                      -->
+    <!-- This is a wrapper for all distribution prepare tasks, as they have   -->
+    <!-- similar dependencies as the main build-runtime task. So we wrap it   -->
+    <!-- away to avoid ant dependency messups.                                -->
+    <!-- ==================================================================== -->
+    <target name="prepare-linux-build-system" description="Install the necessary libraries to build the needed linux distribution runtime.">
+        <antcall target="prepare-distribution-specific-build-system"/>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Copies the os.family + os.distribution specific buildfiles           -->
+    <!-- into the dist                                                        -->
+    <!-- ==================================================================== -->
+    <target name="copy-buildfiles" description="Prepares the appserver sources">
+        <copy todir="${runtime.compile.prefix}" preservelastmodified="true" overwrite="true">
+            <fileset dir="${src.dir}/${os.family}/generic">
+                <include name="**/*" />
+            </fileset>
+            <filterchain>
+                <expandproperties/>
+            </filterchain>
+        </copy>
+        <copy todir="${runtime.compile.prefix}" failonerror="false" preservelastmodified="true" overwrite="true">
+            <fileset dir="${src.dir}/${os.family}/${os.distribution}">
+                <include name="**/*" />
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Install composer                                                     -->
+    <!-- ==================================================================== -->
+    <target name="install-composer" description="Install composer.">
+        <!-- download the composer installer -->
+        <exec dir="${target.dir}" executable="curl">
+            <arg line="-sS http://getcomposer.org/installer -o installer"/>
+        </exec>
+        <!-- install composer itself -->
+        <exec dir="${target.dir}" executable="${runtime.compile.prefix}/bin/php">
+            <arg line="installer -- --install-dir ${runtime.compile.prefix}/bin"/>
+        </exec>
+    </target>
+	
+    <!-- ==================================================================== -->
+    <!-- Compiles the appserver.io Linux runtime environment                  -->
+    <!-- ==================================================================== -->
+    <target name="build-runtime" description="Compiles the appserver.io Linux runtime environment.">
+
+    	<!-- prepare the local build environment -->
+    	<antcall target="prepare" />
+    	
+    	<!-- prepare the Linux build environment -->
+    	<antcall target="prepare-linux-build-system" />
+    	
+    	<!-- prepare the PHP source -->
+    	<antcall target="prepare-source"/>
+    	
+        <!-- delete the application server directory -->
+        <delete dir="${runtime.compile.prefix}" includeemptydirs="true" quiet="false" verbose="true" failonerror="true"/>
+
+    	<!-- prepare the PECL extensions -->
+        <antcall target="prepare-pecl-extension"/>
+
+        <!-- compile the PHP sources and PECL extensions static -->
+        <exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
+            <arg value="clean"/>
+        </exec>
+        <delete file="${target.dir}/php-${runtime.php.version}/aclocal.m4"/>
+        <exec dir="${target.dir}/php-${runtime.php.version}" executable="sh">
+            <arg value="buildconf"/>
+            <arg line="--force"/>
+        </exec>
+
+    	<!-- log PHP compile configuration -->
+    	<echo message="Now compiling PHP using configure params: ${runtime.compile.configuration}"/>
+
+    	<!-- configure, compile and install PHP binary -->
+        <exec dir="${target.dir}/php-${runtime.php.version}" executable="sh">
+            <env key="CC" value="${runtime.cc}"/>
+            <env key="EXTRA_LIBS" value="-llber"/>
+            <arg line="configure ${runtime.compile.configuration}"/>
+        </exec>
+        <exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
+            <arg value="-j8"/>
+        </exec>
+        <exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
+            <arg value="install"/>
+        </exec>
+
+        <!-- build the PECL package's as shared library -->
+        <antcall target="pecl-build-pthreads"/>
+        <antcall target="pecl-build-memcached"/>
+        <antcall target="pecl-build-redis"/>
+        <antcall target="pecl-build-appserver"/>
+        <antcall target="pecl-build-apcu"/>
+        <antcall target="pecl-build-ev"/>
+        <antcall target="pecl-build-event"/>
+        <antcall target="pecl-build-xdebug"/>
+        
+        <!-- copy runtime files from src directory -->
+        <antcall target="copy-buildfiles"/>
+
+    	<!-- installs the Composer dependency manager -->
+    	<antcall target="install-composer"/>
+    	
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Builds the PECL pthreads as shared extension                         -->
+    <!-- ==================================================================== -->
+    <target name="pecl-build-pthreads" description="Builds the PECL pthreads as shared extension.">
+        <untar src="${lib.dir}/pthreads-${runtime.pthreads.version}.tgz" dest="${target.dir}" compression="gzip"/>
+        <exec dir="${target.dir}/pthreads-${runtime.pthreads.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/pthreads-${runtime.pthreads.version}" executable="sh">
+            <arg value="configure"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
+        </exec>
+        <exec dir="${target.dir}/pthreads-${runtime.pthreads.version}" executable="make"/>
+        <exec dir="${target.dir}/pthreads-${runtime.pthreads.version}" executable="make">
+            <arg value="install"/>
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Builds the PECL apcu as shared extension                             -->
+    <!-- ==================================================================== -->
+    <target name="pecl-build-apcu" description="Builds the PECL apcu as shared extension.">
+        <untar src="${lib.dir}/apcu-${runtime.apcu.version}.tgz" dest="${target.dir}" compression="gzip"/>
+        <exec dir="${target.dir}/apcu-${runtime.apcu.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/apcu-${runtime.apcu.version}" executable="sh">
+            <arg value="configure"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
+        </exec>
+        <exec dir="${target.dir}/apcu-${runtime.apcu.version}" executable="make"/>
+        <exec dir="${target.dir}/apcu-${runtime.apcu.version}" executable="make">
+            <arg value="install"/>
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Builds the PECL memcached as shared extension                        -->
+    <!-- ==================================================================== -->
+    <target name="pecl-build-memcached" description="Builds the PECL memcached as shared extension.">
+        <untar src="${lib.dir}/memcached-${runtime.memcached.version}.tgz" dest="${target.dir}" compression="gzip"/>
+        <exec dir="${target.dir}/memcached-${runtime.memcached.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/memcached-${runtime.memcached.version}" executable="sh">
+            <arg value="configure"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
+            <arg value="--with-libmemcached-dir=${libmemcached.dir}"/>
+        </exec>
+        <exec dir="${target.dir}/memcached-${runtime.memcached.version}" executable="make"/>
+        <exec dir="${target.dir}/memcached-${runtime.memcached.version}" executable="make">
+            <arg value="install"/>
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Builds the PECL operator as shared extension                         -->
+    <!-- ==================================================================== -->
+    <target name="pecl-build-operator" description="Builds the PECL operator as shared extension.">
+        <untar src="${lib.dir}/operator-${runtime.operator.version}.tgz" dest="${target.dir}" compression="gzip"/>
+        <exec dir="${target.dir}/operator-${runtime.operator.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/operator-${runtime.operator.version}" executable="sh">
+            <arg value="configure"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
+        </exec>
+        <exec dir="${target.dir}/operator-${runtime.operator.version}" executable="make"/>
+        <exec dir="${target.dir}/operator-${runtime.operator.version}" executable="make">
+            <arg value="install"/>
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Builds the PECL pecl_http as shared extension                         -->
+    <!-- ==================================================================== -->
+    <target name="pecl-build-pecl_http" description="Builds the PECL pecl_http as shared extension.">
+        <untar src="${lib.dir}/pecl_http-${runtime.pecl_http.version}.tgz" dest="${target.dir}" compression="gzip"/>
+        <exec dir="${target.dir}/pecl_http-${runtime.pecl_http.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/pecl_http-${runtime.pecl_http.version}" executable="sh">
+            <arg value="configure"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
+        </exec>
+        <exec dir="${target.dir}/pecl_http-${runtime.pecl_http.version}" executable="make"/>
+        <exec dir="${target.dir}/pecl_http-${runtime.pecl_http.version}" executable="make">
+            <arg value="install"/>
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Builds the PECL libevent as shared extension                         -->
+    <!-- ==================================================================== -->
+    <target name="pecl-build-libevent" description="Builds the PECL libevent as shared extension.">
+        <untar src="${lib.dir}/libevent-${runtime.libevent.version}.tgz" dest="${target.dir}" compression="gzip"/>
+        <exec dir="${target.dir}/libevent-${runtime.libevent.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/libevent-${runtime.libevent.version}" executable="sh">
+            <arg value="configure"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
+            <arg value="--with-libevent=${runtime.compile.libevent.libdir}"/>
+        </exec>
+        <exec dir="${target.dir}/libevent-${runtime.libevent.version}" executable="make"/>
+        <exec dir="${target.dir}/libevent-${runtime.libevent.version}" executable="make">
+            <arg value="install"/>
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Builds the PECL libev as shared extension                         -->
+    <!-- ==================================================================== -->
+    <target name="pecl-build-libev" description="Builds the PECL libev as shared extension.">
+        <unzip src="${lib.dir}/libev-${runtime.libev.version}.zip" dest="${target.dir}"/>
+        <exec dir="${target.dir}/php-libev-${runtime.libev.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/php-libev-${runtime.libev.version}" executable="sh">
+            <arg value="configure"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
+        </exec>
+        <exec dir="${target.dir}/php-libev-${runtime.libev.version}" executable="make"/>
+        <exec dir="${target.dir}/php-libev-${runtime.libev.version}" executable="make">
+            <arg value="install"/>
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Builds the PECL event as shared extension                            -->
+    <!-- ==================================================================== -->
+    <target name="pecl-build-event" description="Builds the PECL event as shared extension.">
+        <untar src="${lib.dir}/event-${runtime.event.version}.tgz" dest="${target.dir}" compression="gzip"/>
+        <exec dir="${target.dir}/event-${runtime.event.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/event-${runtime.event.version}" executable="sh">
+            <arg value="configure"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
+        	<arg value="--with-event-libevent-dir=${runtime.compile.prefix}"/>
+        </exec>
+        <exec dir="${target.dir}/event-${runtime.event.version}" executable="make"/>
+        <exec dir="${target.dir}/event-${runtime.event.version}" executable="make">
+            <arg value="install"/>
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Builds the PECL ev as shared extension                               -->
+    <!-- ==================================================================== -->
+    <target name="pecl-build-ev" description="Builds the PECL ev as shared extension.">
+        <untar src="${lib.dir}/ev-${runtime.ev.version}.tgz" dest="${target.dir}" compression="gzip"/>
+        <exec dir="${target.dir}/ev-${runtime.ev.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/ev-${runtime.ev.version}" executable="sh">
+            <arg value="configure"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
+        </exec>
+        <exec dir="${target.dir}/ev-${runtime.ev.version}" executable="make"/>
+        <exec dir="${target.dir}/ev-${runtime.ev.version}" executable="make">
+            <arg value="install"/>
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Builds the PECL AOP as shared extension                         -->
+    <!-- ==================================================================== -->
+    <target name="pecl-build-AOP" description="Builds the PECL AOP as shared extension.">
+        <untar src="${lib.dir}/AOP-${runtime.AOP.version}.tgz" dest="${target.dir}" compression="gzip"/>
+        <exec dir="${target.dir}/AOP-${runtime.AOP.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/AOP-${runtime.AOP.version}" executable="sh">
+            <arg value="configure"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
+        </exec>
+        <exec dir="${target.dir}/AOP-${runtime.AOP.version}" executable="make"/>
+        <exec dir="${target.dir}/AOP-${runtime.AOP.version}" executable="make">
+            <arg value="install"/>
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Builds the PECL xdebug as shared extension                           -->
+    <!-- ==================================================================== -->
+    <target name="pecl-build-xdebug" description="Builds the PECL xdebug as shared extension.">
+        <untar src="${lib.dir}/xdebug-${runtime.xdebug.version}.tgz" dest="${target.dir}" compression="gzip"/>
+        <exec dir="${target.dir}/xdebug-${runtime.xdebug.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/xdebug-${runtime.xdebug.version}" executable="sh">
+            <arg value="configure"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
+        </exec>
+        <exec dir="${target.dir}/xdebug-${runtime.xdebug.version}" executable="make"/>
+        <exec dir="${target.dir}/xdebug-${runtime.xdebug.version}" executable="make">
+            <arg value="install"/>
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Builds the PECL redis as shared extension                            -->
+    <!-- ==================================================================== -->
+    <target name="pecl-build-redis" description="Builds the PECL redis as shared extension.">
+        <untar src="${lib.dir}/redis-${runtime.redis.version}.tgz" dest="${target.dir}" compression="gzip"/>
+        <exec dir="${target.dir}/redis-${runtime.redis.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/redis-${runtime.redis.version}" executable="sh">
+            <arg value="configure"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
+        </exec>
+        <exec dir="${target.dir}/redis-${runtime.redis.version}" executable="make"/>
+        <exec dir="${target.dir}/redis-${runtime.redis.version}" executable="make">
+            <arg value="install"/>
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Builds the PECL appserver as shared extension                        -->
+    <!-- ==================================================================== -->
+    <target name="pecl-build-appserver" description="Builds the PECL appserver as shared extension.">
+        <untar src="${lib.dir}/ext-appserver-${runtime.ext-appserver.version}.tgz" dest="${target.dir}" compression="gzip"/>
+        <exec dir="${target.dir}/appserver-${runtime.ext-appserver.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
+        <exec dir="${target.dir}/appserver-${runtime.ext-appserver.version}" executable="sh">
+            <arg value="configure"/>
+            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
+        </exec>
+        <exec dir="${target.dir}/appserver-${runtime.ext-appserver.version}" executable="make"/>
+        <exec dir="${target.dir}/appserver-${runtime.ext-appserver.version}" executable="make">
+            <arg value="install"/>
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Copy build files to target directory                                 -->
+    <!-- ==================================================================== -->
+    <target name="move-build-to-target" description="Copies build files to target directory.">
+        <mkdir dir="${target.dir}/re/opt" />
+        <exec dir="${target.dir}" executable="mv">
+            <arg value="${runtime.compile.prefix}"/>
+            <arg value="${target.dir}/re/opt"/>
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Prepares the build property package.name                             -->
+    <!-- ==================================================================== -->
+    <target name="prepare-package-name" description="Prepares the build property package.name">
+        <!-- inline JS to extract the tag from the GIT_BRANCH environment variable -->
+        <script language="javascript"><![CDATA[
+            gitBranch = project.getProperty("env.GIT_BRANCH");
+            gitTag = gitBranch.substring(gitBranch.lastIndexOf("/") + 1);
+            project.setProperty("GIT_TAG", gitTag);
+        ]]></script>
+        <!-- prepare the property package.name -->
+        <property name="package.name" 
+            value="appserver-runtime-${GIT_TAG}.${build.number}.${os.qualified.name}.${os.architecture}.${os.package-extension}"/>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Creates the .tgz package file                                        -->
+    <!-- ==================================================================== -->
+    <target name="create-package" depends="prepare-package-name" description="Creates the .tgz package file">
+        <!-- move the buildfiles to the target -->
+        <antcall target="move-build-to-target" />
+        <!-- create the .tgz package file -->
+        <exec dir="${target.dir}/re/opt" executable="tar">
+            <arg line="-pcvzf ${package.specific-dir}${package.name} appserver"/>
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Runs the PHPUnit integration tests                                   -->
+    <!-- ==================================================================== -->
+    <target name="run-integration-tests" description="Runs the PHPUnit integration tests.">
+        <!-- install the build utilities (PHPUnit etc.) -->
+        <exec dir="${basedir}" executable="${runtime.compile.prefix}/bin/php">
+            <arg line="${runtime.compile.prefix}/bin/composer.phar install"/>
+        </exec>
+        <!-- execute the integration tests for the runtime -->
+        <exec executable="${runtime.compile.prefix}/bin/php" dir="${basedir}" failonerror="true">
+            <arg line="${basedir}/vendor/bin/phpunit --bootstrap bootstrap.php --configuration phpunit.xml" />
+        </exec>
+        <!-- exectue PHP unit tests here -->
+    </target>
+
+</project>

@@ -1,7 +1,6 @@
 /target
 /cookbooks
 /tmp
-/lib
 /instance-src
 /builds
 /.vagrant

@@ -1,4 +1,14 @@
-# Version 1.0.1
+# Version 1.0.0-alpha1
+
+## Bugfixes
+
+* None
+
+## Featurs
+
+* Switch to build process on new CI server
+
+# Version 1.0.0-alpha
 
 ## Bugfixes
 
