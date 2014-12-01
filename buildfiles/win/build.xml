@@ -273,7 +273,7 @@
         <!-- download and install composer -->
         <get src="${composer.download.url}" dest="${target.dir}/installer"/>
         <exec dir="${target.dir}" executable="${target.dir}/appserver/php/php">
-            <arg line="installer -- --install-dir ${target.dir}/appserver/bin"/>
+            <arg line="installer -- --install-dir ${target.dir}/appserver/php"/>
         </exec>
     </target>
 
@@ -283,7 +283,7 @@
     <target name="run-integration-tests" description="Runs the PHPUnit integration tests.">
         <!-- install the build utilities (PHPUnit etc.) -->
         <exec dir="${basedir}" executable="${target.dir}/appserver/php/php">
-            <arg line="${target.dir}/appserver/bin/composer.phar install"/>
+            <arg line="${target.dir}/appserver/php/composer.phar install"/>
         </exec> 
         <!-- execute the integration tests for the runtime -->
         <exec executable="${target.dir}/appserver/php/php" dir="${basedir}" failonerror="true">
