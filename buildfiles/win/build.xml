@@ -287,6 +287,7 @@
         </exec> 
         <!-- execute the integration tests for the runtime -->
         <exec executable="${basedir}/vendor/bin/phpunit.bat" dir="${basedir}" failonerror="true">
+            <env key="php" value="${target.dir}/appserver/php/php"/>
             <arg line="--bootstrap bootstrap.php --configuration phpunit.xml" />
         </exec>
         <!-- exectue PHP unit tests here -->
