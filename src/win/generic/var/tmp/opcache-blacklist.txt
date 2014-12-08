@@ -1,0 +1,8 @@
+; Blacklists all PHP files in the webapps/demo directory and all subdirectories
+;"C:\Program Files\appserver/webapps**/*.php"
+
+; Blacklists all flow eel expression codes
+;"C:\Program Files\appserver\webapps\**\Eel_Expression_Code\*.php"
+
+; Override core functions removed
+"C:\Program Files\appserver\var\scripts\core_functions.php"
