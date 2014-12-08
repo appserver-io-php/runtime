@@ -286,8 +286,8 @@
             <arg line="${target.dir}/appserver/php/composer.phar install"/>
         </exec> 
         <!-- execute the integration tests for the runtime -->
-        <exec executable="${target.dir}/appserver/php/php" dir="${basedir}" failonerror="true">
-            <arg line="${basedir}/vendor/bin/phpunit --bootstrap bootstrap.php --configuration phpunit.xml" />
+        <exec executable="${basedir}/vendor/bin/phpunit.bat" dir="${basedir}" failonerror="true">
+            <arg line="--bootstrap bootstrap.php --configuration phpunit.xml" />
         </exec>
         <!-- exectue PHP unit tests here -->
     </target>
