@@ -67,7 +67,7 @@
     <!-- ==================================================================== -->
     <!-- Unzip the php build dependencies into the development dir            -->
     <!-- ==================================================================== -->
-    <target name="prepare-php-build-deps" depends="get-php-build-deps,check-7zip-present" description="Unzip the php build dependencies into the development dir.">
+    <target name="prepare-php-build-deps" depends="get-php-build-deps, check-7zip-present" description="Unzip the php build dependencies into the development dir.">
         <!-- Unzip the php build dependencies into the sdk environment -->
         <exec dir="${build-workspace.dir}" executable="${7zip-cmd.dir}/7z">
             <arg line="x deps-${runtime.php.major-version}-vc${compiler-version}-${os.architecture}.7z -o${php-buildtree.dir}"/>
@@ -83,6 +83,20 @@
         <!-- move the src files into the folder they belong -->
         <copy todir="${php-buildtree.dir}/php-${runtime.php.version}/ext/appserver" preservelastmodified="true" overwrite="true">
             <fileset dir="${php-sdk.dir}/appserver-${runtime.ext-appserver.version}">
+                <include name="**/*" />
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- =============================================================================== -->
+    <!-- Prepare the pthreads extension source by including it in the build environment -->
+    <!-- =============================================================================== -->
+    <target name="prepare-ext-pthreads-src" description="Prepare the pthreads extension source by including it in the build environment.">
+        <!-- untar the pthreads extension source into the sdk environment -->
+        <untar src="${lib.dir}/pthreads-${runtime.pthreads.version}.tgz" dest="${php-sdk.dir}" compression="gzip"/>
+        <!-- move the src files into the folder they belong -->
+        <copy todir="${php-buildtree.dir}/php-${runtime.php.version}/ext/pthreads" preservelastmodified="true" overwrite="true">
+            <fileset dir="${php-sdk.dir}/pthreads-${runtime.pthreads.version}">
                 <include name="**/*" />
             </fileset>
         </copy>
@@ -176,8 +190,9 @@
     <!-- Will create binaries which cannot be downloaded as .dll.             -->
     <!-- ==================================================================== -->
     <target name="build-binaries" depends="prepare-php-src, prepare-php-build-deps, prepare-php-sdk, expand-scripts" description="Will create binaries which cannot be downloaded as .dll.">
-        <!-- Prepare the appserve src as we need it -->
+        <!-- Prepare the binary sources as we need them -->
         <antcall target="prepare-ext-appserver-src"/>
+        <antcall target="prepare-ext-pthreads-src"/>
         <!-- Do the thing -->
         <exec dir="${target.dir}/scripts" executable="cmd" failonerror="true">
             <arg value="/C"/>
