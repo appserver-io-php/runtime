@@ -16,3 +16,5 @@ composer.phar
 /src/var/www/keep-alive-ssl-cert.pem
 url-pattern.txt
 build.properties
+.CHANGELOG.md.html
+.README.md.html

@@ -1,13 +1,3 @@
-# Version 1.0.0-alpha1
-
-## Bugfixes
-
-* None
-
-## Featurs
-
-* Switch to build process on new CI server
-
 # Version 1.0.0-alpha
 
 ## Bugfixes
@@ -16,6 +6,9 @@
 
 ## Features
 
+* Move var/tmp/opcache-blacklist.txt to from build
+* Switch to build process on new CI server
+* Switch Windows binaries php directory instead of bin
 * Apps included in a default environment will now be downloaded in their latest, or a specified version
 
 # Version 1.0.0
