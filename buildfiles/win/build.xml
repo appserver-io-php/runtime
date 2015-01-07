@@ -39,7 +39,7 @@
     <!-- ==================================================================== -->
     <!-- Check if pthreads extension build dependencies have been downloaded  -->
     <!-- ==================================================================== -->
-    <target name="check-ext-pthreads-build-deps-presentt" description="Check if pthreads extension build dependencies have been downloaded.">
+    <target name="check-ext-pthreads-build-deps-present" description="Check if pthreads extension build dependencies have been downloaded.">
         <available file="${build-workspace.dir}/pthreads-${w32.pthreads.version}-vc${compiler-version}-${os.architecture}.zip" property="ext-pthreads-build-deps.present"/>
     </target>
 
