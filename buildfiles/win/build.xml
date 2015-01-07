@@ -37,6 +37,13 @@
     </target>
 
     <!-- ==================================================================== -->
+    <!-- Check if pthreads extension build dependencies have been downloaded  -->
+    <!-- ==================================================================== -->
+    <target name="check-ext-pthreads-build-deps-present" description="Check if pthreads extension build dependencies have been downloaded.">
+        <available file="${build-workspace.dir}/pthreads-${w32.pthreads.version}-vc${compiler-version}-${os.architecture}.zip" property="ext-pthreads-build-deps.present"/>
+    </target>
+
+    <!-- ==================================================================== -->
     <!-- Check if Windows PHP build dependencies have been downloaded yet     -->
     <!-- ==================================================================== -->
     <target name="check-php-build-deps-present" description="Check if Windows PHP build dependencies have been downloaded yet.">
@@ -48,6 +55,13 @@
     <!-- ==================================================================== -->
     <target name="get-php-sdk" depends="check-php-sdk-present" unless="php-sdk.present" description="Download the PHP SDK from the official site.">
         <get src="${php-sdk.download.url}" dest="${build-workspace.dir}/php-sdk-binary-tools-${php-sdk.timestamp}.zip"/>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Download the dependencies for building the pthreads extension        -->
+    <!-- ==================================================================== -->
+    <target name="get-ext-pthreads-build-deps" depends="check-ext-pthreads-build-deps-present" unless="ext-pthreads-build-deps.present" description="Download the dependencies for building the pthreads extension.">
+        <get src="${ext-pthreads-build-deps.download.url}" dest="${build-workspace.dir}/pthreads-${w32.pthreads.version}-vc${compiler-version}-${os.architecture}.zip"/>
     </target>
 
     <!-- ==================================================================== -->
@@ -67,7 +81,7 @@
     <!-- ==================================================================== -->
     <!-- Unzip the php build dependencies into the development dir            -->
     <!-- ==================================================================== -->
-    <target name="prepare-php-build-deps" depends="get-php-build-deps,check-7zip-present" description="Unzip the php build dependencies into the development dir.">
+    <target name="prepare-php-build-deps" depends="get-php-build-deps, check-7zip-present" description="Unzip the php build dependencies into the development dir.">
         <!-- Unzip the php build dependencies into the sdk environment -->
         <exec dir="${build-workspace.dir}" executable="${7zip-cmd.dir}/7z">
             <arg line="x deps-${runtime.php.major-version}-vc${compiler-version}-${os.architecture}.7z -o${php-buildtree.dir}"/>
@@ -83,6 +97,28 @@
         <!-- move the src files into the folder they belong -->
         <copy todir="${php-buildtree.dir}/php-${runtime.php.version}/ext/appserver" preservelastmodified="true" overwrite="true">
             <fileset dir="${php-sdk.dir}/appserver-${runtime.ext-appserver.version}">
+                <include name="**/*" />
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- =============================================================================== -->
+    <!-- Unzip the pthreads build dependencies into the development dir                  -->
+    <!-- =============================================================================== -->
+    <target name="prepare-ext-pthreads-build-deps" depends="get-ext-pthreads-build-deps" description="Unzip the pthreads build dependencies into the development dir.">
+        <!-- unzip the pthreads extension source into the sdk environment -->
+        <unzip src="${build-workspace.dir}/pthreads-${w32.pthreads.version}-vc${compiler-version}-${os.architecture}.zip" dest="${php-build-deps.dir}"/>
+    </target>
+
+    <!-- =============================================================================== -->
+    <!-- Prepare the pthreads extension source by including it in the build environment -->
+    <!-- =============================================================================== -->
+    <target name="prepare-ext-pthreads-src" depends="prepare-ext-pthreads-build-deps" description="Prepare the pthreads extension source by including it in the build environment.">
+        <!-- untar the pthreads extension source into the sdk environment -->
+        <untar src="${lib.dir}/pthreads-${runtime.pthreads.version}.tgz" dest="${php-sdk.dir}" compression="gzip"/>
+        <!-- move the src files into the folder they belong -->
+        <copy todir="${php-buildtree.dir}/php-${runtime.php.version}/ext/pthreads" preservelastmodified="true" overwrite="true">
+            <fileset dir="${php-sdk.dir}/pthreads-${runtime.pthreads.version}">
                 <include name="**/*" />
             </fileset>
         </copy>
@@ -116,6 +152,16 @@
         <available file="${target.dir}/php_appserver-${runtime.ext-appserver.version}.dll" property="ext-appserver.present"/>
         <!-- Fail if property was not set -->
         <fail unless="ext-appserver.present"/>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Checks if the pthreads extension got built as it should             -->
+    <!-- ==================================================================== -->
+    <target name="check-ext-pthreads-built" description="Checks if the pthreads extension got built as it should.">
+        <!-- Set property if the dll exists -->
+        <available file="${target.dir}/php_pthreads-${runtime.pthreads.version}.dll" property="ext-pthreads.present"/>
+        <!-- Fail if property was not set -->
+        <fail unless="ext-pthreads.present"/>
     </target>
 
     <!-- ==================================================================== -->
@@ -176,8 +222,9 @@
     <!-- Will create binaries which cannot be downloaded as .dll.             -->
     <!-- ==================================================================== -->
     <target name="build-binaries" depends="prepare-php-src, prepare-php-build-deps, prepare-php-sdk, expand-scripts" description="Will create binaries which cannot be downloaded as .dll.">
-        <!-- Prepare the appserve src as we need it -->
+        <!-- Prepare the binary sources as we need them -->
         <antcall target="prepare-ext-appserver-src"/>
+        <antcall target="prepare-ext-pthreads-src"/>
         <!-- Do the thing -->
         <exec dir="${target.dir}/scripts" executable="cmd" failonerror="true">
             <arg value="/C"/>
@@ -191,8 +238,10 @@
         </copy>
         <!-- For some special extensions we have to attach version numbers -->
         <move file="${target.dir}/php_appserver.dll" tofile="${target.dir}/php_appserver-${runtime.ext-appserver.version}.dll"/>
+        <move file="${target.dir}/php_pthreads.dll" tofile="${target.dir}/php_pthreads-${runtime.pthreads.version}.dll"/>
         <!-- Fail if certain binaries did not get built -->
         <antcall target="check-ext-appserver-built"/>
+        <antcall target="check-ext-pthreads-built"/>
     </target>
 
     <!-- ==================================================================== -->
@@ -209,18 +258,15 @@
     	<!-- extract the PHP/PECL binaries into the target folder -->
         <unzip src="${lib.dir}/php-${runtime.php.version}-Win32-VC${compiler-version}-${os.architecture}.zip" dest="${target.dir}/appserver/php"/>
         <unzip src="${lib.dir}/php_apcu-${runtime.apcu.version}-5.5-ts-vc${compiler-version}-${os.architecture}.zip" dest="${target.dir}/apcu"/>
-        <!-- unzip src="${lib.dir}/php_pthreads-${runtime.pthreads.version}-5.5-ts-vc${compiler-version}-${os.architecture}.zip" dest="${target.dir}/pthreads"/ -->
         <unzip src="${lib.dir}/php_event-${runtime.event.version}-5.5-ts-vc${compiler-version}-${os.architecture}.zip" dest="${target.dir}/event"/>
         
     	<!-- copy the DLL's to the PHP ext directory -->
         <copy file="${target.dir}/apcu/php_apcu.dll" todir="${target.dir}/appserver/php/ext"/>
-        <!-- copy file="${target.dir}/pthreads/php_pthreads.dll" todir="${target.dir}/appserver/php/ext"/ -->
-        <!-- copy file="${target.dir}/pthreads/pthreadVC2.dll" todir="${target.dir}/appserver/php"/ -->
         <copy file="${target.dir}/event/php_event.dll" todir="${target.dir}/appserver/php/ext"/>
     	
         <!-- copy the appserver DLL to the PHP ext directory -->
         <copy file="${target.dir}/php_appserver-${runtime.ext-appserver.version}.dll" tofile="${target.dir}/appserver/php/ext/php_appserver.dll"/>
-        <copy file="${custom-lib.dir}/php_pthreads-${runtime.pthreads.version}.dll" tofile="${target.dir}/appserver/php/ext/php_pthreads.dll"/>
+        <copy file="${target.dir}/php_pthreads-${runtime.pthreads.version}.dll" tofile="${target.dir}/appserver/php/ext/php_pthreads.dll"/>
         <copy file="${custom-lib.dir}/pthreadVC2.dll" tofile="${target.dir}/appserver/php/pthreadVC2.dll"/>
 
         <!-- copy runtime files from src directory -->
