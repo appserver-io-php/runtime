@@ -103,10 +103,10 @@
     </target>
 
     <!-- =============================================================================== -->
-    <!-- Prepare the pthreads extension source by including it in the build environment -->
+    <!-- Unzip the pthreads build dependencies into the development dir                  -->
     <!-- =============================================================================== -->
-    <target name="prepare-ext-pthreads-build-deps" depends="get-ext-pthreads-build-deps" description="Prepare the pthreads extension source by including it in the build environment.">
-        <!-- untar the pthreads extension source into the sdk environment -->
+    <target name="prepare-ext-pthreads-build-deps" depends="get-ext-pthreads-build-deps" description="Unzip the pthreads build dependencies into the development dir.">
+        <!-- unzip the pthreads extension source into the sdk environment -->
         <unzip src="${build-workspace.dir}/pthreads-${w32.pthreads.version}-vc${compiler-version}-${os.architecture}.zip" dest="${php-build-deps.dir}"/>
     </target>
 
@@ -152,6 +152,16 @@
         <available file="${target.dir}/php_appserver-${runtime.ext-appserver.version}.dll" property="ext-appserver.present"/>
         <!-- Fail if property was not set -->
         <fail unless="ext-appserver.present"/>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Checks if the pthreads extension got built as it should             -->
+    <!-- ==================================================================== -->
+    <target name="check-ext-pthreads-built" description="Checks if the pthreads extension got built as it should.">
+        <!-- Set property if the dll exists -->
+        <available file="${target.dir}/php_pthreads-${runtime.pthreads.version}.dll" property="ext-pthreads.present"/>
+        <!-- Fail if property was not set -->
+        <fail unless="ext-pthreads.present"/>
     </target>
 
     <!-- ==================================================================== -->
@@ -228,8 +238,10 @@
         </copy>
         <!-- For some special extensions we have to attach version numbers -->
         <move file="${target.dir}/php_appserver.dll" tofile="${target.dir}/php_appserver-${runtime.ext-appserver.version}.dll"/>
+        <move file="${target.dir}/php_pthreads.dll" tofile="${target.dir}/php_pthreads-${runtime.pthreads.version}.dll"/>
         <!-- Fail if certain binaries did not get built -->
         <antcall target="check-ext-appserver-built"/>
+        <antcall target="check-ext-pthreads-built"/>
     </target>
 
     <!-- ==================================================================== -->
