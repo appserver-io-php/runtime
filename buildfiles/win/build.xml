@@ -107,7 +107,7 @@
     <!-- =============================================================================== -->
     <target name="prepare-ext-pthreads-build-deps" depends="get-ext-pthreads-build-deps" description="Prepare the pthreads extension source by including it in the build environment.">
         <!-- untar the pthreads extension source into the sdk environment -->
-        <unzip src="${build-workspace.dir}/pthreads-${w32.pthreads.version}-vc${compiler-version}-${os.architecture}.zip" dest="${php-buildtree.dir}"/>
+        <unzip src="${build-workspace.dir}/pthreads-${w32.pthreads.version}-vc${compiler-version}-${os.architecture}.zip" dest="${php-build-deps.dir}"/>
     </target>
 
     <!-- =============================================================================== -->
