@@ -6,7 +6,7 @@
 
 ## Features
 
-* Add missing php.ini files for Windows/Linux builds
+* Add missing FPM php.ini files for Windows/Linux builds
 
 # Version 1.0.0-beta2
 
