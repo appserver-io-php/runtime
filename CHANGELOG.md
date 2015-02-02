@@ -1,3 +1,14 @@
+# Version 1.0.0-rc1
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add release.version property to build.default.properies
+* Remove unnecessary opcache-blacklist.txt from var/tmp directory and referencing .ini files
+
 # Version 1.0.0-beta3
 
 ## Bugfixes
