@@ -1,8 +1,0 @@
-; Blacklists all PHP files in the webapps/demo directory and all subdirectories
-;/opt/appserver/webapps**/*.php
-
-; Blacklists all flow eel expression codes
-/opt/appserver/webapps/**/Eel_Expression_Code/*.php
-
-; Override core functions removed
-/opt/appserver/var/scripts/core_functions.php
