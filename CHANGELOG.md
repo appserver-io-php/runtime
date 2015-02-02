@@ -1,3 +1,26 @@
+# Version 1.0.0-beta3
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add missing php.ini files for Windows/Linux builds
+
+# Version 1.0.0-beta2
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Switch to PHP 5.5.19
+* Switch pthreads-1.0.5
+* Add preparation of pthreads sources for Windows build
+* Fixed #235 - Add separate php.ini for PHP-FPM
+
 # Version 1.0.0-alpha
 
 ## Bugfixes
