@@ -579,18 +579,97 @@
     </target>
 
     <!-- ==================================================================== -->
+    <!-- Will create a Mac OS X specific package name                         -->
+    <!-- ==================================================================== -->
+    <scriptdef name="create-package-name" language="javascript">
+        <attribute name="build"/>
+        <attribute name="prefix"/>
+        <attribute name="separator"/>
+        <attribute name="extension"/>
+        <attribute name="architecture"/>
+        <attribute name="suffix-separator"/>
+        <attribute name="version-separator"/>
+        <attribute name="architecture-separator"/>
+        <![CDATA[
+
+        // declare the package name
+        var packageName = '';
+
+        // first we load the branch to extract the tag we're working on
+        gitBranch = project.getProperty("env.GIT_BRANCH");
+        gitTag = gitBranch.substring(gitBranch.lastIndexOf("/") + 1);
+
+        // declare version and version suffix
+        var resultVersion = gitTag;
+        var resultSuffix = '';
+
+        // load the attributes
+        var build = attributes.get("build");
+        var prefix = attributes.get("prefix");
+        var extension = attributes.get("extension");
+        var architecture = attributes.get("architecture");
+        var suffixSeparator = attributes.get("suffix-separator");
+        var versionSeparator = attributes.get("version-separator");
+        var architectureSeparator = attributes.get("architecture-separator");
+        
+        // the package name ALWAYS starts with the prefix
+        packageName = prefix;
+
+        // try to extract the version suffix, e. g. beta1
+        if (gitTag.indexOf("-") !== -1) {
+
+           // try to load the suffix
+           resultVersion = gitTag.substring(0, gitTag.indexOf("-"));
+           resultSuffix = gitTag.replace(resultVersion + "-", "");
+        }
+
+        // append the extracted version
+        if (resultVersion != "") {
+            packageName += versionSeparator + resultVersion;
+        }
+
+        // append the build number
+        if (build != "") {
+            packageName += "-" + build;
+        }
+
+        // append the OS specific suffix separator
+        if (resultSuffix != "") {
+            packageName += suffixSeparator + resultSuffix;
+        }
+
+        // append the architecture
+        if (architecture != "") {
+            packageName += architectureSeparator + architecture;
+        }
+
+        // append the package extension
+        if (extension != "") {
+            packageName += "." + extension;
+        }
+
+        // store the result in PACKAGE_NAME property
+        project.setProperty("PACKAGE_NAME", packageName);
+    ]]>
+    </scriptdef>
+
+    <!-- ==================================================================== -->
     <!-- Prepares the build property package.name                             -->
     <!-- ==================================================================== -->
     <target name="prepare-package-name" description="Prepares the build property package.name">
-        <!-- inline JS to extract the tag from the GIT_BRANCH environment variable -->
-        <script language="javascript"><![CDATA[
-            gitBranch = project.getProperty("env.GIT_BRANCH");
-            gitTag = gitBranch.substring(gitBranch.lastIndexOf("/") + 1);
-            project.setProperty("GIT_TAG", gitTag);
-        ]]></script>
+        <!-- create the distribution specific package name -->
+        <create-package-name 
+            prefix="appserver-runtime"
+            build="${build.number}"
+            suffix-separator="+"
+            version-separator="_"
+            architecture="${os.architecture}"
+            architecture-separator="_"
+            extension="${os.package-extension}"/>
+        <!-- log the created package name -->
+        <echo>Package-Name: ${PACKAGE_NAME}</echo>
         <!-- prepare the property package.name -->
-        <property name="package.name" 
-            value="appserver-runtime-${GIT_TAG}.${build.number}.${os.qualified.name}.${os.architecture}.${os.package-extension}"/>
+        <property name="package.name" value="${PACKAGE_NAME}"/>
     </target>
 
     <!-- ==================================================================== -->
