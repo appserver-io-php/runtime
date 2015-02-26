@@ -2,7 +2,7 @@
 
 ## Bugfixes
 
-* None
+* Fixed [#612](https://github.com/appserver-io/appserver/issues/612) - php_opcache.dll failed to load if installed in non default path (Windows)
 
 ## Features
 
