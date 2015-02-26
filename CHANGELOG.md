@@ -1,3 +1,13 @@
+# Version 1.0.2
+
+## Bugfixes
+
+* Fixed [#618](https://github.com/appserver-io/appserver/issues/618) - Segfault on Mac OS X when restarting after a new installation
+
+## Features
+
+* None
+
 # Version 1.0.1
 
 ## Bugfixes
