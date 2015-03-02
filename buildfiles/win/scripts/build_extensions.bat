@@ -23,4 +23,4 @@ nmake clean
 buildconf --force
 call "configure" ${binaries.config-string}
 nmake
-nmake" test
+nmake test
