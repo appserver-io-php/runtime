@@ -91,12 +91,10 @@
     </target>
     
     <!-- ==================================================================== -->
-    <!-- Builds the runtime, runs the integration tests and copies the .tgz   -->
-	<!-- to the hub.                                                          -->
-    <!-- ==================================================================== -->
-    <target name="build" description="Builds the runtime, runs the integration tests and copies the .tgz to the hub.">
+    <!-- Builds the runtime and copies the .tgz to the hub.					  -->
+	<!-- ==================================================================== -->
+    <target name="build" description="Builds the runtime and copies the .tgz to the hub.">
         <antcall target="build-runtime" />
-        <!-- <antcall target="run-integration-tests" /> -->
     </target>
 
 </project>
