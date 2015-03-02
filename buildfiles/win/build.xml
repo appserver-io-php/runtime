@@ -272,8 +272,6 @@
         <!-- copy runtime files from src directory -->
         <antcall target="copy-buildfiles" />
     	
-        <!-- installs the Composer dependency manager -->
-        <antcall target="install-composer" />
     </target>
 
     <!-- ==================================================================== -->
