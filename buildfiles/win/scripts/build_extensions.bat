@@ -19,8 +19,8 @@ call "phpsdk_buildtree.bat" phpdev
 
 :: Go to the PHP src dir and do the actual building
 cd "${php-buildtree.dir}\php-${runtime.php.version}"
-nmake clean
-buildconf --force
+call "nmake" clean
+call "buildconf" --force
 call "configure" ${binaries.config-string}
-nmake
-nmake test
+call "nmake"
+call "nmake" test
