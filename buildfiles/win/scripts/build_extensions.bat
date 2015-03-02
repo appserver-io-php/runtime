@@ -22,4 +22,4 @@ cd "${php-buildtree.dir}\php-${runtime.php.version}"
 call "buildconf"
 call "configure" ${binaries.config-string}
 call "nmake"
-
+call "nmake test"
