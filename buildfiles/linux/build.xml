@@ -176,6 +176,9 @@
         <exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
             <arg value="-j8"/>
         </exec>
+    	<exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
+            <arg value="test"/>
+        </exec>
         <exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -192,9 +195,6 @@
         
         <!-- copy runtime files from src directory -->
         <antcall target="copy-buildfiles"/>
-
-    	<!-- installs the Composer dependency manager -->
-    	<antcall target="install-composer"/>
     	
     </target>
 

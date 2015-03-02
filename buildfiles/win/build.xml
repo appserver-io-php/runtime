@@ -75,6 +75,7 @@
     <!-- Untar the PHP source into the development dir                        -->
     <!-- ==================================================================== -->
     <target name="prepare-php-src" description="Untar the PHP source into the development dir.">
+    	<!-- <delete dir="${php-buildtree.dir}\php-${runtime.php.version}" includeemptydirs="true" quiet="false" verbose="false" failonerror="true"/> -->
         <untar src="${lib.dir}/php-${runtime.php.version}.tar.gz" dest="${php-buildtree.dir}" compression="gzip"/>
     </target>
 
@@ -272,8 +273,6 @@
         <!-- copy runtime files from src directory -->
         <antcall target="copy-buildfiles" />
     	
-        <!-- installs the Composer dependency manager -->
-        <antcall target="install-composer" />
     </target>
 
     <!-- ==================================================================== -->
