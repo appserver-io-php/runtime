@@ -1,3 +1,23 @@
+# Version 1.0.4
+
+## Bugfixes
+
+* Fixed a naming bug by renaming Raspbian packages which where misspelled
+
+## Features
+
+* None
+
+# Version 1.0.3
+
+## Bugfixes
+
+* Added "make test" testing of built libraries
+
+## Features
+
+* None
+
 # Version 1.0.2
 
 ## Bugfixes
