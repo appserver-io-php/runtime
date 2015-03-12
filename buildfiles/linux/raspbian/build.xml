@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE project>
-<project name="appserver-io-php/runtime-linux-raspian" basedir=".">
+<project name="appserver-io-php/runtime-linux-raspbian" basedir=".">
 
     <!-- ==================================================================== -->
     <!-- Load the environment variables into our properties                   -->
@@ -14,9 +14,9 @@
     <property file="${basedir}/buildfiles/${os.family}/${os.distribution}/build.default.properties"/>
 
     <!-- ==================================================================== -->
-    <!-- Install the necessary libraries to build the debian runtime          -->
+    <!-- Install the necessary libraries to build the raspbian runtime        -->
     <!-- ==================================================================== -->
-    <target name="prepare-distribution-specific-build-system" description="Install the necessary libraries to build the debian runtime.">
+    <target name="prepare-distribution-specific-build-system" description="Install the necessary libraries to build the raspbian runtime.">
         <exec dir="${target.dir}" executable="apt-get" inputstring="Y">
             <arg value="install"/>
             <arg value="ant"/>
