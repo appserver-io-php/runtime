@@ -358,7 +358,7 @@
         <create-package-name 
             prefix="appserver-runtime"
             build="${build.number}"
-            suffix-separator="+"
+            suffix-separator="."
             version-separator="_"
             architecture="${os.architecture}"
             architecture-separator="_"
