@@ -125,9 +125,7 @@
     <!-- ==================================================================== -->
     <target name="install-composer" description="Install composer.">
         <!-- download the composer installer -->
-        <exec dir="${target.dir}" executable="curl">
-            <arg line="-sS http://getcomposer.org/installer -o installer"/>
-        </exec>
+        <get src="${composer.download.url}" dest="${target.dir}/installer"/>
         <!-- install composer itself -->
         <exec dir="${target.dir}" executable="${runtime.compile.prefix}/bin/php">
             <arg line="installer -- --install-dir ${runtime.compile.prefix}/bin"/>
@@ -195,6 +193,9 @@
         
         <!-- copy runtime files from src directory -->
         <antcall target="copy-buildfiles"/>
+
+        <!-- install composer into the runtime -->
+        <antcall target="install-composer" />
     	
     </target>
 
