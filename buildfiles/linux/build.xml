@@ -20,16 +20,6 @@
     <property file="${basedir}/buildfiles/${os.family}/build.default.properties" />
 
     <!-- ==================================================================== -->
-    <!-- Copies any built package to the snapshot hosting server.             -->
-    <!-- ==================================================================== -->
-    <target name="copy-to-hub" depends="create-package" description="Copies any built package to the snapshot hosting server.">
-    	<echo message="Now try to upload ${package.specific-dir}${package.name} to snapshot server"/>
-    	<exec executable="scp" failonerror="true">
-            <arg line="-o StrictHostKeyChecking=no -i ${user.home}/.ssh/id_rsa ${package.specific-dir}${package.name} ${hub.scp-user}@${hub.address}:${hub.snapshot-path}"/>
-        </exec>
-    </target>
-
-    <!-- ==================================================================== -->
     <!-- Prepares the PHP sources for the runtime                             -->
     <!-- ==================================================================== -->
     <target name="prepare-source" description="Prepares the PHP sources for the runtime.">
@@ -534,7 +524,7 @@
         <antcall target="move-build-to-target" />
         <!-- create the .tgz package file -->
         <exec dir="${target.dir}/re/opt" executable="tar">
-            <arg line="-pcvzf ${package.specific-dir}${package.name} appserver"/>
+            <arg line="-pcvzf ${build.dir}${package.name} appserver"/>
         </exec>
     </target>
 

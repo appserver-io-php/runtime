@@ -6,7 +6,7 @@
 
 ## Features
 
-* None
+* Unified build artifact placement
 
 # Version 1.0.4
 
