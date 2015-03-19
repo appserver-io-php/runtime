@@ -670,8 +670,8 @@
         <!-- move the buildfiles to the target -->
         <antcall target="move-build-to-target" />
         <!-- create the .tgz package file -->
-        <exec dir="${build.dir}/re/opt" executable="tar">
-            <arg line="-pcvzf ${package.specific-dir}${package.name} appserver"/>
+        <exec dir="${target.dir}/re/opt" executable="tar">
+            <arg line="-pcvzf ${build.dir}/${package.name} appserver"/>
         </exec>
     </target>
 

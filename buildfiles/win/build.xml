@@ -368,7 +368,7 @@
     <!-- Creates the .zip package file                                        -->
     <!-- ==================================================================== -->
     <target name="create-package" depends="prepare-package-name" description="Creates the .zip package file.">
-    	<zip destfile="${build.dir}${package.name}" compress="true">
+    	<zip destfile="${build.dir}/${package.name}" compress="true">
     		<zipfileset dir="${target.dir}" includes="appserver/**/*" />
     	</zip>
     </target>
