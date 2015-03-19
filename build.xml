@@ -69,14 +69,6 @@
     </target>
 
     <!-- ==================================================================== -->
-    <!-- Prepares the target dir                                              -->
-    <!-- ==================================================================== -->
-    <target name="prepare" depends="clean">
-        <mkdir dir="${target.dir}" />
-        <mkdir dir="${temp.dir}" />
-    </target>
-
-    <!-- ==================================================================== -->
     <!-- Prepares the build environment                                       -->
     <!-- ==================================================================== -->
     <target name="prepare-build" depends="clean-build">
@@ -89,6 +81,7 @@
     <target name="prepare" depends="clean" description="Prepares all the required directories.">
         <mkdir dir="${target.dir}" />
         <mkdir dir="${lib.dir}" />
+        <mkdir dir="${temp.dir}" />
     </target>
 	
     <!-- ==================================================================== -->
