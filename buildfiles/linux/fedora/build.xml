@@ -48,7 +48,7 @@
         </exec>
         <!-- Bugfix for missing symlink -->
         <exec dir="/usr/${runtime.compile.libdir}" executable="ln">
-            <arg value="-s"/>
+            <arg value="-sf"/>
             <arg value="libsystemd-daemon.so.0 libsystemd-daemon.so"/>
         </exec>
     </target>
