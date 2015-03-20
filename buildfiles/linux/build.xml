@@ -110,7 +110,7 @@
         </copy>
 
         <!-- make the composer file executable -->
-        <chmod perm="755" dir="${runtime.compile.prefix}/bin/composer" includes="**/*"/>
+        <chmod perm="755" file="${runtime.compile.prefix}/bin/composer" />
     </target>
 
     <!-- ==================================================================== -->
