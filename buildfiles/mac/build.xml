@@ -288,17 +288,17 @@
     <!-- ==================================================================== -->
     <target name="build-runtime" description="Compiles the appserver.io Linux runtime environment.">
 
-    	<!-- prepare the local build environment -->
-    	<antcall target="prepare" />
-    	
-    	<!-- prepare the PHP source -->
-    	<antcall target="prepare-source"/>
-    	
+        <!-- prepare the local build environment -->
+        <antcall target="prepare" />
+
+        <!-- prepare the PHP source -->
+        <antcall target="prepare-source"/>
+
         <!-- delete the application server directory -->
         <delete dir="${runtime.compile.prefix}" includeemptydirs="true" quiet="false" verbose="true" failonerror="true"/>
 
         <!-- build the necessary libraries -->
-    	<antcall target="build-libjpeg"/>
+        <antcall target="build-libjpeg"/>
         <antcall target="build-libpng"/>
         <antcall target="build-libfreetype"/>
         <antcall target="build-libmemcached"/>
@@ -309,7 +309,7 @@
         <antcall target="build-pcre"/>
         <antcall target="build-libicu"/>
 
-    	<!-- prepare the PECL extensions -->
+        <!-- prepare the PECL extensions -->
         <antcall target="prepare-pecl-extension"/>
 
         <!-- compile the PHP sources and PECL extensions static -->
@@ -322,10 +322,10 @@
             <arg line="--force"/>
         </exec>
 
-    	<!-- log PHP compile configuration -->
-    	<echo message="Now compiling PHP using configure params: ${runtime.compile.configuration}"/>
+        <!-- log PHP compile configuration -->
+        <echo message="Now compiling PHP using configure params: ${runtime.compile.configuration}"/>
 
-    	<!-- configure, compile and install PHP binary -->
+        <!-- configure, compile and install PHP binary -->
         <exec dir="${target.dir}/php-${runtime.php.version}" executable="sh">
             <env key="CC" value="${runtime.cc}"/>
             <env key="EXTRA_LIBS" value="-llber"/>
@@ -334,9 +334,11 @@
         <exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
             <arg value="-j8"/>
         </exec>
-    	<exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
-    		<arg value="test"/>
-        </exec>
+
+        <!-- run the PHP tests -->
+        <antcall target="run-php-tests"/>
+
+        <!-- install the binaries -->
         <exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -353,7 +355,16 @@
         
         <!-- copy runtime files from src directory -->
         <antcall target="copy-buildfiles"/>
-    	
+
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Runs the PHP tests                                                   -->
+    <!-- ==================================================================== -->
+    <target name="run-php-tests" if="${runtime.php.run-tests}" description="Runs the PHP tests.">
+        <exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
+            <arg value="test"/>
+        </exec>
     </target>
 
     <!-- ==================================================================== -->
