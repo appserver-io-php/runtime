@@ -23,4 +23,4 @@ call "nmake" clean
 call "buildconf" --force
 call "configure" ${binaries.config-string}
 call "nmake"
-call "nmake" test
+:: call "nmake" test
