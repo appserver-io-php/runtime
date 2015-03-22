@@ -1,3 +1,23 @@
+# Version 1.1.0-alpha2
+
+## Bugfixes
+
+* Remove unnecessary PHP 5.5 libs and binaries
+
+## Features
+
+* None
+
+# Version 1.1.0-alpha1
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Switched to PHP 5.6
+
 # Version 1.0.4
 
 ## Bugfixes
