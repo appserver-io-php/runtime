@@ -167,9 +167,11 @@
         <exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
             <arg value="-j8"/>
         </exec>
-    	<exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
-            <arg value="test"/>
-        </exec>
+
+        <!-- run the PHP tests -->
+        <antcall target="run-php-tests"/>
+
+        <!-- install the binaries -->
         <exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -190,6 +192,15 @@
         <!-- install composer into the runtime -->
         <antcall target="install-composer" />
     	
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Runs the PHP tests                                                   -->
+    <!-- ==================================================================== -->
+    <target name="run-php-tests" if="${runtime.php.run-tests}" description="Runs the PHP tests.">
+        <exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
+            <arg value="test"/>
+        </exec>
     </target>
 
     <!-- ==================================================================== -->
