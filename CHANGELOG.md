@@ -1,3 +1,13 @@
+# Version 1.0.5
+
+## Bugfixes
+
+* Fixed [#701](https://github.com/appserver-io/appserver/issues/701) - composer.phar is missing in Mac OS X/Linux build
+
+## Features
+
+* Unified build artifact placement
+
 # Version 1.0.4
 
 ## Bugfixes

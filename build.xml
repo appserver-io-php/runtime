@@ -24,6 +24,8 @@
     <property name="src.dir" value="${basedir}/src" />
     <property name="target.dir" value="${basedir}/target"/>
     <property name="php-test.dir" value="${basedir}/tests" />
+    <property name="build.dir" value="${basedir}/build" />
+    <property name="temp.dir" value="${basedir}/tmp" />
 
     <!-- ==================================================================== -->
     <!-- Load all property files in the right order                           -->
@@ -38,12 +40,9 @@
     <import file="buildfiles/${os.family}/build.xml"/>
 
     <!-- ==================================================================== -->
-    <!-- Create properties which need other properties coming from different  -->
-    <!-- files as we had problems defining it within properties files         -->
-    <!-- CAUTION, THIS SYNTAX IS DOUBLED IN THE rpmbuild SPECS FILE!          -->
+    <!-- Remote path to recently built resources                              -->
     <!-- ==================================================================== -->
     <property name="hub.snapshot-path" value="/var/www/builds.appserver.io/${os.qualified.path}"/>
-    <property name="package.specific-dir" value="${target.dir}/"/>
 	
     <!-- ==================================================================== -->
     <!-- Cleans the directories with the generated source files               -->
@@ -53,11 +52,36 @@
     </target>
 
     <!-- ==================================================================== -->
+    <!-- Cleans the build directories                                         -->
+    <!-- ==================================================================== -->
+    <target name="clean-build">
+        <delete dir="${build.dir}" includeemptydirs="true" quiet="false" verbose="false" failonerror="true"/>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Copies any built package to the snapshot hosting server.             -->
+    <!-- ==================================================================== -->
+    <target name="copy-to-hub" description="Copies any built package to the snapshot hosting server.">
+        <echo message="Now trying to upload ${package.name} to snapshot server"/>
+        <exec executable="scp" failonerror="true">
+            <arg line="-o StrictHostKeyChecking=no -i ${user.home}/.ssh/id_rsa ${build.dir}/${package.name} ${hub.scp-user}@${hub.address}:${hub.snapshot-path}"/>
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Prepares the build environment                                       -->
+    <!-- ==================================================================== -->
+    <target name="prepare-build" depends="clean-build">
+        <mkdir dir="${build.dir}" />
+    </target>
+
+    <!-- ==================================================================== -->
     <!-- Prepares all the required directories                                -->
     <!-- ==================================================================== -->
     <target name="prepare" depends="clean" description="Prepares all the required directories.">
         <mkdir dir="${target.dir}" />
         <mkdir dir="${lib.dir}" />
+        <mkdir dir="${temp.dir}" />
     </target>
 	
     <!-- ==================================================================== -->
@@ -93,8 +117,11 @@
     <!-- ==================================================================== -->
     <!-- Builds the runtime and copies the .tgz to the hub.					  -->
 	<!-- ==================================================================== -->
-    <target name="build" description="Builds the runtime and copies the .tgz to the hub.">
+    <target name="build" depends="prepare-build" description="Builds the runtime and copies the .tgz to the hub.">
+        <!-- do the actual building -->
         <antcall target="build-runtime" />
+        <!-- create a compressed package of the recent build -->
+        <antcall target="create-package" />
     </target>
 
 </project>
