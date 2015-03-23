@@ -3,10 +3,11 @@
 ## Bugfixes
 
 * Remove unnecessary PHP 5.5 libs and binaries
+* Fixed [#701](https://github.com/appserver-io/appserver/issues/701) - composer.phar is missing in Mac OS X/Linux build
 
 ## Features
 
-* None
+* Unified build artifact placement
 
 # Version 1.1.0-alpha1
 

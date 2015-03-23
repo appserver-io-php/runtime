@@ -1,0 +1,3 @@
+#! /bin/bash
+
+${runtime.compile.prefix}/bin/php ${runtime.compile.prefix}/bin/composer.phar $*;
