@@ -23,4 +23,6 @@ call "nmake" clean
 call "buildconf" --force
 call "configure" ${binaries.config-string}
 call "nmake"
-call "nmake" test
+
+:: Enable this if you want to call all php tests afterwards
+:: call "nmake" test
