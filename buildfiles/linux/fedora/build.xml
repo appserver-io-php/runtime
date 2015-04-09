@@ -18,6 +18,15 @@
     <!-- ==================================================================== -->
     <target name="prepare-distribution-specific-build-system" description="Install the necessary libraries to build the fedora runtime.">
         <!-- Bugfix for missing symlink -->
+        <echo message="Creating symlinks for ldap libraries" />
+        <exec dir="/usr/lib" executable="ln">
+            <arg line="-sf /usr/${runtime.compile.libdir}/ldb/modules/ldb/ldap.so"/>
+        </exec>
+        <exec dir="/usr/lib" executable="ln">
+            <arg line="-sf /usr/${runtime.compile.libdir}/ldb"/>
+        </exec>
+        <!-- Bugfix for missing symlink -->
+        <echo message="Creating symlinks for systemd libraries" />
         <exec dir="/usr/${runtime.compile.libdir}" executable="ln">
             <arg value="-sf"/>
             <arg value="libsystemd-daemon.so.0 libsystemd-daemon.so"/>
