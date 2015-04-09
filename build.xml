@@ -223,7 +223,7 @@
         <antcall target="start-vagrant-build-box" />
         <!-- invoke original build target within vagrant box -->
         <exec dir="${temp.dir}" executable="vagrant">
-            <arg line="ssh -c 'sudo ant build -buildfile ${vagrant.basedir}/build.xml -Dbuild.number=${build.number} -Dtarget-os.version=${target-os.version}'" />
+            <arg line="ssh -c 'sudo ant build -buildfile ${vagrant.basedir}/build.xml -Dbuild.number=${build.number} -Dtarget-os.version=${target-os.version} -Dos.family=${os.family} -Dos.distribution=${os.distribution}'" />
         </exec>
         <!-- destroy the box after all work is done -->
         <antcall target="destroy-vagrant-box" />
