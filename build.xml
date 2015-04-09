@@ -228,7 +228,7 @@
         <!-- destroy the box after all work is done -->
         <antcall target="destroy-vagrant-box" />
     </target>
-    
+
     <!-- ==================================================================== -->
     <!-- Builds the runtime and creates a .tgz package.                       -->
 	<!-- ==================================================================== -->
