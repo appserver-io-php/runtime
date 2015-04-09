@@ -26,6 +26,7 @@
     <property name="php-test.dir" value="${basedir}/tests" />
     <property name="build.dir" value="${basedir}/build" />
     <property name="temp.dir" value="${basedir}/tmp" />
+    <property name="reports.dir" value="${basedir}/reports" />
 
     <!-- ==================================================================== -->
     <!-- Load all property files in the right order                           -->
@@ -49,20 +50,47 @@
     <!-- ==================================================================== -->
     <target name="clean" description="Cleans build directory in preparation for new build.">
         <delete dir="${target.dir}" includeemptydirs="true" quiet="false" verbose="true" failonerror="true"/>
+        <delete dir="${temp.dir}" includeemptydirs="true" quiet="false" verbose="true" failonerror="true"/>
     </target>
 
     <!-- ==================================================================== -->
     <!-- Cleans the build directories                                         -->
     <!-- ==================================================================== -->
-    <target name="clean-build">
-        <delete dir="${build.dir}" includeemptydirs="true" quiet="false" verbose="false" failonerror="true"/>
+    <target name="clean-build"  depends="prepare-build">
+        <delete includeemptydirs="true" quiet="false" verbose="false" failonerror="true">
+            <fileset dir="${build.dir}" includes="**/*"/>
+        </delete>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Cleans the reports directories                                       -->
+    <!-- ==================================================================== -->
+    <target name="clean-reports"  depends="prepare-reports">
+        <delete includeemptydirs="true" quiet="false" verbose="false" failonerror="true">
+            <fileset dir="${reports.dir}" includes="**/*"/>
+        </delete>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Prepares the reports environment                                     -->
+    <!-- ==================================================================== -->
+    <target name="prepare-reports">
+        <mkdir dir="${reports.dir}" />
     </target>
 
     <!-- ==================================================================== -->
     <!-- Prepares the build environment                                       -->
     <!-- ==================================================================== -->
-    <target name="prepare-build" depends="clean-build">
+    <target name="prepare-build">
         <mkdir dir="${build.dir}" />
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Copies any built package to the snapshot hosting server.             -->
+    <!-- ==================================================================== -->
+    <target name="copy-to-hub" depends="prepare-package-name" description="Copies any built package to the snapshot hosting server.">
+        <echo message="Now trying to upload ${package.name} to snapshot server"/>
+        <scp file="${build.dir}/${package.name}" todir="${hub.scp-user}@${hub.address}:${hub.snapshot-path}" keyfile="${user.home}/.ssh/id_rsa" failonerror="true" />
     </target>
 
     <!-- ==================================================================== -->
@@ -73,7 +101,7 @@
         <mkdir dir="${lib.dir}" />
         <mkdir dir="${temp.dir}" />
     </target>
-	
+
     <!-- ==================================================================== -->
     <!-- Copies the sources to the temporary directory                        -->
     <!-- ==================================================================== -->
@@ -92,7 +120,7 @@
             </fileset>
         </copy>
     </target>
-    
+
     <!-- ==================================================================== -->
     <!-- Copies the sources to the deploy directory                           -->
     <!-- ==================================================================== -->
@@ -103,11 +131,108 @@
             </fileset>
         </copy>
     </target>
+
+    <!-- ==================================================================== -->
+    <!-- Will test if the targeted box is already started                     -->
+    <!-- ==================================================================== -->
+    <target name="test-vagrant-box-started">
+        <!-- issue the actual command -->
+        <exec dir="${temp.dir}" executable="vagrant" errorproperty="vagrant.box.not-started">
+            <arg line="ssh ${vagrant-box.name}" />
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Will test if a readily packaged vagrant machine is available at the  -->
+    <!-- appropriate location. Only makes sense if the box name is known      -->
+    <!-- ==================================================================== -->
+    <target name="test-packaged-box-exists" if="vagrant-box.name">
+        <available file="${http://boxes.appserver.io/linux/fedora}/${vagrant-box.name}" property="vagrant.packaged-box.exists"/>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Will initialize an already packaged vagrant box                      -->
+    <!-- ==================================================================== -->
+    <target name="initialize-packaged-box" depends="test-packaged-box-exists" if="vagrant.packaged-box.exists">
+        <!-- issue the actual start command -->
+        <exec dir="${temp.dir}" executable="vagrant" failonerror="true">
+            <arg line="up ${vagrant-box.name} --provider=${vagrant.provider}" />
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Will start a vagrant box within the tmp directory                    -->
+    <!-- ==================================================================== -->
+    <target name="start-vagrant-box" depends="test-vagrant-box-started, initialize-packaged-box" if="vagrant.box.not-started">
+        <!-- issue the actual start command -->
+        <exec dir="${temp.dir}" executable="vagrant" failonerror="true">
+            <arg line="up ${vagrant-box.name} --provider=${vagrant.provider}" />
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Will start a vagrant box specifically suited for build tasks         -->
+    <!-- ==================================================================== -->
+    <target name="start-vagrant-build-box">
+        <!-- map the vagrant name according to our prepared environment -->
+        <property name="vagrant-box.name" value="${vagrant-box.prefix}Build" />
+        <!-- prepare the building environment -->
+        <antcall target="prepare-build-environment" />
+        <!-- start our vagrant box -->
+        <antcall target="start-vagrant-box" />
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Will destroy any running vagrant box within our tmp directory        -->
+    <!-- ==================================================================== -->
+    <target name="destroy-vagrant-box">
+        <!-- issue the actual destroy command -->
+        <exec dir="${temp.dir}" executable="vagrant" failonerror="true">
+            <arg line="destroy -f" />
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Will prepare the environment to run a vagrant box in                 -->
+    <!-- ==================================================================== -->
+    <target name="prepare-build-environment" depends="prepare, clean-build, clean-reports">
+        <copy todir="${temp.dir}" failonerror="true">
+            <fileset dir="${basedir}">
+               <include name="build.*"/>
+               <include name="buildfiles/**"/>
+            </fileset>
+        </copy>
+        <!-- expand the properties within our box configuration -->
+        <copy todir="${temp.dir}" failonerror="true">
+            <fileset dir="${basedir}/buildfiles/${os.family}">
+                <include name="Vagrantfile"/>
+            </fileset>
+            <filterchain>
+                <expandproperties/>
+            </filterchain>
+        </copy>
+        <!-- prepare a tmp dir for work within the VM -->
+        <mkdir dir="${temp.dir}/tmp" />
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Creates all RPM packages and uploads them to builds file-server      -->
+    <!-- ==================================================================== -->
+    <target name="vagrant-build">
+        <!-- start our vagrant box -->
+        <antcall target="start-vagrant-build-box" />
+        <!-- invoke original build target within vagrant box -->
+        <exec dir="${temp.dir}" executable="vagrant">
+            <arg line="ssh -c 'sudo ant build -buildfile ${vagrant.basedir}/build.xml -Dbuild.number=${build.number} -Dtarget-os.version=${target-os.version}'" />
+        </exec>
+        <!-- destroy the box after all work is done -->
+        <antcall target="destroy-vagrant-box" />
+    </target>
     
     <!-- ==================================================================== -->
-    <!-- Builds the runtime and copies the .tgz to the hub.					  -->
+    <!-- Builds the runtime and creates a .tgz package.                       -->
 	<!-- ==================================================================== -->
-    <target name="build" depends="prepare-build" description="Builds the runtime and copies the .tgz to the hub.">
+    <target name="build" depends="prepare-build" description="Builds the runtime and creates a .tgz package.">
         <!-- do the actual building -->
         <antcall target="build-runtime" />
         <!-- create a compressed package of the recent build -->
