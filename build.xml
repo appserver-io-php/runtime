@@ -165,9 +165,11 @@
     <!-- ==================================================================== -->
     <target name="start-vagrant-box" depends="test-vagrant-box-started, initialize-packaged-box" if="vagrant.box.not-started">
         <!-- issue the actual start command -->
-        <exec dir="${temp.dir}" executable="vagrant" failonerror="true">
+        <exec dir="${temp.dir}" executable="vagrant" errorproperty="vagrant-box.start.failed">
             <arg line="up ${vagrant-box.name} --provider=${vagrant.provider}" />
         </exec>
+        <!-- make sure the box gets destroyed if there have been errors during startup -->
+        <antcall target="destroy-vagrant-box-on-error" />
     </target>
 
     <!-- ==================================================================== -->
@@ -190,6 +192,15 @@
         <exec dir="${temp.dir}" executable="vagrant" failonerror="true">
             <arg line="destroy -f" />
         </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Will destroy any running vagrant box within our tmp directory if     -->
+    <!-- a "fatal" error occured previously                                   -->
+    <!-- ==================================================================== -->
+    <target name="destroy-vagrant-box-on-error" if="vagrant-box.start.failed">
+        <!-- issue the actual destroy call -->
+        <antcall target="destroy-vagrant-box" />
     </target>
 
     <!-- ==================================================================== -->
@@ -216,23 +227,34 @@
     </target>
 
     <!-- ==================================================================== -->
-    <!-- Creates all RPM packages and uploads them to builds file-server      -->
+    <!-- Builds the runtime within a temporarily started vagrant box.         -->
+    <!-- Box will be started and destroyed automatically                      -->
     <!-- ==================================================================== -->
-    <target name="vagrant-build">
+    <target name="build">
         <!-- start our vagrant box -->
         <antcall target="start-vagrant-build-box" />
-        <!-- invoke original build target within vagrant box -->
-        <exec dir="${temp.dir}" executable="vagrant">
-            <arg line="ssh -c 'sudo ant build -buildfile ${vagrant.basedir}/build.xml -Dbuild.number=${build.number} -Dtarget-os.version=${target-os.version} -Dos.family=${os.family} -Dos.distribution=${os.distribution}'" />
-        </exec>
+        <!-- start the build in the box -->
+        <antcall target="vagrant-build" />
         <!-- destroy the box after all work is done -->
         <antcall target="destroy-vagrant-box" />
+        <!-- tell them about any failures we might encountered -->
+        <fail if="build.failed" message="The build failed with message '${build.failed}', see log above." />
     </target>
 
     <!-- ==================================================================== -->
-    <!-- Builds the runtime and creates a .tgz package.                       -->
-	<!-- ==================================================================== -->
-    <target name="build" depends="prepare-build" description="Builds the runtime and creates a .tgz package.">
+    <!-- Builds the runtime within an existing vagrant box                    -->
+    <!-- ==================================================================== -->
+    <target name="vagrant-build">
+        <!-- invoke original build target within vagrant box -->
+        <exec dir="${temp.dir}" executable="vagrant" errorproperty="build.failed">
+            <arg line="ssh -c 'sudo ant build -buildfile ${vagrant.basedir}/build.xml -Dbuild.number=${build.number} -Dtarget-os.version=${target-os.version} -Dos.family=${os.family} -Dos.distribution=${os.distribution}'" />
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Builds the runtime locally without the use of vagrant                -->
+    <!-- ==================================================================== -->
+    <target name="local-build" depends="prepare-build" description="Builds the runtime and creates a .tgz package.">
         <!-- do the actual building -->
         <antcall target="build-runtime" />
         <!-- create a compressed package of the recent build -->

@@ -19,23 +19,19 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.synced_folder "${lib.dir}", "${vagrant-lib.dir}"
 
   # Extend the timeout for initial connection
-  config.vm.boot_timeout = 1200
+  config.vm.boot_timeout = 600
 
   config.vm.provider "virtualbox" do |vb|
     host = RbConfig::CONFIG['host_os']
 
-    # Give VM 1/6 system memory & access to 2 cpu cores on the host
+    # Give VM 4Gb system memory & access to all cpu cores on the host
+    mem = 4096
     if host =~ /darwin/
-      cpus = 2
-      # sysctl returns Bytes and we need to convert to MB
-      mem = `sysctl -n hw.memsize`.to_i / 1024 / 1024 / 6
+      cpus = `sysctl -n hw.ncpu`.to_i
     elsif host =~ /linux/
-      cpus = 2
-      # meminfo shows KB and we need to convert to MB
-      mem = `grep 'MemTotal' /proc/meminfo | sed -e 's/MemTotal://' -e 's/ kB//'`.to_i / 1024 / 6
+      cpus = `nproc`.to_i
     else # sorry Windows folks, I can't help you
       cpus = 2
-      mem = 2048
     end
 
     vb.customize ["modifyvm", :id, "--memory", mem]
