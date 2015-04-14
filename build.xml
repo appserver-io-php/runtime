@@ -86,14 +86,6 @@
     </target>
 
     <!-- ==================================================================== -->
-    <!-- Copies any built package to the snapshot hosting server.             -->
-    <!-- ==================================================================== -->
-    <target name="copy-to-hub" depends="prepare-package-name" description="Copies any built package to the snapshot hosting server.">
-        <echo message="Now trying to upload ${package.name} to snapshot server"/>
-        <scp file="${build.dir}/${package.name}" todir="${hub.scp-user}@${hub.address}:${hub.snapshot-path}" keyfile="${user.home}/.ssh/id_rsa" failonerror="true" />
-    </target>
-
-    <!-- ==================================================================== -->
     <!-- Prepares all the required directories                                -->
     <!-- ==================================================================== -->
     <target name="prepare" depends="clean" description="Prepares all the required directories.">
