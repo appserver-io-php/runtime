@@ -157,11 +157,9 @@
     <!-- ==================================================================== -->
     <target name="start-vagrant-box" depends="test-vagrant-box-started, initialize-packaged-box" if="vagrant.box.not-started">
         <!-- issue the actual start command -->
-        <exec dir="${temp.dir}" executable="vagrant" errorproperty="vagrant-box.start.failed">
+        <exec dir="${temp.dir}" executable="vagrant" failonerror="true">
             <arg line="up ${vagrant-box.name} --provider=${vagrant.provider} --destroy-on-error" />
         </exec>
-        <!-- make sure the box gets destroyed if there have been errors during startup -->
-        <antcall target="destroy-vagrant-box-on-error" />
     </target>
 
     <!-- ==================================================================== -->
@@ -184,17 +182,6 @@
         <exec dir="${temp.dir}" executable="vagrant" failonerror="true">
             <arg line="destroy -f" />
         </exec>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Will destroy any running vagrant box within our tmp directory if     -->
-    <!-- a "fatal" error occured previously                                   -->
-    <!-- ==================================================================== -->
-    <target name="destroy-vagrant-box-on-error" if="vagrant-box.start.failed">
-        <!-- tell them there have been issues -->
-        <echo message="Destroying vagrant box because of the following error: ${vagrant-box.start.failed}" />
-        <!-- issue the actual destroy call -->
-        <antcall target="destroy-vagrant-box" />
     </target>
 
     <!-- ==================================================================== -->
@@ -241,7 +228,7 @@
     <target name="vagrant-build">
         <!-- invoke original build target within vagrant box -->
         <exec dir="${temp.dir}" executable="vagrant" errorproperty="build.failed">
-            <arg line="ssh -c 'sudo ant build -buildfile ${vagrant.basedir}/build.xml -Dbuild.number=${build.number} -Dtarget-os.version=${target-os.version} -Dos.family=${os.family} -Dos.distribution=${os.distribution}'" />
+            <arg line="ssh -c 'sudo ant local-build -buildfile ${vagrant.basedir}/build.xml -Dbuild.number=${build.number} -Dtarget-os.version=${target-os.version} -Dos.family=${os.family} -Dos.distribution=${os.distribution}' -- -t -t" />
         </exec>
     </target>
 
