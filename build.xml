@@ -166,7 +166,7 @@
     <target name="start-vagrant-box" depends="test-vagrant-box-started, initialize-packaged-box" if="vagrant.box.not-started">
         <!-- issue the actual start command -->
         <exec dir="${temp.dir}" executable="vagrant" errorproperty="vagrant-box.start.failed">
-            <arg line="up ${vagrant-box.name} --provider=${vagrant.provider}" />
+            <arg line="up ${vagrant-box.name} --provider=${vagrant.provider} --destroy-on-error" />
         </exec>
         <!-- make sure the box gets destroyed if there have been errors during startup -->
         <antcall target="destroy-vagrant-box-on-error" />
@@ -199,6 +199,8 @@
     <!-- a "fatal" error occured previously                                   -->
     <!-- ==================================================================== -->
     <target name="destroy-vagrant-box-on-error" if="vagrant-box.start.failed">
+        <!-- tell them there have been issues -->
+        <echo message="Destroying vagrant box because of the following error: ${vagrant-box.start.failed}" />
         <!-- issue the actual destroy call -->
         <antcall target="destroy-vagrant-box" />
     </target>
