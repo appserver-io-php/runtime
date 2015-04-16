@@ -75,6 +75,8 @@
     <target name="prepare-php-src" description="Untar the PHP source into the development dir.">
     	<!-- <delete dir="${php-buildtree.dir}\php-${runtime.php.version}" includeemptydirs="true" quiet="false" verbose="false" failonerror="true"/> -->
         <echo message="${env.PATH}" />
+        <echo message="${env.Path}" />
+        <echo message="${env.path}" />
 		<untar src="${lib.dir}/php-${runtime.php.version}.tar.gz" dest="${php-buildtree.dir}" compression="gzip"/>
     </target>
 
