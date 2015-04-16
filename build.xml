@@ -55,6 +55,7 @@
     <!-- Cleans the build directories                                         -->
     <!-- ==================================================================== -->
     <target name="clean-build">
+    	<echo message="${env.Path}" />
         <delete dir="${build.dir}" includeemptydirs="true" quiet="false" verbose="false" failonerror="true"/>
     </target>
 
