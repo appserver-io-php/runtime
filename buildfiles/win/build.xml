@@ -25,7 +25,6 @@
     <!-- Check if Windows PHP SDK has been downloaded yet                     -->
     <!-- ==================================================================== -->
     <target name="check-php-sdk-present" description="Check if Windows PHP SDK has been downloaded yet.">
-	<echo message="${env.PATH}" />
         <available file="${build-workspace.dir}/php-sdk-binary-tools-${php-sdk.timestamp}.zip" property="php-sdk.present"/>
     </target>
 
@@ -33,7 +32,6 @@
     <!-- Check if pthreads extension build dependencies have been downloaded  -->
     <!-- ==================================================================== -->
     <target name="check-ext-pthreads-build-deps-present" description="Check if pthreads extension build dependencies have been downloaded.">
-	<echo message="${env.PATH}" />
         <available file="${build-workspace.dir}/pthreads-${w32.pthreads.version}-vc${compiler-version}-${os.architecture}.zip" property="ext-pthreads-build-deps.present"/>
     </target>
 
@@ -49,7 +47,6 @@
     <!-- Download the PHP SDK from the official site                          -->
     <!-- ==================================================================== -->
     <target name="get-php-sdk" depends="check-php-sdk-present" unless="php-sdk.present" description="Download the PHP SDK from the official site.">
-	<echo message="${env.PATH}" />
         <get src="${php-sdk.download.url}" dest="${build-workspace.dir}/php-sdk-binary-tools-${php-sdk.timestamp}.zip"/>
     </target>
 
@@ -57,16 +54,14 @@
     <!-- Download the dependencies for building the pthreads extension        -->
     <!-- ==================================================================== -->
     <target name="get-ext-pthreads-build-deps" depends="check-ext-pthreads-build-deps-present" unless="ext-pthreads-build-deps.present" description="Download the dependencies for building the pthreads extension.">
-        <echo message="${env.PATH}" />
-		<get src="${ext-pthreads-build-deps.download.url}" dest="${build-workspace.dir}/pthreads-${w32.pthreads.version}-vc${compiler-version}-${os.architecture}.zip"/>
+	<get src="${ext-pthreads-build-deps.download.url}" dest="${build-workspace.dir}/pthreads-${w32.pthreads.version}-vc${compiler-version}-${os.architecture}.zip"/>
     </target>
 
     <!-- ==================================================================== -->
     <!-- Download the dependencies for building PHP                           -->
     <!-- ==================================================================== -->
     <target name="get-php-build-deps" depends="check-php-build-deps-present" unless="php-build-deps.present" description="Download the dependencies for building PHP.">
-        <echo message="${env.PATH}" />
-		<get src="${php-build-deps.download.url}" dest="${build-workspace.dir}/deps-${runtime.php.major-version}-vc${compiler-version}-${os.architecture}.7z"/>
+	<get src="${php-build-deps.download.url}" dest="${build-workspace.dir}/deps-${runtime.php.major-version}-vc${compiler-version}-${os.architecture}.7z"/>
     </target>
 
     <!-- ==================================================================== -->
@@ -74,9 +69,6 @@
     <!-- ==================================================================== -->
     <target name="prepare-php-src" description="Untar the PHP source into the development dir.">
     	<!-- <delete dir="${php-buildtree.dir}\php-${runtime.php.version}" includeemptydirs="true" quiet="false" verbose="false" failonerror="true"/> -->
-        <echo message="${env.PATH}" />
-        <echo message="${env.Path}" />
-        <echo message="${env.path}" />
 		<untar src="${lib.dir}/php-${runtime.php.version}.tar.gz" dest="${php-buildtree.dir}" compression="gzip"/>
     </target>
 
@@ -95,7 +87,6 @@
     <!-- =============================================================================== -->
     <target name="prepare-ext-appserver-src" description="Prepare the appserver extension source by including it in the build environment.">
         <!-- untar the appserver extension source into the sdk environment -->
-        <echo message="${env.PATH}" />
 		<untar src="${lib.dir}/ext-appserver-${runtime.ext-appserver.version}.tgz" dest="${php-sdk.dir}" compression="gzip"/>
         <!-- move the src files into the folder they belong -->
         <copy todir="${php-buildtree.dir}/php-${runtime.php.version}/ext/appserver" preservelastmodified="true" overwrite="true">
@@ -118,7 +109,6 @@
     <!-- =============================================================================== -->
     <target name="prepare-ext-pthreads-src" depends="prepare-ext-pthreads-build-deps" description="Prepare the pthreads extension source by including it in the build environment.">
         <!-- untar the pthreads extension source into the sdk environment -->
-        <echo message="${env.PATH}" />
 		<untar src="${lib.dir}/pthreads-${runtime.pthreads.version}.tgz" dest="${php-sdk.dir}" compression="gzip"/>
         <!-- move the src files into the folder they belong -->
         <copy todir="${php-buildtree.dir}/php-${runtime.php.version}/ext/pthreads" preservelastmodified="true" overwrite="true">
@@ -133,7 +123,6 @@
     <!-- ==================================================================== -->
     <target name="check-7zip-present" description="Will check if there is an usable instance of 7zip installed">
         <!-- Set property if the executable exists -->
-        <echo message="${env.PATH}" />
 		<available file="${7zip-cmd.dir}/7z.exe" property="7zip.present"/>
         <!-- Fail if property was not set -->
         <fail unless="7zip.present"/>
@@ -154,7 +143,6 @@
     <!-- ==================================================================== -->
     <target name="check-ext-appserver-built" description="Checks if the appserver extension got built as it should.">
         <!-- Set property if the dll exists -->
-        <echo message="${env.PATH}" />
 		<available file="${target.dir}/php_appserver-${runtime.ext-appserver.version}.dll" property="ext-appserver.present"/>
         <!-- Fail if property was not set -->
         <fail unless="ext-appserver.present"/>
@@ -165,8 +153,7 @@
     <!-- ==================================================================== -->
     <target name="check-ext-pthreads-built" description="Checks if the pthreads extension got built as it should.">
         <!-- Set property if the dll exists -->
-        <echo message="${env.PATH}" />
-		<available file="${target.dir}/php_pthreads-${runtime.pthreads.version}.dll" property="ext-pthreads.present"/>
+	<available file="${target.dir}/php_pthreads-${runtime.pthreads.version}.dll" property="ext-pthreads.present"/>
         <!-- Fail if property was not set -->
         <fail unless="ext-pthreads.present"/>
     </target>
@@ -185,8 +172,7 @@
     <!-- ==================================================================== -->
     <target name="check-php-sdk-prepared" depends="check-php-buildtree-present" if="php-buildtree.present" description="Will check if the environment has already been prepared.">
         <!-- Define a fileset we can pickup -->
-        <echo message="${env.PATH}" />
-		<fileset dir="${php-buildtree.dir}/deps/lib" id="php-buildtree.fileset"/>
+	<fileset dir="${php-buildtree.dir}/deps/lib" id="php-buildtree.fileset"/>
         <!-- Set the property if the fileset is not empty -->
         <pathconvert refid="php-buildtree.fileset"
                      property="php-sdk.prepared"
@@ -199,7 +185,6 @@
     <!-- ======================================================================= -->
     <target name="expand-scripts" description="Will expand the properties of the scripts and store them in target directory.">
         <!-- We have to expand the scripts here, as we are going to use them -->
-        <echo message="${env.PATH}" />
 		<copy todir="${target.dir}">
             <fileset dir="${basedir}/buildfiles/${os.family}">
                 <include name="scripts/**"/>
@@ -215,7 +200,6 @@
     <!-- ==================================================================== -->
     <target name="prepare-php-sdk" depends="check-php-sdk-prepared, expand-scripts" unless="php-sdk.prepared" description="Prepare Windows PHP SDK as a build environment.">
         <!-- Without Visual Studio installed this makes no sense! -->
-        <echo message="${env.PATH}" />
 		<antcall target="check-vc-present"/>
         <!-- Download the PHP SDK archive -->
         <antcall target="get-php-sdk"/>
@@ -233,7 +217,6 @@
     <!-- ==================================================================== -->
     <target name="build-binaries" depends="prepare-php-src, prepare-php-build-deps, prepare-php-sdk, expand-scripts" description="Will create binaries which cannot be downloaded as .dll.">
         <!-- Prepare the binary sources as we need them -->
-        <echo message="${env.PATH}" />
 		<antcall target="prepare-ext-appserver-src"/>
         <antcall target="prepare-ext-pthreads-src"/>
         <!-- Do the thing -->
@@ -259,7 +242,6 @@
     <!-- Prepares the PHP/PECL Windows binaries                               -->
     <!-- ==================================================================== -->
     <target name="build-runtime" description="Prepares the PHP/PECL Windows binaries.">
-        <echo message="${env.PATH}" />
     	<!-- prepare the local build environment -->
     	<antcall target="prepare" />
         
@@ -367,7 +349,6 @@
     <!-- Copies any built package to the snapshot hosting server.             -->
     <!-- ==================================================================== -->
     <target name="copy-to-hub" depends="prepare-package-name" description="Copies any built package to the snapshot hosting server.">
-<echo message="${env.PATH}" />       
 	   <echo message="Now try to upload ${package.name} to snapshot server"/>
         <scp file="${build.dir}/${package.name}" todir="${hub.scp-user}@${hub.address}:${hub.snapshot-path}" keyfile="${user.home}/.ssh/id_rsa" />
     </target>
@@ -377,7 +358,6 @@
     <!-- ==================================================================== -->
     <target name="prepare-package-name" description="Prepares the build property package.name">
         <!-- create the distribution specific package name -->
-        <echo message="${env.PATH}" />
 		<create-package-name 
             prefix="appserver-runtime"
             build="${build.number}"
@@ -396,7 +376,6 @@
     <!-- Creates the .zip package file                                        -->
     <!-- ==================================================================== -->
     <target name="create-package" depends="prepare-package-name" description="Creates the .zip package file.">
-    	<echo message="${env.PATH}" />
 		<zip destfile="${build.dir}/${package.name}" compress="true">
     		<zipfileset dir="${target.dir}" includes="appserver/**/*" />
     	</zip>
@@ -419,7 +398,6 @@
     <!-- ==================================================================== -->
     <target name="install-composer" description="Install composer.">
         <!-- download and install composer -->
-<echo message="${env.PATH}" />       
 	   <get src="${composer.download.url}" dest="${target.dir}/installer"/>
         <!-- install composer itself -->
         <exec dir="${target.dir}" executable="${target.dir}/appserver/php/php">
@@ -432,7 +410,6 @@
     <!-- ==================================================================== -->
     <target name="run-integration-tests" description="Runs the PHPUnit integration tests.">
         <!-- install the build utilities (PHPUnit etc.) -->
-        <echo message="${env.PATH}" />
 		<exec dir="${basedir}" executable="${target.dir}/appserver/php/php">
             <arg line="${target.dir}/appserver/php/composer.phar install"/>
         </exec> 
