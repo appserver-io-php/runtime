@@ -77,7 +77,7 @@
     <target name="prepare-php-build-deps" depends="get-php-build-deps, check-7zip-present" description="Unzip the php build dependencies into the development dir.">
         <!-- Unzip the php build dependencies into the sdk environment -->
         <exec dir="${build-workspace.dir}" executable="${7zip-cmd.dir}/7z">
-            <arg line="x deps-${runtime.php.major-version}-vc${compiler-version}-${os.architecture}.7z -o${php-buildtree.dir}"/>
+            <arg line="x -y deps-${runtime.php.major-version}-vc${compiler-version}-${os.architecture}.7z -o${php-buildtree.dir}"/>
         </exec>
     </target>
 
