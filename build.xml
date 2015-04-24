@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE project>
-<project name="appserver-io-php/runtime" default="build" basedir=".">
+<project name="appserver-io-php/runtime" default="dependencies-init" basedir=".">
 
     <!-- ==================================================================== -->
     <!-- Load the environment variables into our properties                   -->
@@ -47,6 +47,11 @@
     <property name="dependency.dir" value ="${basedir}/${codepool}" />
     <property name="package.dir" value="${dependency.dir}/package" />
     <property name="package.remote-location" value="https://github.com/appserver-io-dist/package.git" />
+
+    <!-- ==================================================================== -->
+    <!-- Import the package build files if they are present                   -->
+    <!-- ==================================================================== -->
+    <import file="${package.dir}/common.xml" optional="true" />
 
     <!-- ==================================================================== -->
     <!-- Remote path to recently built resources                              -->
