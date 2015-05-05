@@ -113,5 +113,17 @@
         <!-- create a compressed package of the recent build -->
         <antcall target="create-package" />
     </target>
+    
+    <!-- ==================================================================== -->
+    <!-- Install composer                                                     -->
+    <!-- ==================================================================== -->
+    <target name="install-composer" description="Install composer.">
+        <!-- download and install composer -->
+        <get src="${composer.download.url}" dest="${target.dir}/installer"/>
+        <!-- install composer itself -->
+        <exec dir="${target.dir}" executable="${target.dir}/appserver/php/php">
+            <arg line="installer -- --install-dir ${target.dir}/appserver/php"/>
+        </exec>
+    </target>
 
 </project>
