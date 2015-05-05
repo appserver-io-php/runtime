@@ -1,3 +1,14 @@
+# Version 1.0.6
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Closed [#758](https://github.com/appserver-io/appserver/issues/758) - Update to latest PHP 5.5.24
+* Switch to pthreads-1.0.6 which adds the PTHREADS_ALLOW_GLOBALS functionality for the 1.x branch
+
 # Version 1.0.5
 
 ## Bugfixes
