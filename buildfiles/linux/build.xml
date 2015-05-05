@@ -112,18 +112,6 @@
         <!-- make the composer file executable -->
         <chmod perm="755" file="${runtime.compile.prefix}/bin/composer" />
     </target>
-
-    <!-- ==================================================================== -->
-    <!-- Install composer                                                     -->
-    <!-- ==================================================================== -->
-    <target name="install-composer" description="Install composer.">
-        <!-- download the composer installer -->
-        <get src="${composer.download.url}" dest="${target.dir}/installer"/>
-        <!-- install composer itself -->
-        <exec dir="${target.dir}" executable="${runtime.compile.prefix}/bin/php">
-            <arg line="installer -- --install-dir ${runtime.compile.prefix}/bin"/>
-        </exec>
-    </target>
 	
     <!-- ==================================================================== -->
     <!-- Compiles the appserver.io Linux runtime environment                  -->
