@@ -263,18 +263,6 @@
     </target>
 
     <!-- ==================================================================== -->
-    <!-- Install composer                                                     -->
-    <!-- ==================================================================== -->
-    <target name="install-composer" description="Install composer.">
-        <!-- download the composer installer -->
-        <get src="${composer.download.url}" dest="${target.dir}/installer"/>
-        <!-- install composer itself -->
-        <exec dir="${target.dir}" executable="${runtime.compile.prefix}/bin/php">
-            <arg line="installer -- --install-dir ${runtime.compile.prefix}/bin"/>
-        </exec>
-    </target>
-	
-    <!-- ==================================================================== -->
     <!-- Compiles the appserver.io Linux runtime environment                  -->
     <!-- ==================================================================== -->
     <target name="build-runtime" description="Compiles the appserver.io Linux runtime environment.">
