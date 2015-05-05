@@ -344,6 +344,18 @@
         project.setProperty("PACKAGE_NAME", packageName);
     ]]>
     </scriptdef>
+    
+    <!-- ==================================================================== -->
+    <!-- Install composer                                                     -->
+    <!-- ==================================================================== -->
+    <target name="install-composer" description="Install composer.">		
+        <!-- download the composer installer -->		
+        <get src="${composer.download.url}" dest="${target.dir}/installer"/>		
+        <!-- install composer itself -->		
+        <exec dir="${target.dir}" executable="${runtime.compile.prefix}/php/php">
+            <arg line="installer -- --install-dir ${runtime.compile.prefix}/php"/>		
+        </exec>		
+    </target>
 
     <!-- ==================================================================== -->
     <!-- Prepares the build property package.name                             -->
