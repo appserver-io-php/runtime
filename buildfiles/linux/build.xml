@@ -406,7 +406,7 @@
     <!-- Copies any built package to the snapshot hosting server.             -->
     <!-- ==================================================================== -->
     <target name="copy-to-hub" depends="prepare-package-name" description="Copies any built package to the snapshot hosting server.">
-        <echo message="Now try to upload ${package.name} to snapshot server"/>
+        <echo message="Now try to upload ${package.name} to ${hub.address}:${hub.snapshot-path}"/>
         <exec executable="scp" failonerror="true">
             <arg line="-o StrictHostKeyChecking=no -i ${user.home}/.ssh/id_rsa ${build.dir}/${package.name} ${hub.scp-user}@${hub.address}:${hub.snapshot-path}"/>
         </exec>
