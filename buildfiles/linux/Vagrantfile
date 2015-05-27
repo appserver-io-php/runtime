@@ -23,7 +23,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # config.vm.provision "shell", path: "buildfiles/${os.family}/${os.distribution}/provision.sh"
 
   # Share the build folder as read only
-  config.vm.synced_folder "${reports.dir}", "${vagrant-reports.dir}"
+  config.vm.synced_folder "${build.dir}", "${vagrant-build.dir}"
   config.vm.synced_folder "${src.dir}", "${vagrant-src.dir}"
   config.vm.synced_folder "${lib.dir}", "${vagrant-lib.dir}"
 
@@ -34,17 +34,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     host = RbConfig::CONFIG['host_os']
 
     # Give VM 4Gb system memory & access to all cpu cores on the host
-    mem = 4096
-    if host =~ /darwin/
-      cpus = `sysctl -n hw.ncpu`.to_i
-    elsif host =~ /linux/
-      cpus = `nproc`.to_i
-    else # sorry Windows folks, I can't help you
-      cpus = 2
-    end
-
-    vb.customize ["modifyvm", :id, "--memory", mem]
-    vb.customize ["modifyvm", :id, "--cpus", cpus]
+    vb.memory = 4096
+    vb.cpus = 4
   end
 
   config.vm.define :"${vagrant-box.name}" do |t|
