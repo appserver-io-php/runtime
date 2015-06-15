@@ -13,7 +13,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Box name and location
   config.vm.box = "${vagrant-box.name}"
-  config.vm.box_url = "${vagrant-box.baseurl}/${vagrant-box.name}.box"
+  config.vm.box_url = "https://github.com/holms/vagrant-jessie-box/releases/download/Jessie-v0.1/Debian-jessie-amd64-netboot.box"
 
   # Basic network configuration
   config.vm.host_name = "${vagrant-box.name}"
@@ -35,8 +35,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     host = RbConfig::CONFIG['host_os']
 
     # Give VM 4Gb system memory & access to all cpu cores on the host
-<<<<<<< HEAD
-    mem = 4096
     if host =~ /darwin/
       cpus = `sysctl -n hw.ncpu`.to_i
     elsif host =~ /linux/
@@ -45,12 +43,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       cpus = 2
     end
 
-    vb.customize ["modifyvm", :id, "--memory", mem]
-    vb.customize ["modifyvm", :id, "--cpus", cpus]
-=======
     vb.memory = 4096
-    vb.cpus = 4
->>>>>>> 9cfa70ee63d62f925c98f98918ce72c240d44214
+    vb.cpus = cpus
   end
 
   config.vm.define :"${vagrant-box.name}" do |t|
