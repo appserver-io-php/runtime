@@ -13,7 +13,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Box name and location
   config.vm.box = "${vagrant-box.name}"
-  config.vm.box_url = "https://github.com/holms/vagrant-jessie-box/releases/download/Jessie-v0.1/Debian-jessie-amd64-netboot.box"
+  config.vm.box_url = "${vagrant-box.baseurl}/${vagrant-box.name}.box"
 
   # Basic network configuration
   config.vm.host_name = "${vagrant-box.name}"
