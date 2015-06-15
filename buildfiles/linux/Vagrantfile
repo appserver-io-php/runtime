@@ -17,19 +17,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "shell", path: "buildfiles/${os.family}/${os.distribution}/provision.sh"
 
   # Share the build folder as read only
-  config.vm.synced_folder "${build.dir}", "${vagrant-build.dir}"
   config.vm.synced_folder "${reports.dir}", "${vagrant-reports.dir}"
   config.vm.synced_folder "${src.dir}", "${vagrant-src.dir}"
   config.vm.synced_folder "${lib.dir}", "${vagrant-lib.dir}"
 
   # Extend the timeout for initial connection
-  config.vm.boot_timeout = 1200
+  config.vm.boot_timeout = 600
 
   config.vm.provider "virtualbox" do |vb|
     host = RbConfig::CONFIG['host_os']
 
-    # Give VM 6Gb system memory & access to all cpu cores on the host
-    mem = 6144
+    # Give VM 4Gb system memory & access to all cpu cores on the host
+    mem = 4096
     if host =~ /darwin/
       cpus = `sysctl -n hw.ncpu`.to_i
     elsif host =~ /linux/
