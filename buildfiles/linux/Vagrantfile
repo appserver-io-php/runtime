@@ -6,18 +6,25 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  # Basic default configuration
-  config.vm.box = "chef/${os.distribution}-${target-os.version}"
-  config.vm.box_url = "https://vagrantcloud.com/chef/boxes/${os.distribution}-${target-os.version}"
+  # Basic default configuration used for intial setup of box.
+  # Please use if packaged boxes are unavailable or unwelcome
+  # config.vm.box = "chef/${os.distribution}-${target-os.version}"
+  # config.vm.box_url = "https://vagrantcloud.com/chef/boxes/${os.distribution}-${target-os.version}"
+
+  # Box name and location
+  config.vm.box = "${vagrant-box.name}"
+  config.vm.box_url = "${vagrant-box.baseurl}/${vagrant-box.name}.box"
 
   # Basic network configuration
   config.vm.host_name = "${vagrant-box.name}"
 
-  # Shell provisioning
-  config.vm.provision "shell", path: "buildfiles/${os.family}/${os.distribution}/provision.sh"
+  # Shell provisioning used for intial setup of box.
+  # Please use if packaged boxes are unavailable or unwelcome
+  # config.vm.provision "shell", path: "buildfiles/${os.family}/${os.distribution}/provision.sh"
 
   # Share the build folder as read only
   config.vm.synced_folder "${reports.dir}", "${vagrant-reports.dir}"
+  config.vm.synced_folder "${build.dir}", "${vagrant-build.dir}"
   config.vm.synced_folder "${src.dir}", "${vagrant-src.dir}"
   config.vm.synced_folder "${lib.dir}", "${vagrant-lib.dir}"
 
@@ -28,6 +35,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     host = RbConfig::CONFIG['host_os']
 
     # Give VM 4Gb system memory & access to all cpu cores on the host
+<<<<<<< HEAD
     mem = 4096
     if host =~ /darwin/
       cpus = `sysctl -n hw.ncpu`.to_i
@@ -39,6 +47,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     vb.customize ["modifyvm", :id, "--memory", mem]
     vb.customize ["modifyvm", :id, "--cpus", cpus]
+=======
+    vb.memory = 4096
+    vb.cpus = 4
+>>>>>>> 9cfa70ee63d62f925c98f98918ce72c240d44214
   end
 
   config.vm.define :"${vagrant-box.name}" do |t|

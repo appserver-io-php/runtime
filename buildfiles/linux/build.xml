@@ -103,7 +103,7 @@
                 <expandproperties/>
             </filterchain>
         </copy>
-        <copy todir="${runtime.compile.prefix}" failonerror="false" preservelastmodified="true" overwrite="true">
+        <copy todir="${runtime.compile.prefix}" failonerror="false" errorproperty="dev.null" preservelastmodified="true" overwrite="true">
             <fileset dir="${src.dir}/${os.family}/${os.distribution}">
                 <include name="**/*" />
             </fileset>
@@ -548,8 +548,10 @@
         <antcall target="move-build-to-target" />
         <!-- create the .tgz package file -->
         <exec dir="${target.dir}/re/opt" executable="tar">
-            <arg line="-pcvzf ${build.dir}/${package.name} appserver"/>
+            <arg line="-pcvzf ${target.dir}/${package.name} appserver" />
         </exec>
+        <!-- move it to our build dir -->
+        <move file="${target.dir}/${package.name}" todir="${build.dir}" />
     </target>
 
     <!-- ==================================================================== -->
@@ -565,6 +567,21 @@
             <arg line="${basedir}/vendor/bin/phpunit --bootstrap bootstrap.php --configuration phpunit.xml" />
         </exec>
         <!-- exectue PHP unit tests here -->
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Builds the runtime within an existing vagrant box                    -->
+    <!-- ==================================================================== -->
+    <target name="vagrant-build">
+        <!-- invoke original build target within vagrant box -->
+        <exec dir="${temp.dir}" executable="sh" errorproperty="fatal-error.occured">
+            <arg value="-c" />
+            <arg value='vagrant ssh-config | ssh -F /dev/stdin ${vagrant-box.name} "sudo ant local-build -buildfile ${vagrant.basedir}/build.xml -Dgithub.oauth.token=${github.oauth.token} -Dbuild.number=${build.number} -Dtarget-os.version=${target-os.version} -Dappserver.runtime.version=${appserver.runtime.version} -Dappserver.runtime.build=${appserver.runtime.build}"' />
+        </exec>
+        <!-- check for a specific build failure and make an emergency destroy -->
+        <antcall target="destroy-vagrant-box-on-error" />
+        <!-- tell them about any failures we might have encountered -->
+        <fail if="fatal-error.occured" message="The build failed with message '${fatal-error.occured}', see log above." />
     </target>
 
 </project>

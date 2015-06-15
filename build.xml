@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE project>
-<project name="appserver-io-php/runtime" default="build" basedir=".">
+<project name="appserver-io-php/runtime" default="dependencies-init" basedir=".">
 
     <!-- ==================================================================== -->
     <!-- Load the environment variables into our properties                   -->
@@ -40,11 +40,46 @@
     <!-- ==================================================================== -->
     <import file="buildfiles/${os.family}/build.xml"/>
 
+    <!-- initialize the library specific properties -->
+    <property name="codepool" value="vendor"/>
+
+    <!-- initialize the directory where we can find the real build files -->
+    <property name="dependency.dir" value ="${basedir}/${codepool}" />
+    <property name="package.dir" value="${dependency.dir}/package" />
+    <property name="package.remote-location" value="https://github.com/appserver-io-dist/package.git" />
+
+    <!-- ==================================================================== -->
+    <!-- Import the package build files if they are present                   -->
+    <!-- ==================================================================== -->
+    <import file="${package.dir}/common.xml" optional="true" />
+
     <!-- ==================================================================== -->
     <!-- Remote path to recently built resources                              -->
     <!-- ==================================================================== -->
     <property name="hub.snapshot-path" value="/var/www/builds.appserver.io/${os.qualified.path}"/>
-	
+
+    <!-- ==================================================================== -->
+    <!-- Checks if the package helper libary is present                       -->
+    <!-- ==================================================================== -->
+    <target name="package-library-present">
+        <!-- check for the existence of the most central file of the package library -->
+        <available file="${package.dir}/common.xml" property="package-library.present" />
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Loads all dependencies needed for the execution of build targets.    -->
+    <!-- Not to be confused with the loading of dependencies needed for the   -->
+    <!-- built packages!                                                      -->
+    <!-- ==================================================================== -->
+    <target name="dependencies-init" depends="package-library-present" unless="package-library.present">
+        <!-- create the target dir -->
+        <mkdir dir="${dependency.dir}" />
+        <!-- clone the latest version of our package library -->
+        <exec dir="${dependency.dir}" executable="git">
+            <arg line="clone ${package.remote-location}" />
+        </exec>
+    </target>
+
     <!-- ==================================================================== -->
     <!-- Cleans the directories with the generated source files               -->
     <!-- ==================================================================== -->
@@ -60,22 +95,6 @@
         <delete includeemptydirs="true" quiet="false" verbose="false" failonerror="true">
             <fileset dir="${build.dir}" includes="**/*"/>
         </delete>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Cleans the reports directories                                       -->
-    <!-- ==================================================================== -->
-    <target name="clean-reports"  depends="prepare-reports">
-        <delete includeemptydirs="true" quiet="false" verbose="false" failonerror="true">
-            <fileset dir="${reports.dir}" includes="**/*"/>
-        </delete>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Prepares the reports environment                                     -->
-    <!-- ==================================================================== -->
-    <target name="prepare-reports">
-        <mkdir dir="${reports.dir}" />
     </target>
 
     <!-- ==================================================================== -->
@@ -125,69 +144,32 @@
     </target>
 
     <!-- ==================================================================== -->
-    <!-- Will test if the targeted box is already started                     -->
+    <!-- Moves any build results from the temporary target directory into     -->
+    <!-- a mounted build directoy                                             -->
     <!-- ==================================================================== -->
-    <target name="test-vagrant-box-started">
-        <!-- issue the actual command -->
-        <exec dir="${temp.dir}" executable="vagrant" errorproperty="vagrant.box.not-started">
-            <arg line="ssh ${vagrant-box.name}" />
-        </exec>
-    </target>
+    <target name="move-build-results" description="Moves any build results from the temporary target directory into a mounted build directoy">
+        <move todir="${runtime.compile.prefix}" preservelastmodified="true" overwrite="true">
+            <fileset dir="${src.dir}/${os.family}/generic">
+                <include name="**/*" />
+            </fileset>
+            <filterchain>
+                <expandproperties/>
+            </filterchain>
+        </move>
+        <copy todir="${runtime.compile.prefix}" failonerror="false" errorproperty="dev.null" preservelastmodified="true" overwrite="true">
+            <fileset dir="${src.dir}/${os.family}/${os.distribution}">
+                <include name="**/*" />
+            </fileset>
+        </copy>
 
-    <!-- ==================================================================== -->
-    <!-- Will test if a readily packaged vagrant machine is available at the  -->
-    <!-- appropriate location. Only makes sense if the box name is known      -->
-    <!-- ==================================================================== -->
-    <target name="test-packaged-box-exists" if="vagrant-box.name">
-        <available file="${http://boxes.appserver.io/linux/fedora}/${vagrant-box.name}" property="vagrant.packaged-box.exists"/>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Will initialize an already packaged vagrant box                      -->
-    <!-- ==================================================================== -->
-    <target name="initialize-packaged-box" depends="test-packaged-box-exists" if="vagrant.packaged-box.exists">
-        <!-- issue the actual start command -->
-        <exec dir="${temp.dir}" executable="vagrant" failonerror="true">
-            <arg line="up ${vagrant-box.name} --provider=${vagrant.provider}" />
-        </exec>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Will start a vagrant box within the tmp directory                    -->
-    <!-- ==================================================================== -->
-    <target name="start-vagrant-box" depends="test-vagrant-box-started, initialize-packaged-box" if="vagrant.box.not-started">
-        <!-- issue the actual start command -->
-        <exec dir="${temp.dir}" executable="vagrant" failonerror="true">
-            <arg line="up ${vagrant-box.name} --provider=${vagrant.provider} --destroy-on-error" />
-        </exec>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Will start a vagrant box specifically suited for build tasks         -->
-    <!-- ==================================================================== -->
-    <target name="start-vagrant-build-box">
-        <!-- map the vagrant name according to our prepared environment -->
-        <property name="vagrant-box.name" value="${vagrant-box.prefix}Build" />
-        <!-- prepare the building environment -->
-        <antcall target="prepare-build-environment" />
-        <!-- start our vagrant box -->
-        <antcall target="start-vagrant-box" />
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Will destroy any running vagrant box within our tmp directory        -->
-    <!-- ==================================================================== -->
-    <target name="destroy-vagrant-box">
-        <!-- issue the actual destroy command -->
-        <exec dir="${temp.dir}" executable="vagrant" failonerror="true">
-            <arg line="destroy -f" />
-        </exec>
+        <!-- make the composer file executable -->
+        <chmod perm="755" file="${runtime.compile.prefix}/bin/composer" />
     </target>
 
     <!-- ==================================================================== -->
     <!-- Will prepare the environment to run a vagrant box in                 -->
     <!-- ==================================================================== -->
-    <target name="prepare-build-environment" depends="prepare, clean-build, clean-reports">
+    <target name="prepare-build-environment" depends="prepare, clean-build">
         <copy todir="${temp.dir}" failonerror="true">
             <fileset dir="${basedir}">
                <include name="build.*"/>
@@ -208,31 +190,6 @@
     </target>
 
     <!-- ==================================================================== -->
-    <!-- Builds the runtime within a temporarily started vagrant box.         -->
-    <!-- Box will be started and destroyed automatically                      -->
-    <!-- ==================================================================== -->
-    <target name="build">
-        <!-- start our vagrant box -->
-        <antcall target="start-vagrant-build-box" />
-        <!-- start the build in the box -->
-        <antcall target="vagrant-build" />
-        <!-- destroy the box after all work is done -->
-        <antcall target="destroy-vagrant-box" />
-        <!-- tell them about any failures we might encountered -->
-        <fail if="build.failed" message="The build failed with message '${build.failed}', see log above." />
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Builds the runtime within an existing vagrant box                    -->
-    <!-- ==================================================================== -->
-    <target name="vagrant-build">
-        <!-- invoke original build target within vagrant box -->
-        <exec dir="${temp.dir}" executable="vagrant" errorproperty="build.failed">
-            <arg line="ssh -c 'sudo ant local-build -buildfile ${vagrant.basedir}/build.xml -Dbuild.number=${build.number} -Dtarget-os.version=${target-os.version} -Dos.family=${os.family} -Dos.distribution=${os.distribution}' -- -t -t" />
-        </exec>
-    </target>
-
-    <!-- ==================================================================== -->
     <!-- Builds the runtime locally without the use of vagrant                -->
     <!-- ==================================================================== -->
     <target name="local-build" depends="prepare-build" description="Builds the runtime and creates a .tgz package.">
@@ -240,6 +197,30 @@
         <antcall target="build-runtime" />
         <!-- create a compressed package of the recent build -->
         <antcall target="create-package" />
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Creates all RPM packages within an existing vagrant box              -->
+    <!-- ==================================================================== -->
+    <target name="vagrant-build">
+        <!-- map the vagrant name according to the expected environment -->
+        <property name="vagrant-box.name" value="${vagrant-box.prefix}Build" />
+        <!-- invoke original build target within vagrant box -->
+        <exec dir="${temp.dir}" executable="sh" errorproperty="build.failed">
+            <arg value="-c" />
+            <arg value='vagrant ssh-config | ssh -F /dev/stdin ${vagrant-box.name} "sudo ant local-build -buildfile ${vagrant.basedir}/build.xml -Dtarget.dir=/tmp/target -Dbuild.number=${build.number} -Dtarget-os.version=${target-os.version} -Dos.family=${os.family} -Dos.distribution=${os.distribution}"' />
+        </exec>
+        <!-- eliminate the possiblity of empty but existing error output -->
+        <property name="build.failed" value=""/>
+        <condition property="fatal-error.occured" value="${build.failed}">
+            <not>
+                <equals arg1="${build.failed}" arg2=""/>
+            </not>
+        </condition>
+        <!-- check for a specific build failure and make an emergency destroy -->
+        <antcall target="destroy-vagrant-box-on-error" />
+        <!-- tell them about any failures we might encountered -->
+        <fail if="fatal-error.occured" message="The build failed with message '${fatal-error.occured}', see log above." />
     </target>
 
 </project>
