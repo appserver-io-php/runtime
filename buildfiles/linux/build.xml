@@ -103,7 +103,7 @@
                 <expandproperties/>
             </filterchain>
         </copy>
-        <copy todir="${runtime.compile.prefix}" failonerror="false" errorproperty="dev.null" preservelastmodified="true" overwrite="true">
+        <copy todir="${runtime.compile.prefix}" failonerror="false" preservelastmodified="true" overwrite="true">
             <fileset dir="${src.dir}/${os.family}/${os.distribution}">
                 <include name="**/*" />
             </fileset>
