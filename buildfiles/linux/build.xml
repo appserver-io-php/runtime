@@ -153,10 +153,7 @@
             <arg line="configure ${runtime.compile.configuration}"/>
         </exec>
         <exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
-            <arg value="-j8"/>
-        </exec>
-    	<exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
-            <arg value="test"/>
+            <arg value="-j2"/>
         </exec>
         <exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
             <arg value="install"/>
@@ -206,7 +203,9 @@
             <arg value="configure"/>
             <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
-        <exec dir="${target.dir}/apcu-${runtime.apcu.version}" executable="make"/>
+        <exec dir="${target.dir}/apcu-${runtime.apcu.version}" executable="make">
+            <arg value="-j2"/>
+        </exec>
         <exec dir="${target.dir}/apcu-${runtime.apcu.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -223,7 +222,9 @@
             <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
             <arg value="--with-libmemcached-dir=${libmemcached.dir}"/>
         </exec>
-        <exec dir="${target.dir}/memcached-${runtime.memcached.version}" executable="make"/>
+        <exec dir="${target.dir}/memcached-${runtime.memcached.version}" executable="make">
+            <arg value="-j2"/>
+        </exec>
         <exec dir="${target.dir}/memcached-${runtime.memcached.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -239,7 +240,9 @@
             <arg value="configure"/>
             <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
-        <exec dir="${target.dir}/operator-${runtime.operator.version}" executable="make"/>
+        <exec dir="${target.dir}/operator-${runtime.operator.version}" executable="make">
+            <arg value="-j2"/>
+        </exec>
         <exec dir="${target.dir}/operator-${runtime.operator.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -255,7 +258,9 @@
             <arg value="configure"/>
             <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
-        <exec dir="${target.dir}/pecl_http-${runtime.pecl_http.version}" executable="make"/>
+        <exec dir="${target.dir}/pecl_http-${runtime.pecl_http.version}" executable="make">
+            <arg value="-j2"/>
+        </exec>
         <exec dir="${target.dir}/pecl_http-${runtime.pecl_http.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -272,7 +277,9 @@
             <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
             <arg value="--with-libevent=${runtime.compile.libevent.libdir}"/>
         </exec>
-        <exec dir="${target.dir}/libevent-${runtime.libevent.version}" executable="make"/>
+        <exec dir="${target.dir}/libevent-${runtime.libevent.version}" executable="make">
+            <arg value="-j2"/>
+        </exec>
         <exec dir="${target.dir}/libevent-${runtime.libevent.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -288,7 +295,9 @@
             <arg value="configure"/>
             <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
-        <exec dir="${target.dir}/php-libev-${runtime.libev.version}" executable="make"/>
+        <exec dir="${target.dir}/php-libev-${runtime.libev.version}" executable="make">
+            <arg value="-j2"/>
+        </exec>
         <exec dir="${target.dir}/php-libev-${runtime.libev.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -305,7 +314,9 @@
             <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         	<arg value="--with-event-libevent-dir=${runtime.compile.prefix}"/>
         </exec>
-        <exec dir="${target.dir}/event-${runtime.event.version}" executable="make"/>
+        <exec dir="${target.dir}/event-${runtime.event.version}" executable="make">
+            <arg value="-j2"/>
+        </exec>
         <exec dir="${target.dir}/event-${runtime.event.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -321,7 +332,9 @@
             <arg value="configure"/>
             <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
-        <exec dir="${target.dir}/ev-${runtime.ev.version}" executable="make"/>
+        <exec dir="${target.dir}/ev-${runtime.ev.version}" executable="make">
+            <arg value="-j2"/>
+        </exec>
         <exec dir="${target.dir}/ev-${runtime.ev.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -337,7 +350,9 @@
             <arg value="configure"/>
             <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
-        <exec dir="${target.dir}/AOP-${runtime.AOP.version}" executable="make"/>
+        <exec dir="${target.dir}/AOP-${runtime.AOP.version}" executable="make">
+            <arg value="-j2"/>
+        </exec>
         <exec dir="${target.dir}/AOP-${runtime.AOP.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -353,7 +368,9 @@
             <arg value="configure"/>
             <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
-        <exec dir="${target.dir}/xdebug-${runtime.xdebug.version}" executable="make"/>
+        <exec dir="${target.dir}/xdebug-${runtime.xdebug.version}" executable="make">
+            <arg value="-j2"/>
+        </exec>
         <exec dir="${target.dir}/xdebug-${runtime.xdebug.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -369,7 +386,9 @@
             <arg value="configure"/>
             <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
-        <exec dir="${target.dir}/redis-${runtime.redis.version}" executable="make"/>
+        <exec dir="${target.dir}/redis-${runtime.redis.version}" executable="make">
+            <arg value="-j2"/>
+        </exec>
         <exec dir="${target.dir}/redis-${runtime.redis.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -385,7 +404,9 @@
             <arg value="configure"/>
             <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
-        <exec dir="${target.dir}/appserver-${runtime.ext-appserver.version}" executable="make"/>
+        <exec dir="${target.dir}/appserver-${runtime.ext-appserver.version}" executable="make">
+            <arg value="-j2"/>
+        </exec>
         <exec dir="${target.dir}/appserver-${runtime.ext-appserver.version}" executable="make">
             <arg value="install"/>
         </exec>
