@@ -36,7 +36,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Give VM 4Gb system memory & access to half the cpu cores on the host
     vb.memory = 4096
     vb.cpus = 2
-    v.customize ["modifyvm", :id, "--cpuexecutioncap", "80"]
+    vb.customize ["modifyvm", :id, "--cpuexecutioncap", "80"]
   end
 
   config.vm.define :"${vagrant-box.name}" do |t|
