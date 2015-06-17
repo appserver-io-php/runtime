@@ -175,7 +175,6 @@
             <arg line="configure ${runtime.compile.configuration}"/>
         </exec>
         <exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
-            <arg value="-j8"/>
         </exec>
 
         <!-- run the PHP tests -->
