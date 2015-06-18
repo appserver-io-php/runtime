@@ -103,7 +103,7 @@
                 <expandproperties/>
             </filterchain>
         </copy>
-        <copy todir="${runtime.compile.prefix}" failonerror="false" preservelastmodified="true" overwrite="true">
+        <copy todir="${runtime.compile.prefix}" failonerror="false" preservelastmodified="true" overwrite="true" quiet="true">
             <fileset dir="${src.dir}/${os.family}/${os.distribution}">
                 <include name="**/*" />
             </fileset>
@@ -124,48 +124,46 @@
             <arg line="installer -- --install-dir ${runtime.compile.prefix}/bin"/>
         </exec>
     </target>
-	
+
     <!-- ==================================================================== -->
     <!-- Compiles the appserver.io Linux runtime environment                  -->
     <!-- ==================================================================== -->
     <target name="build-runtime" description="Compiles the appserver.io Linux runtime environment.">
 
-    	<!-- prepare the local build environment -->
-    	<antcall target="prepare" />
-    	
-    	<!-- prepare the Linux build environment -->
-    	<antcall target="prepare-linux-build-system" />
-    	
-    	<!-- prepare the PHP source -->
-    	<antcall target="prepare-source"/>
-    	
+        <!-- prepare the local build environment -->
+        <antcall target="prepare" />
+
+        <!-- prepare the Linux build environment -->
+        <antcall target="prepare-linux-build-system" />
+
+        <!-- prepare the PHP source -->
+        <antcall target="prepare-source"/>
+
         <!-- delete the application server directory -->
         <delete dir="${runtime.compile.prefix}" includeemptydirs="true" quiet="false" verbose="true" failonerror="true"/>
 
-    	<!-- prepare the PECL extensions -->
+        <!-- prepare the PECL extensions -->
         <antcall target="prepare-pecl-extension"/>
 
-        <!-- compile the PHP sources and PECL extensions static -->
-        <exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
-            <arg value="clean"/>
-        </exec>
+        <!-- clean any possible remained of former builds and create the build configuration -->
+        <antcall target="make-clean" />
         <delete file="${target.dir}/php-${runtime.php.version}/aclocal.m4"/>
         <exec dir="${target.dir}/php-${runtime.php.version}" executable="sh">
             <arg value="buildconf"/>
             <arg line="--force"/>
         </exec>
 
-    	<!-- log PHP compile configuration -->
-    	<echo message="Now compiling PHP using configure params: ${runtime.compile.configuration}"/>
+        <!-- log PHP compile configuration -->
+        <echo message="Now compiling PHP using configure params: ${runtime.compile.configuration}"/>
 
-    	<!-- configure, compile and install PHP binary -->
+        <!-- configure, compile and install PHP binary -->
         <exec dir="${target.dir}/php-${runtime.php.version}" executable="sh">
             <env key="CC" value="${runtime.cc}"/>
             <env key="EXTRA_LIBS" value="-llber"/>
             <arg line="configure ${runtime.compile.configuration}"/>
         </exec>
         <exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
-            <arg value="-j8"/>
+            <arg value="-j2"/>
         </exec>
 
         <!-- run the PHP tests -->
@@ -229,7 +227,9 @@
             <arg value="configure"/>
             <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
-        <exec dir="${target.dir}/apcu-${runtime.apcu.version}" executable="make"/>
+        <exec dir="${target.dir}/apcu-${runtime.apcu.version}" executable="make">
+            <arg value="-j2"/>
+        </exec>
         <exec dir="${target.dir}/apcu-${runtime.apcu.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -246,7 +246,9 @@
             <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
             <arg value="--with-libmemcached-dir=${libmemcached.dir}"/>
         </exec>
-        <exec dir="${target.dir}/memcached-${runtime.memcached.version}" executable="make"/>
+        <exec dir="${target.dir}/memcached-${runtime.memcached.version}" executable="make">
+            <arg value="-j2"/>
+        </exec>
         <exec dir="${target.dir}/memcached-${runtime.memcached.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -262,7 +264,9 @@
             <arg value="configure"/>
             <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
-        <exec dir="${target.dir}/operator-${runtime.operator.version}" executable="make"/>
+        <exec dir="${target.dir}/operator-${runtime.operator.version}" executable="make">
+            <arg value="-j2"/>
+        </exec>
         <exec dir="${target.dir}/operator-${runtime.operator.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -278,7 +282,9 @@
             <arg value="configure"/>
             <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
-        <exec dir="${target.dir}/pecl_http-${runtime.pecl_http.version}" executable="make"/>
+        <exec dir="${target.dir}/pecl_http-${runtime.pecl_http.version}" executable="make">
+            <arg value="-j2"/>
+        </exec>
         <exec dir="${target.dir}/pecl_http-${runtime.pecl_http.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -295,7 +301,9 @@
             <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
             <arg value="--with-libevent=${runtime.compile.libevent.libdir}"/>
         </exec>
-        <exec dir="${target.dir}/libevent-${runtime.libevent.version}" executable="make"/>
+        <exec dir="${target.dir}/libevent-${runtime.libevent.version}" executable="make">
+            <arg value="-j2"/>
+        </exec>
         <exec dir="${target.dir}/libevent-${runtime.libevent.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -311,7 +319,9 @@
             <arg value="configure"/>
             <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
-        <exec dir="${target.dir}/php-libev-${runtime.libev.version}" executable="make"/>
+        <exec dir="${target.dir}/php-libev-${runtime.libev.version}" executable="make">
+            <arg value="-j2"/>
+        </exec>
         <exec dir="${target.dir}/php-libev-${runtime.libev.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -328,7 +338,9 @@
             <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         	<arg value="--with-event-libevent-dir=${runtime.compile.prefix}"/>
         </exec>
-        <exec dir="${target.dir}/event-${runtime.event.version}" executable="make"/>
+        <exec dir="${target.dir}/event-${runtime.event.version}" executable="make">
+            <arg value="-j2"/>
+        </exec>
         <exec dir="${target.dir}/event-${runtime.event.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -344,7 +356,9 @@
             <arg value="configure"/>
             <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
-        <exec dir="${target.dir}/ev-${runtime.ev.version}" executable="make"/>
+        <exec dir="${target.dir}/ev-${runtime.ev.version}" executable="make">
+            <arg value="-j2"/>
+        </exec>
         <exec dir="${target.dir}/ev-${runtime.ev.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -360,7 +374,9 @@
             <arg value="configure"/>
             <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
-        <exec dir="${target.dir}/AOP-${runtime.AOP.version}" executable="make"/>
+        <exec dir="${target.dir}/AOP-${runtime.AOP.version}" executable="make">
+            <arg value="-j2"/>
+        </exec>
         <exec dir="${target.dir}/AOP-${runtime.AOP.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -376,7 +392,9 @@
             <arg value="configure"/>
             <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
-        <exec dir="${target.dir}/xdebug-${runtime.xdebug.version}" executable="make"/>
+        <exec dir="${target.dir}/xdebug-${runtime.xdebug.version}" executable="make">
+            <arg value="-j2"/>
+        </exec>
         <exec dir="${target.dir}/xdebug-${runtime.xdebug.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -392,7 +410,9 @@
             <arg value="configure"/>
             <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
-        <exec dir="${target.dir}/redis-${runtime.redis.version}" executable="make"/>
+        <exec dir="${target.dir}/redis-${runtime.redis.version}" executable="make">
+            <arg value="-j2"/>
+        </exec>
         <exec dir="${target.dir}/redis-${runtime.redis.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -408,7 +428,9 @@
             <arg value="configure"/>
             <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
         </exec>
-        <exec dir="${target.dir}/appserver-${runtime.ext-appserver.version}" executable="make"/>
+        <exec dir="${target.dir}/appserver-${runtime.ext-appserver.version}" executable="make">
+            <arg value="-j2"/>
+        </exec>
         <exec dir="${target.dir}/appserver-${runtime.ext-appserver.version}" executable="make">
             <arg value="install"/>
         </exec>
@@ -422,16 +444,6 @@
         <exec dir="${target.dir}" executable="mv">
             <arg value="${runtime.compile.prefix}"/>
             <arg value="${target.dir}/re/opt"/>
-        </exec>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Copies any built package to the snapshot hosting server.             -->
-    <!-- ==================================================================== -->
-    <target name="copy-to-hub" depends="prepare-package-name" description="Copies any built package to the snapshot hosting server.">
-        <echo message="Now try to upload ${package.name} to snapshot server"/>
-        <exec executable="scp" failonerror="true">
-            <arg line="-o StrictHostKeyChecking=no -i ${user.home}/.ssh/id_rsa ${build.dir}/${package.name} ${hub.scp-user}@${hub.address}:${hub.snapshot-path}"/>
         </exec>
     </target>
 
@@ -548,8 +560,10 @@
         <antcall target="move-build-to-target" />
         <!-- create the .tgz package file -->
         <exec dir="${target.dir}/re/opt" executable="tar">
-            <arg line="-pcvzf ${build.dir}/${package.name} appserver"/>
+            <arg line="-pcvzf ${target.dir}/${package.name} appserver" />
         </exec>
+        <!-- move it to our build dir -->
+        <move file="${target.dir}/${package.name}" todir="${build.dir}" />
     </target>
 
     <!-- ==================================================================== -->
@@ -565,6 +579,21 @@
             <arg line="${basedir}/vendor/bin/phpunit --bootstrap bootstrap.php --configuration phpunit.xml" />
         </exec>
         <!-- exectue PHP unit tests here -->
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Builds the runtime within an existing vagrant box                    -->
+    <!-- ==================================================================== -->
+    <target name="vagrant-build">
+        <!-- invoke original build target within vagrant box -->
+        <exec dir="${temp.dir}" executable="sh" errorproperty="fatal-error.occured">
+            <arg value="-c" />
+            <arg value='vagrant ssh-config | ssh -F /dev/stdin ${vagrant-box.name} "sudo ant local-build -buildfile ${vagrant.basedir}/build.xml -Dgithub.oauth.token=${github.oauth.token} -Dbuild.number=${build.number} -Dtarget-os.version=${target-os.version} -Dappserver.runtime.version=${appserver.runtime.version} -Dappserver.runtime.build=${appserver.runtime.build}"' />
+        </exec>
+        <!-- check for a specific build failure and make an emergency destroy -->
+        <antcall target="destroy-vagrant-box-on-error" />
+        <!-- tell them about any failures we might have encountered -->
+        <fail if="fatal-error.occured" message="The build failed with message '${fatal-error.occured}', see log above." />
     </target>
 
 </project>
