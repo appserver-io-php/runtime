@@ -344,14 +344,6 @@
     </scriptdef>
 
     <!-- ==================================================================== -->
-    <!-- Copies any built package to the snapshot hosting server.             -->
-    <!-- ==================================================================== -->
-    <target name="copy-to-hub" depends="prepare-package-name" description="Copies any built package to the snapshot hosting server.">
-        <echo message="Now try to upload ${package.name} to snapshot server"/>
-        <scp file="${build.dir}/${package.name}" todir="${hub.scp-user}@${hub.address}:${hub.snapshot-path}" keyfile="${user.home}/.ssh/id_rsa" />
-    </target>
-
-    <!-- ==================================================================== -->
     <!-- Prepares the build property package.name                             -->
     <!-- ==================================================================== -->
     <target name="prepare-package-name" description="Prepares the build property package.name">

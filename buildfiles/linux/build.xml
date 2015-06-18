@@ -114,16 +114,6 @@
     </target>
 
     <!-- ==================================================================== -->
-    <!-- Copies any built package to the snapshot hosting server.             -->
-    <!-- ==================================================================== -->
-    <target name="copy-to-hub" depends="prepare-package-name" description="Copies any built package to the snapshot hosting server.">
-        <echo message="Now try to upload ${package.name} to snapshot server"/>
-        <exec executable="scp" failonerror="true">
-            <arg line="-o StrictHostKeyChecking=no -i ${user.home}/.ssh/id_rsa ${build.dir}/${package.name} ${hub.scp-user}@${hub.address}:${hub.snapshot-path}"/>
-        </exec>
-    </target>
-
-    <!-- ==================================================================== -->
     <!-- Install composer                                                     -->
     <!-- ==================================================================== -->
     <target name="install-composer" description="Install composer.">
