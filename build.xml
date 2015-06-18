@@ -125,7 +125,7 @@
                 <expandproperties/>
             </filterchain>
         </copy>
-        <copy todir="${target.dir}" failonerror="false" preservelastmodified="true" overwrite="true">
+        <copy todir="${target.dir}" failonerror="false" preservelastmodified="true" overwrite="true" quiet="true">
             <fileset dir="${src.dir}/${os.family}/${os.distribution}">
                 <include name="**/*" />
             </fileset>
