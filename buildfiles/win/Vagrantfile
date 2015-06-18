@@ -6,32 +6,36 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  # Basic default configuration
-  config.vm.box = "http://aka.ms/vagrant-win${target-os.version}-ie11"
-
-  # Basic network configuration
-  config.vm.host_name = "${vagrant-box.name}"
-
-  # Tell them we are using Windows without SSH
-  config.vm.communicator = "winrm"
-
-  # Share the build folder as read only
-  config.vm.synced_folder "${build.dir}", "${vagrant-build.dir}"
-  config.vm.synced_folder "${src.dir}", "${vagrant-src.dir}"
-  config.vm.synced_folder "${lib.dir}", "${vagrant-lib.dir}"
-
-  # Extend the timeout for initial connection
-  config.vm.boot_timeout = 600
-
-  config.vm.provider "virtualbox" do |vb|
-    host = RbConfig::CONFIG['host_os']
-
-    # Give VM 4Gb system memory & access to half the cpu cores on the host
+  # Give the box 4GB or RAM and 2 cores
+  config.vm.provider 'virtualbox' do |v|
     vb.customize ["modifyvm", :id, "--memory", "4096"]
     vb.customize ["modifyvm", :id, "--cpus", "2"]
-    vb.customize ["modifyvm", :id, "--cpuexecutioncap", "90"]
+    vb.customize ["modifyvm", :id, "--cpuexecutioncap", "85"]
   end
 
-  config.vm.define :"${vagrant-box.name}" do |t|
-    end
+  # Configure the actual windows machine
+  config.vm.define "${vagrant-box.name}" do |windows|
+    windows.vm.guest = :windows
+    
+    # Basic base box configuration
+    # windows.vm.box = "http://aka.ms/vagrant-win${target-os.version}-ie11"
+    
+    # Local configuration
+    windows.vm.box = "${vagrant-box.name}"
+    windows.vm.box_url = "file://~/Downloads/${vagrant-box.name}.box"
+
+    # Extend the timeout for initial connection
+    windows.vm.boot_timeout = 600
+    
+    # Set up WinRM communication
+    windows.vm.communicator = 'winrm'
+    windows.winrm.username = "IEUser"
+    windows.winrm.password = "Passw0rd!"
+    windows.vm.network 'forwarded_port', host: 3389, guest: 3389
+    
+    # Share the folders needed for our build
+    windows.vm.synced_folder "${build.dir}", "${vagrant-build.dir}"
+    windows.vm.synced_folder "${src.dir}", "${vagrant-src.dir}"
+    windows.vm.synced_folder "${lib.dir}", "${vagrant-lib.dir}"
+  end
 end
