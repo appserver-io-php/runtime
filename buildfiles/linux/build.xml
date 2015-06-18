@@ -134,41 +134,39 @@
             <arg line="installer -- --install-dir ${runtime.compile.prefix}/bin"/>
         </exec>
     </target>
-	
+
     <!-- ==================================================================== -->
     <!-- Compiles the appserver.io Linux runtime environment                  -->
     <!-- ==================================================================== -->
     <target name="build-runtime" description="Compiles the appserver.io Linux runtime environment.">
 
-    	<!-- prepare the local build environment -->
-    	<antcall target="prepare" />
-    	
-    	<!-- prepare the Linux build environment -->
-    	<antcall target="prepare-linux-build-system" />
-    	
-    	<!-- prepare the PHP source -->
-    	<antcall target="prepare-source"/>
-    	
+        <!-- prepare the local build environment -->
+        <antcall target="prepare" />
+
+        <!-- prepare the Linux build environment -->
+        <antcall target="prepare-linux-build-system" />
+
+        <!-- prepare the PHP source -->
+        <antcall target="prepare-source"/>
+
         <!-- delete the application server directory -->
         <delete dir="${runtime.compile.prefix}" includeemptydirs="true" quiet="false" verbose="true" failonerror="true"/>
 
-    	<!-- prepare the PECL extensions -->
+        <!-- prepare the PECL extensions -->
         <antcall target="prepare-pecl-extension"/>
 
-        <!-- compile the PHP sources and PECL extensions static -->
-        <exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
-            <arg value="clean"/>
-        </exec>
+        <!-- clean any possible remained of former builds and create the build configuration -->
+        <antcall target="make-clean" />
         <delete file="${target.dir}/php-${runtime.php.version}/aclocal.m4"/>
         <exec dir="${target.dir}/php-${runtime.php.version}" executable="sh">
             <arg value="buildconf"/>
             <arg line="--force"/>
         </exec>
 
-    	<!-- log PHP compile configuration -->
-    	<echo message="Now compiling PHP using configure params: ${runtime.compile.configuration}"/>
+        <!-- log PHP compile configuration -->
+        <echo message="Now compiling PHP using configure params: ${runtime.compile.configuration}"/>
 
-    	<!-- configure, compile and install PHP binary -->
+        <!-- configure, compile and install PHP binary -->
         <exec dir="${target.dir}/php-${runtime.php.version}" executable="sh">
             <env key="CC" value="${runtime.cc}"/>
             <env key="EXTRA_LIBS" value="-llber"/>

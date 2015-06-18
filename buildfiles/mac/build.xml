@@ -313,10 +313,8 @@
         <!-- prepare the PECL extensions -->
         <antcall target="prepare-pecl-extension"/>
 
-        <!-- compile the PHP sources and PECL extensions static -->
-        <exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
-            <arg value="clean"/>
-        </exec>
+        <!-- clean any possible remained of former builds and create the build configuration -->
+        <antcall target="make-clean" />
         <delete file="${target.dir}/php-${runtime.php.version}/aclocal.m4"/>
         <exec dir="${target.dir}/php-${runtime.php.version}" executable="sh">
             <arg value="buildconf"/>
