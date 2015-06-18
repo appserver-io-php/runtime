@@ -152,6 +152,30 @@
     </target>
 
     <!-- ==================================================================== -->
+    <!-- Checks if the executtion of make clean is even needed.               -->
+    <!-- ==================================================================== -->
+    <target name="check-make-clean-needed" description="Checks if the executtion of make clean is even needed.">
+        <!-- download the composer installer -->
+        <condition property="make-clean.needed">
+            <or>
+                <available file="${target.dir}/php-${runtime.php.version}/makefile" />
+                <available file="${target.dir}/php-${runtime.php.version}/Makefile" />
+                <available file="${target.dir}/php-${runtime.php.version}/GNUMakefile" />
+            </or>
+        </condition>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Executes make clean if it is needed.                                 -->
+    <!-- ==================================================================== -->
+    <target name="make-clean" depends="check-make-clean-needed" if="make-clean.needed" description="Executes make clean if it is needed.">
+        <!-- execute the "make clean" command -->
+        <exec dir="${target.dir}/php-${runtime.php.version}" executable="make" failonerror="true">
+            <arg value="clean"/>
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
     <!-- Moves any build results from the temporary target directory into     -->
     <!-- a mounted build directoy                                             -->
     <!-- ==================================================================== -->
