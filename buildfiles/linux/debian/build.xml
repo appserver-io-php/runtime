@@ -11,7 +11,8 @@
     <!-- Load the default properties. This allows recursive overriding of     -->
     <!-- default properties.                                                  -->
     <!-- ==================================================================== -->
-    <property file="${basedir}/buildfiles/${os.family}/${os.distribution}/build.default.properties"/>
+    <property file="${basedir}/buildfiles/${os.family}/${os.distribution}/${target-os.major.version}/build.default.properties"/>
+    <property file="${basedir}/buildfiles/${os.family}/${os.distribution}/generic/build.default.properties"/>
 
     <!-- ==================================================================== -->
     <!-- Install the necessary libraries to build the debian runtime          -->
