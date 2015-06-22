@@ -10,7 +10,7 @@
     <!-- ==================================================================== -->
     <!-- Load the default properties after loading default properties of the  -->
     <!-- os.distribution. This allows recursive overriding of default         -->
-	<!-- properties.                                                          -->
+    <!-- properties.                                                          -->
     <!-- ==================================================================== -->
     <property file="${basedir}/buildfiles/${os.family}/build.default.properties" />
 
