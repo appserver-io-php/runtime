@@ -15,14 +15,9 @@
     <property file="${basedir}/buildfiles/${os.family}/${os.distribution}/generic/build.default.properties"/>
 
     <!-- ==================================================================== -->
-    <!-- Install the necessary libraries to build the debian runtime          -->
+    <!-- Import the build.xml files, defined by the build version             -->
     <!-- ==================================================================== -->
-    <target name="prepare-distribution-specific-build-system" description="Install the necessary libraries to build the debian runtime.">
-    	<!-- Bugfix for missing symlink -->
-    	<exec dir="/usr/lib" executable="ln">
-    		<arg value="-sf"/>
-    		<arg value="${libldap.dir}/libldap.so"/>
-    	</exec>
-    </target>
+    <import file="${basedir}/buildfiles/${os.family}/${os.distribution}/${target-os.major.version}/build.xml" optional="true" />
+    <import file="${basedir}/buildfiles/${os.family}/${os.distribution}/generic/build.xml" optional="true" />
 
 </project>
