@@ -67,7 +67,7 @@
     <!-- Untar the PHP source into the development dir                        -->
     <!-- ==================================================================== -->
     <target name="prepare-php-src" description="Untar the PHP source into the development dir.">
-    	<!-- <delete dir="${php-buildtree.dir}\php-${runtime.php.version}" includeemptydirs="true" quiet="false" verbose="false" failonerror="true"/> -->
+        <!-- <delete dir="${php-buildtree.dir}\php-${runtime.php.version}" includeemptydirs="true" quiet="false" verbose="false" failonerror="true"/> -->
         <untar src="${lib.dir}/php-${runtime.php.version}.tar.gz" dest="${php-buildtree.dir}" compression="gzip"/>
     </target>
 
@@ -180,7 +180,7 @@
 
     <!-- ======================================================================= -->
     <!-- Will expand the properties of the scripts and store them in the target  -->
-	<!-- directory.                                                              -->
+    <!-- directory.                                                              -->
     <!-- ======================================================================= -->
     <target name="expand-scripts" description="Will expand the properties of the scripts and store them in target directory.">
         <!-- We have to expand the scripts here, as we are going to use them -->
@@ -241,22 +241,22 @@
     <!-- Prepares the PHP/PECL Windows binaries                               -->
     <!-- ==================================================================== -->
     <target name="build-runtime" description="Prepares the PHP/PECL Windows binaries.">
-        
-    	<!-- prepare the local build environment -->
-    	<antcall target="prepare" />
-        
-    	<!-- Build binaries we cannot download ourselves (if not already present) -->
+
+        <!-- prepare the local build environment -->
+        <antcall target="prepare" />
+
+        <!-- Build binaries we cannot download ourselves (if not already present) -->
         <antcall target="build-binaries"/>
-        
-    	<!-- extract the PHP/PECL binaries into the target folder -->
+
+        <!-- extract the PHP/PECL binaries into the target folder -->
         <unzip src="${lib.dir}/php-${runtime.php.version}-Win32-VC${compiler-version}-${os.architecture}.zip" dest="${target.dir}/appserver/php"/>
-        <unzip src="${lib.dir}/php_apcu-${runtime.apcu.version}-5.5-ts-vc${compiler-version}-${os.architecture}.zip" dest="${target.dir}/apcu"/>
-        <unzip src="${lib.dir}/php_event-${runtime.event.version}-5.5-ts-vc${compiler-version}-${os.architecture}.zip" dest="${target.dir}/event"/>
-        
-    	<!-- copy the DLL's to the PHP ext directory -->
+        <unzip src="${lib.dir}/php_apcu-${runtime.apcu.version}-5.6-ts-vc${compiler-version}-${os.architecture}.zip" dest="${target.dir}/apcu"/>
+        <unzip src="${lib.dir}/php_event-${runtime.event.version}-5.6-ts-vc${compiler-version}-${os.architecture}.zip" dest="${target.dir}/event"/>
+
+        <!-- copy the DLL's to the PHP ext directory -->
         <copy file="${target.dir}/apcu/php_apcu.dll" todir="${target.dir}/appserver/php/ext"/>
         <copy file="${target.dir}/event/php_event.dll" todir="${target.dir}/appserver/php/ext"/>
-    	
+
         <!-- copy the appserver DLL to the PHP ext directory -->
         <copy file="${target.dir}/php_appserver-${runtime.ext-appserver.version}.dll" tofile="${target.dir}/appserver/php/ext/php_appserver.dll"/>
         <copy file="${target.dir}/php_pthreads-${runtime.pthreads.version}.dll" tofile="${target.dir}/appserver/php/ext/php_pthreads.dll"/>
@@ -267,7 +267,6 @@
 
         <!-- install composer into the runtime -->
         <antcall target="install-composer" />
-    	
     </target>
 
     <!-- ==================================================================== -->
@@ -354,7 +353,7 @@
         <!-- install composer itself -->		
         <exec dir="${target.dir}" executable="${runtime.compile.prefix}/php/php">
             <arg line="installer -- --install-dir ${runtime.compile.prefix}/php"/>		
-        </exec>		
+        </exec>
     </target>
 
     <!-- ==================================================================== -->
@@ -362,7 +361,7 @@
     <!-- ==================================================================== -->
     <target name="prepare-package-name" description="Prepares the build property package.name">
         <!-- create the distribution specific package name -->
-        <create-package-name 
+        <create-package-name
             prefix="appserver-runtime"
             build="${build.number}"
             suffix-separator="."
@@ -380,9 +379,9 @@
     <!-- Creates the .zip package file                                        -->
     <!-- ==================================================================== -->
     <target name="create-package" depends="prepare-package-name" description="Creates the .zip package file.">
-    	<zip destfile="${build.dir}/${package.name}" compress="true">
-    		<zipfileset dir="${target.dir}" includes="appserver/**/*" />
-    	</zip>
+        <zip destfile="${build.dir}/${package.name}" compress="true">
+            <zipfileset dir="${target.dir}" includes="appserver/**/*" />
+        </zip>
     </target>
 
     <!-- ==================================================================== -->
@@ -395,14 +394,6 @@
                 <include name="**/*" />
             </fileset>
         </copy>
-    </target>
-    
-    <!-- ==================================================================== -->
-    <!-- Copies any built package to the snapshot hosting server. -->
-    <!-- ==================================================================== -->
-    <target name="copy-to-hub" depends="prepare-package-name" description="Copies any built package to the snapshot hosting server.">
-        <echo message="Now trying to upload ${package.name} to snapshot server"/>
-        <scp file="${build.dir}/${package.name}" todir="${hub.scp-user}@${hub.address}:${hub.snapshot-path}" keyfile="${user.home}/.ssh/id_rsa" failonerror="true" />
     </target>
 
     <!-- ==================================================================== -->
@@ -419,5 +410,5 @@
         </exec>
         <!-- exectue PHP unit tests here -->
     </target>
-    
+
 </project>

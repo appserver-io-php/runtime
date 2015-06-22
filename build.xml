@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE project>
-<project name="appserver-io-php/runtime" default="build" basedir=".">
+<project name="appserver-io-php/runtime" default="dependencies-init" basedir=".">
 
     <!-- ==================================================================== -->
     <!-- Load the environment variables into our properties                   -->
@@ -26,6 +26,7 @@
     <property name="php-test.dir" value="${basedir}/tests" />
     <property name="build.dir" value="${basedir}/build" />
     <property name="temp.dir" value="${basedir}/tmp" />
+    <property name="reports.dir" value="${basedir}/reports" />
 
     <!-- ==================================================================== -->
     <!-- Load all property files in the right order                           -->
@@ -39,29 +40,67 @@
     <!-- ==================================================================== -->
     <import file="buildfiles/${os.family}/build.xml"/>
 
+    <!-- initialize the library specific properties -->
+    <property name="codepool" value="vendor"/>
+
+    <!-- initialize the directory where we can find the real build files -->
+    <property name="dependency.dir" value ="${basedir}/${codepool}" />
+    <property name="package.dir" value="${dependency.dir}/package" />
+    <property name="package.remote-location" value="https://github.com/appserver-io-dist/package.git" />
+
+    <!-- ==================================================================== -->
+    <!-- Import the package build files if they are present                   -->
+    <!-- ==================================================================== -->
+    <import file="${package.dir}/common.xml" optional="true" />
+
     <!-- ==================================================================== -->
     <!-- Remote path to recently built resources                              -->
     <!-- ==================================================================== -->
     <property name="hub.snapshot-path" value="/var/www/builds.appserver.io/${os.qualified.path}"/>
-	
+
+    <!-- ==================================================================== -->
+    <!-- Checks if the package helper libary is present                       -->
+    <!-- ==================================================================== -->
+    <target name="package-library-present">
+        <!-- check for the existence of the most central file of the package library -->
+        <available file="${package.dir}/common.xml" property="package-library.present" />
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Loads all dependencies needed for the execution of build targets.    -->
+    <!-- Not to be confused with the loading of dependencies needed for the   -->
+    <!-- built packages!                                                      -->
+    <!-- ==================================================================== -->
+    <target name="dependencies-init" depends="package-library-present" unless="package-library.present">
+        <!-- create the target dir -->
+        <mkdir dir="${dependency.dir}" />
+        <!-- clone the latest version of our package library -->
+        <exec dir="${dependency.dir}" executable="git">
+            <arg line="clone ${package.remote-location}" />
+        </exec>
+    </target>
+
     <!-- ==================================================================== -->
     <!-- Cleans the directories with the generated source files               -->
     <!-- ==================================================================== -->
     <target name="clean" description="Cleans build directory in preparation for new build.">
         <delete dir="${target.dir}" includeemptydirs="true" quiet="false" verbose="true" failonerror="true"/>
+        <delete dir="${temp.dir}" includeemptydirs="true" quiet="false" verbose="true" failonerror="true"/>
     </target>
 
     <!-- ==================================================================== -->
     <!-- Cleans the build directories                                         -->
     <!-- ==================================================================== -->
-    <target name="clean-build">
-        <delete dir="${build.dir}" includeemptydirs="true" quiet="false" verbose="false" failonerror="true"/>
+    <target name="clean-build"  depends="prepare-build">
+        <delete includeemptydirs="true" quiet="false" verbose="false" failonerror="true">
+            <fileset dir="${build.dir}" includes="**/*"/>
+        </delete>
     </target>
 
     <!-- ==================================================================== -->
     <!-- Prepares the build environment                                       -->
     <!-- ==================================================================== -->
-    <target name="prepare-build" depends="clean-build">
+    <target name="prepare-build">
         <mkdir dir="${build.dir}" />
     </target>
 
@@ -73,7 +112,7 @@
         <mkdir dir="${lib.dir}" />
         <mkdir dir="${temp.dir}" />
     </target>
-	
+
     <!-- ==================================================================== -->
     <!-- Copies the sources to the temporary directory                        -->
     <!-- ==================================================================== -->
@@ -86,13 +125,13 @@
                 <expandproperties/>
             </filterchain>
         </copy>
-        <copy todir="${target.dir}" failonerror="false" preservelastmodified="true" overwrite="true">
+        <copy todir="${target.dir}" failonerror="false" preservelastmodified="true" overwrite="true" quiet="true">
             <fileset dir="${src.dir}/${os.family}/${os.distribution}">
                 <include name="**/*" />
             </fileset>
         </copy>
     </target>
-    
+
     <!-- ==================================================================== -->
     <!-- Copies the sources to the deploy directory                           -->
     <!-- ==================================================================== -->
@@ -103,11 +142,81 @@
             </fileset>
         </copy>
     </target>
-    
+
     <!-- ==================================================================== -->
-    <!-- Builds the runtime and copies the .tgz to the hub.					  -->
-	<!-- ==================================================================== -->
-    <target name="build" depends="prepare-build" description="Builds the runtime and copies the .tgz to the hub.">
+    <!-- Checks if the executtion of make clean is even needed.               -->
+    <!-- ==================================================================== -->
+    <target name="check-make-clean-needed" description="Checks if the executtion of make clean is even needed.">
+        <!-- download the composer installer -->
+        <condition property="make-clean.needed">
+            <or>
+                <available file="${target.dir}/php-${runtime.php.version}/makefile" />
+                <available file="${target.dir}/php-${runtime.php.version}/Makefile" />
+                <available file="${target.dir}/php-${runtime.php.version}/GNUMakefile" />
+            </or>
+        </condition>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Executes make clean if it is needed.                                 -->
+    <!-- ==================================================================== -->
+    <target name="make-clean" depends="check-make-clean-needed" if="make-clean.needed" description="Executes make clean if it is needed.">
+        <!-- execute the "make clean" command -->
+        <exec dir="${target.dir}/php-${runtime.php.version}" executable="make" failonerror="true">
+            <arg value="clean"/>
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Moves any build results from the temporary target directory into     -->
+    <!-- a mounted build directoy                                             -->
+    <!-- ==================================================================== -->
+    <target name="move-build-results" description="Moves any build results from the temporary target directory into a mounted build directoy">
+        <move todir="${runtime.compile.prefix}" preservelastmodified="true" overwrite="true">
+            <fileset dir="${src.dir}/${os.family}/generic">
+                <include name="**/*" />
+            </fileset>
+            <filterchain>
+                <expandproperties/>
+            </filterchain>
+        </move>
+        <copy todir="${runtime.compile.prefix}" failonerror="false" errorproperty="dev.null" preservelastmodified="true" overwrite="true">
+            <fileset dir="${src.dir}/${os.family}/${os.distribution}">
+                <include name="**/*" />
+            </fileset>
+        </copy>
+
+        <!-- make the composer file executable -->
+        <chmod perm="755" file="${runtime.compile.prefix}/bin/composer" />
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Will prepare the environment to run a vagrant box in                 -->
+    <!-- ==================================================================== -->
+    <target name="prepare-build-environment" depends="prepare, clean-build">
+        <copy todir="${temp.dir}" failonerror="true">
+            <fileset dir="${basedir}">
+               <include name="build.*"/>
+               <include name="buildfiles/**"/>
+            </fileset>
+        </copy>
+        <!-- expand the properties within our box configuration -->
+        <copy todir="${temp.dir}" failonerror="true">
+            <fileset dir="${basedir}/buildfiles/${os.family}">
+                <include name="Vagrantfile"/>
+            </fileset>
+            <filterchain>
+                <expandproperties/>
+            </filterchain>
+        </copy>
+        <!-- prepare a tmp dir for work within the VM -->
+        <mkdir dir="${temp.dir}/tmp" />
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Builds the runtime locally without the use of vagrant                -->
+    <!-- ==================================================================== -->
+    <target name="local-build" depends="prepare-build" description="Builds the runtime and creates a .tgz package.">
         <!-- do the actual building -->
         <antcall target="build-runtime" />
         <!-- create a compressed package of the recent build -->
@@ -124,6 +233,30 @@
         <exec dir="${target.dir}" executable="${target.binary.dir}/php">
             <arg line="installer -- --install-dir ${target.binary.dir}"/>
         </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Creates all RPM packages within an existing vagrant box              -->
+    <!-- ==================================================================== -->
+    <target name="vagrant-build">
+        <!-- map the vagrant name according to the expected environment -->
+        <property name="vagrant-box.name" value="${vagrant-box.prefix}Build" />
+        <!-- invoke original build target within vagrant box -->
+        <exec dir="${temp.dir}" executable="sh" errorproperty="build.failed">
+            <arg value="-c" />
+            <arg value='vagrant ssh-config | ssh -F /dev/stdin ${vagrant-box.name} "sudo ant local-build -buildfile ${vagrant.basedir}/build.xml -Dtarget.dir=/tmp/target -Dbuild.number=${build.number} -Dtarget-os.version=${target-os.version} -Dos.family=${os.family} -Dos.distribution=${os.distribution}"' />
+        </exec>
+        <!-- eliminate the possiblity of empty but existing error output -->
+        <property name="build.failed" value=""/>
+        <condition property="fatal-error.occured" value="${build.failed}">
+            <not>
+                <equals arg1="${build.failed}" arg2=""/>
+            </not>
+        </condition>
+        <!-- check for a specific build failure and make an emergency destroy -->
+        <antcall target="destroy-vagrant-box-on-error" />
+        <!-- tell them about any failures we might encountered -->
+        <fail if="fatal-error.occured" message="The build failed with message '${fatal-error.occured}', see log above." />
     </target>
 
 </project>

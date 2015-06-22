@@ -291,10 +291,8 @@
     	<!-- prepare the PECL extensions -->
         <antcall target="prepare-pecl-extension"/>
 
-        <!-- compile the PHP sources and PECL extensions static -->
-        <exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
-            <arg value="clean"/>
-        </exec>
+        <!-- clean any possible remained of former builds and create the build configuration -->
+        <antcall target="make-clean" />
         <delete file="${target.dir}/php-${runtime.php.version}/aclocal.m4"/>
         <exec dir="${target.dir}/php-${runtime.php.version}" executable="sh">
             <arg value="buildconf"/>
@@ -559,16 +557,6 @@
             <arg value="${target.dir}/re/opt"/>
         </exec>
     </target>
-    
-    <!-- ==================================================================== -->
-    <!-- Copies any built package to the snapshot hosting server.             -->
-    <!-- ==================================================================== -->
-    <target name="copy-to-hub" depends="prepare-package-name" description="Copies any built package to the snapshot hosting server.">
-        <echo message="Now try to upload ${package.name} to snapshot server"/>
-        <exec executable="scp" failonerror="true">
-            <arg line="-o StrictHostKeyChecking=no -i ${user.home}/.ssh/id_rsa ${build.dir}/${package.name} ${hub.scp-user}@${hub.address}:${hub.snapshot-path}"/>
-        </exec>
-    </target>
 
     <!-- ==================================================================== -->
     <!-- Will create a Mac OS X specific package name                         -->
@@ -689,6 +677,21 @@
             <arg line="${basedir}/vendor/bin/phpunit --bootstrap bootstrap.php --configuration phpunit.xml" />
         </exec>
         <!-- exectue PHP unit tests here -->
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Builds the runtime within an existing vagrant box                    -->
+    <!-- ==================================================================== -->
+    <target name="vagrant-build">
+        <!-- invoke original build target within vagrant box -->
+        <exec dir="${temp.dir}" executable="sh" errorproperty="fatal-error.occured">
+            <arg value="-c" />
+            <arg value='vagrant ssh-config | ssh -F /dev/stdin ${vagrant-box.name} "sudo ant local-build -buildfile ${vagrant.basedir}/build.xml -Dgithub.oauth.token=${github.oauth.token} -Dbuild.number=${build.number} -Dtarget-os.version=${target-os.version} -Dappserver.runtime.version=${appserver.runtime.version} -Dappserver.runtime.build=${appserver.runtime.build}"' />
+        </exec>
+        <!-- check for a specific build failure and make an emergency destroy -->
+        <antcall target="destroy-vagrant-box-on-error" />
+        <!-- tell them about any failures we might have encountered -->
+        <fail if="fatal-error.occured" message="The build failed with message '${fatal-error.occured}', see log above." />
     </target>
 
 </project>

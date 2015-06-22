@@ -1,0 +1,44 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  # Basic default configuration used for intial setup of box.
+  # Please use if packaged boxes are unavailable or unwelcome
+  # config.vm.box = "chef/${os.distribution}-${target-os.version}"
+  # config.vm.box_url = "https://vagrantcloud.com/chef/boxes/${os.distribution}-${target-os.version}"
+
+  # Box name and location
+  config.vm.box = "${vagrant-box.name}"
+  config.vm.box_url = "${vagrant-box.baseurl}/${vagrant-box.name}.box"
+
+  # Basic network configuration
+  config.vm.host_name = "${vagrant-box.name}"
+
+  # Shell provisioning used for intial setup of box.
+  # Please use if packaged boxes are unavailable or unwelcome
+  # config.vm.provision "shell", path: "buildfiles/${os.family}/${os.distribution}/provision.sh"
+
+  # Share the build folder as read only
+  config.vm.synced_folder "${build.dir}", "${vagrant-build.dir}"
+  config.vm.synced_folder "${src.dir}", "${vagrant-src.dir}"
+  config.vm.synced_folder "${lib.dir}", "${vagrant-lib.dir}"
+
+  # Extend the timeout for initial connection
+  config.vm.boot_timeout = 600
+
+  config.vm.provider "virtualbox" do |vb|
+    host = RbConfig::CONFIG['host_os']
+
+    # Give VM 4Gb system memory & access to half the cpu cores on the host
+    vb.customize ["modifyvm", :id, "--memory", "4096"]
+    vb.customize ["modifyvm", :id, "--cpus", "2"]
+    vb.customize ["modifyvm", :id, "--cpuexecutioncap", "90"]
+  end
+
+  config.vm.define :"${vagrant-box.name}" do |t|
+    end
+end
