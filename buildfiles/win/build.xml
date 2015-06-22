@@ -241,33 +241,19 @@
     <!-- Prepares the PHP/PECL Windows binaries                               -->
     <!-- ==================================================================== -->
     <target name="build-runtime" description="Prepares the PHP/PECL Windows binaries.">
-<<<<<<< HEAD
-        
-    	<!-- prepare the local build environment -->
-    	<antcall target="prepare" />
-        
-    	<!-- Build binaries we cannot download ourselves (if not already present) -->
-=======
+
         <!-- prepare the local build environment -->
         <antcall target="prepare" />
 
         <!-- Build binaries we cannot download ourselves (if not already present) -->
->>>>>>> 85a6240... formatting
         <antcall target="build-binaries"/>
 
         <!-- extract the PHP/PECL binaries into the target folder -->
         <unzip src="${lib.dir}/php-${runtime.php.version}-Win32-VC${compiler-version}-${os.architecture}.zip" dest="${target.dir}/appserver/php"/>
-<<<<<<< HEAD
-        <unzip src="${lib.dir}/php_apcu-${runtime.apcu.version}-5.5-ts-vc${compiler-version}-${os.architecture}.zip" dest="${target.dir}/apcu"/>
-        <unzip src="${lib.dir}/php_event-${runtime.event.version}-5.5-ts-vc${compiler-version}-${os.architecture}.zip" dest="${target.dir}/event"/>
-        
-    	<!-- copy the DLL's to the PHP ext directory -->
-=======
         <unzip src="${lib.dir}/php_apcu-${runtime.apcu.version}-5.6-ts-vc${compiler-version}-${os.architecture}.zip" dest="${target.dir}/apcu"/>
         <unzip src="${lib.dir}/php_event-${runtime.event.version}-5.6-ts-vc${compiler-version}-${os.architecture}.zip" dest="${target.dir}/event"/>
 
         <!-- copy the DLL's to the PHP ext directory -->
->>>>>>> 85a6240... formatting
         <copy file="${target.dir}/apcu/php_apcu.dll" todir="${target.dir}/appserver/php/ext"/>
         <copy file="${target.dir}/event/php_event.dll" todir="${target.dir}/appserver/php/ext"/>
 
