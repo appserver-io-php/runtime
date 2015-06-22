@@ -15,17 +15,6 @@
     <property file="${basedir}/buildfiles/${os.family}/build.default.properties" />
 
     <!-- ==================================================================== -->
-    <!-- Copies any built package to the snapshot hosting server.             -->
-    <!-- This target is only usable on an Unix like machines.                 -->
-    <!-- ==================================================================== -->
-    <target name="copy-to-hub" description="Uploads any built package from a MacOSX like machine to the file-server.">
-        <exec executable="sh" failonerror="true">
-            <arg value="-c" />
-            <arg value="scp -o StrictHostKeyChecking=no -i ${user.home}/.ssh/id_rsa ${build.dir}/* ${build.server.user}@${build.server.host}:${build.server.upload-path}" />
-        </exec>
-    </target>
-
-    <!-- ==================================================================== -->
     <!-- Prepares the PHP sources for the runtime                             -->
     <!-- ==================================================================== -->
     <target name="prepare-source" description="Prepares the PHP sources for the runtime.">
