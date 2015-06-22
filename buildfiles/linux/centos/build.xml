@@ -17,7 +17,31 @@
     <!-- Install the necessary libraries to build the centos runtime          -->
     <!-- ==================================================================== -->
     <target name="prepare-distribution-specific-build-system" description="Install the necessary libraries to build the centos runtime.">
-        <!-- nothing to do here -->
+        <exec executable="yum" inputstring="Y">
+            <arg value="install"/>
+            <arg value="autoconf"/>
+            <arg value="curl"/>
+            <arg value="bison"/>
+            <arg value="libxml2"/>
+            <arg value="libxml2-devel"/>
+            <arg value="openssl-devel"/>
+            <arg value="bzip2-devel"/>
+            <arg value="libjpeg-turbo-devel"/>
+            <arg value="libpng-devel"/>
+            <arg value="freetype-devel"/>
+            <arg value="libmcrypt-devel"/>
+            <arg value="libmemcached-devel"/>
+            <arg value="libXpm-devel"/>
+            <arg value="pcre-devel"/>
+            <arg value="libpng-devel"/>
+            <arg value="libcurl-devel"/>
+            <arg value="libevent-devel"/>
+            <arg value="gcc-c++"/>
+            <arg value="openldap-devel"/>
+            <arg value="rpm-build"/>
+            <arg value="libicu-devel"/>
+            <arg value="libxslt-devel"/>
+        </exec>
     </target>
 
 </project>
