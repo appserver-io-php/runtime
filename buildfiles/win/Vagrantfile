@@ -31,7 +31,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     windows.vm.communicator = 'winrm'
     windows.winrm.username = "IEUser"
     windows.winrm.password = "Passw0rd!"
-    windows.vm.network 'forwarded_port', host: 3389, guest: 3389
+    windows.vm.network 'forwarded_port', host: 3389, guest: 3389, auto_correct: true
     
     # Share the folders needed for our build
     windows.vm.synced_folder "${build.dir}", "${vagrant-build.dir}"
