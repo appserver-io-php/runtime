@@ -15,6 +15,12 @@
     </tstamp>
 
     <!-- ==================================================================== -->
+    <!-- We define an extra property for our base directory so we are able to -->
+    <!-- selectively override it without affection the original dir           -->
+    <!-- ==================================================================== -->
+    <property name="work.dir" value="${basedir}/" />
+
+    <!-- ==================================================================== -->
     <!-- Create some basic properties which we need for further processing    -->
     <!-- The property hub.scp-user is missing on purpose and has to be        -->
     <!-- provided within the build environment.                               -->
