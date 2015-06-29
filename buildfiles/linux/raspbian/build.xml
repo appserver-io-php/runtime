@@ -62,7 +62,7 @@
         <!-- invoke original build target within vagrant box -->
         <exec dir="${temp.dir}" executable="sh" errorproperty="build.failed">
             <arg value="-c" />
-            <arg value='vagrant ssh-config | ssh -F /dev/stdin ${vagrant-box.name} "sudo ant local-build -buildfile ${vagrant.basedir}/build.xml -Dtarget.dir=/tmp/target -Dbuild.number=${build.number} -Dtarget-os.major.version=${target-os.major.version} -Dtarget-os.minor.version=${target-os.minor.version} -Dos.family=${os.family} -Dos.distribution=${os.distribution}"' />
+            <arg value='vagrant ssh-config | ssh -F /dev/stdin ${vagrant-box.name} "sudo ant local-build -buildfile ${vagrant.basedir}/build.xml -Dtarget.dir=/tmp/target -Dbuild.number=${build.number} -Dtarget-os.major.version=${target-os.major.version} -Dtarget-os.minor.version=${target-os.minor.version} -Dos.family=${os.family} -Dos.distribution=${os.distribution} -Dos.architecture=${os.architecture}"' />
         </exec>
         <!-- eliminate the possiblity of empty but existing error output -->
         <property name="build.failed" value=""/>
