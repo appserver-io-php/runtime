@@ -17,16 +17,16 @@
     <!-- ==================================================================== -->
     <!-- Create some basic properties which we need for further processing    -->
     <!-- The property hub.scp-user is missing on purpose and has to be        -->
-    <!-- provided within the build environment                                -->
+    <!-- provided within the build environment.                               -->
     <!-- ==================================================================== -->
     <property name="hub.address" value="bernade.appserver.io"/>
-    <property name="lib.dir" value="${basedir}/lib" />
-    <property name="src.dir" value="${basedir}/src" />
-    <property name="target.dir" value="${basedir}/target"/>
-    <property name="php-test.dir" value="${basedir}/tests" />
-    <property name="build.dir" value="${basedir}/build" />
-    <property name="temp.dir" value="${basedir}/tmp" />
-    <property name="reports.dir" value="${basedir}/reports" />
+    <property name="src.dir" value="${work.dir}src" />
+    <property name="lib.dir" value="${work.dir}lib" />
+    <property name="target.dir" value="${work.dir}target" />
+    <property name="build.dir" value="${work.dir}build" />
+    <property name="tests.dir" value="${work.dir}tests" />
+    <property name="temp.dir" value="${work.dir}tmp" />
+    <property name="reports.dir" value="${work.dir}reports" />
 
     <!-- ==================================================================== -->
     <!-- Load all property files in the right order                           -->
