@@ -46,7 +46,7 @@
             <arg value="${os.lib.dir}/libldap.so"/>
         </exec>
         <exec dir="/usr/lib" executable="ln">
-            <arg line="-sf /lib/${os.lib.dir}/libsystemd-daemon.so.0 /lib/${os.lib.dir}/libsystemd-daemon.so"/>
+            <arg line="-sf /usr/lib/${os.lib.dir}/libsystemd-daemon.so.0 /usr/lib/${os.lib.dir}/libsystemd-daemon.so"/>
         </exec>
         <exec dir="/usr/lib" executable="ldconfig" />
     </target>
