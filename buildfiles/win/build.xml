@@ -250,8 +250,8 @@
 
         <!-- extract the PHP/PECL binaries into the target folder -->
         <unzip src="${lib.dir}/php-${runtime.php.version}-Win32-VC${compiler-version}-${os.architecture}.zip" dest="${target.dir}/appserver/php"/>
-        <unzip src="${lib.dir}/php_apcu-${runtime.apcu.version}-5.6-ts-vc${compiler-version}-${os.architecture}.zip" dest="${target.dir}/apcu"/>
-        <unzip src="${lib.dir}/php_event-${runtime.event.version}-5.6-ts-vc${compiler-version}-${os.architecture}.zip" dest="${target.dir}/event"/>
+        <unzip src="${lib.dir}/php_apcu-${runtime.apcu.version}-5.5-ts-vc${compiler-version}-${os.architecture}.zip" dest="${target.dir}/apcu"/>
+        <unzip src="${lib.dir}/php_event-${runtime.event.version}-5.5-ts-vc${compiler-version}-${os.architecture}.zip" dest="${target.dir}/event"/>
 
         <!-- copy the DLL's to the PHP ext directory -->
         <copy file="${target.dir}/apcu/php_apcu.dll" todir="${target.dir}/appserver/php/ext"/>
