@@ -15,18 +15,24 @@
     </tstamp>
 
     <!-- ==================================================================== -->
+    <!-- We define an extra property for our base directory so we are able to -->
+    <!-- selectively override it without affection the original dir           -->
+    <!-- ==================================================================== -->
+    <property name="work.dir" value="${basedir}/" />
+
+    <!-- ==================================================================== -->
     <!-- Create some basic properties which we need for further processing    -->
     <!-- The property hub.scp-user is missing on purpose and has to be        -->
-    <!-- provided within the build environment                                -->
+    <!-- provided within the build environment.                               -->
     <!-- ==================================================================== -->
     <property name="hub.address" value="bernade.appserver.io"/>
-    <property name="lib.dir" value="${basedir}/lib" />
-    <property name="src.dir" value="${basedir}/src" />
-    <property name="target.dir" value="${basedir}/target"/>
-    <property name="php-test.dir" value="${basedir}/tests" />
-    <property name="build.dir" value="${basedir}/build" />
-    <property name="temp.dir" value="${basedir}/tmp" />
-    <property name="reports.dir" value="${basedir}/reports" />
+    <property name="src.dir" value="${work.dir}src" />
+    <property name="lib.dir" value="${work.dir}lib" />
+    <property name="target.dir" value="${work.dir}target" />
+    <property name="build.dir" value="${work.dir}build" />
+    <property name="tests.dir" value="${work.dir}tests" />
+    <property name="temp.dir" value="${work.dir}tmp" />
+    <property name="reports.dir" value="${work.dir}reports" />
 
     <!-- ==================================================================== -->
     <!-- Load all property files in the right order                           -->
@@ -221,30 +227,6 @@
         <antcall target="build-runtime" />
         <!-- create a compressed package of the recent build -->
         <antcall target="create-package" />
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Creates all RPM packages within an existing vagrant box              -->
-    <!-- ==================================================================== -->
-    <target name="vagrant-build">
-        <!-- map the vagrant name according to the expected environment -->
-        <property name="vagrant-box.name" value="${vagrant-box.prefix}Build" />
-        <!-- invoke original build target within vagrant box -->
-        <exec dir="${temp.dir}" executable="sh" errorproperty="build.failed">
-            <arg value="-c" />
-            <arg value='vagrant ssh-config | ssh -F /dev/stdin ${vagrant-box.name} "sudo ant local-build -buildfile ${vagrant.basedir}/build.xml -Dtarget.dir=/tmp/target -Dbuild.number=${build.number} -Dtarget-os.version=${target-os.version} -Dos.family=${os.family} -Dos.distribution=${os.distribution}"' />
-        </exec>
-        <!-- eliminate the possiblity of empty but existing error output -->
-        <property name="build.failed" value=""/>
-        <condition property="fatal-error.occured" value="${build.failed}">
-            <not>
-                <equals arg1="${build.failed}" arg2=""/>
-            </not>
-        </condition>
-        <!-- check for a specific build failure and make an emergency destroy -->
-        <antcall target="destroy-vagrant-box-on-error" />
-        <!-- tell them about any failures we might encountered -->
-        <fail if="fatal-error.occured" message="The build failed with message '${fatal-error.occured}', see log above." />
     </target>
 
 </project>

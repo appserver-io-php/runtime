@@ -40,11 +40,15 @@
             <arg value="libicu-dev"/>
             <arg value="libxslt-dev"/>
         </exec>
-        <!-- Bugfix for missing symlink -->
+        <!-- Bugfix for missing symlinks -->
         <exec dir="/usr/lib" executable="ln">
             <arg value="-sf"/>
-            <arg value="${libldap.dir}/libldap.so"/>
+            <arg value="${os.lib.dir}/libldap.so"/>
         </exec>
+        <exec dir="/usr/lib" executable="ln">
+            <arg line="-sf /lib/${os.lib.dir}/libsystemd-daemon.so.0 /lib/${os.lib.dir}/libsystemd-daemon.so"/>
+        </exec>
+        <exec dir="/usr/lib" executable="ldconfig" />
     </target>
 
 </project>
