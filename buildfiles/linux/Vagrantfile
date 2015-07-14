@@ -23,10 +23,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # config.vm.provision "shell", path: "buildfiles/${os.family}/${os.distribution}/provision.sh"
 
   # Share the build folder as read only
-  config.vm.synced_folder "${temp.dir}", "${vagrant.basedir}", type: "rsync"
-  config.vm.synced_folder "${build.dir}", "${vagrant-build.dir}", type: "rsync", rsync__auto: true
-  config.vm.synced_folder "${src.dir}", "${vagrant-src.dir}", type: "rsync"
-  config.vm.synced_folder "${lib.dir}", "${vagrant-lib.dir}", type: "rsync"
+  config.vm.synced_folder "${temp.dir}", "${vagrant.basedir}"
+  config.vm.synced_folder "${build.dir}", "${vagrant-build.dir}"
+  config.vm.synced_folder "${src.dir}", "${vagrant-src.dir}"
+  config.vm.synced_folder "${lib.dir}", "${vagrant-lib.dir}"
 
   # Extend the timeout for initial connection
   config.vm.boot_timeout = 600
