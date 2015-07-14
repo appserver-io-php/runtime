@@ -33,6 +33,7 @@
             <arg value="libpcre3-dev"/>
             <arg value="libpng12-dev"/>
             <arg value="libcurl4-openssl-dev"/>
+            <arg value="libsystemd-daemon-dev"/>
             <arg value="libpng12-dev"/>
             <arg value="libevent-dev"/>
             <arg value="libev-dev"/>
