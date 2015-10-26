@@ -12,6 +12,9 @@
     <!-- ==================================================================== -->
     <target name="prepare-distribution-specific-build-system" description="Install the necessary libraries to build the debian runtime.">
         <exec dir="${target.dir}" executable="apt-get" inputstring="Y">
+            <arg value="update"/>
+        </exec>
+        <exec dir="${target.dir}" executable="apt-get" inputstring="Y">
             <arg value="install"/>
             <arg value="ant"/>
             <arg value="autoconf"/>
