@@ -6,10 +6,10 @@
     <!-- Load the environment variables into our properties                   -->
     <!-- ==================================================================== -->
     <property environment="env" />
-    
+
     <!-- ==================================================================== -->
     <!-- Generate a time stamp for further use in build targets               -->
-    <!-- ==================================================================== --> 
+    <!-- ==================================================================== -->
     <tstamp>
         <format property="time.stamp" pattern="yyyy-MM-dd_HHmmss"/>
     </tstamp>
@@ -210,6 +210,15 @@
         <copy todir="${temp.dir}" failonerror="true">
             <fileset dir="${basedir}/buildfiles/${os.family}">
                 <include name="Vagrantfile"/>
+            </fileset>
+            <filterchain>
+                <expandproperties/>
+            </filterchain>
+        </copy>
+        <!-- expand the properties within our provisioning -->
+        <copy todir="${temp.dir}">
+            <fileset dir="${basedir}/buildfiles/${os.family}/${os.distribution}">
+                <include name="provision.*"/>
             </fileset>
             <filterchain>
                 <expandproperties/>
