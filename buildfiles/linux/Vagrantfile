@@ -20,7 +20,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Shell provisioning used for intial setup of box.
   # Please use if packaged boxes are unavailable or unwelcome
-  # config.vm.provision "shell", path: "buildfiles/${os.family}/${os.distribution}/provision.sh"
+  # config.vm.provision "shell", path: "provision.sh"
 
   # Share the build folder as read only
   config.vm.synced_folder "${temp.dir}", "${vagrant.basedir}"
