@@ -1,3 +1,14 @@
+# Version 1.1.1
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Enable intl extension by default on Mac OS X
+* Switch to PHP 5.6.16
+
 # Version 1.1.0-alpha2
 
 ## Bugfixes
