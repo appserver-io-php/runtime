@@ -332,20 +332,6 @@
             <arg value="install"/>
         </exec>
 
-        <!--
-         ! customize path for libicu library referenced from PECL intl extension. Read a more
-         ! detailed explanation under http://log.zyxar.com/blog/2012/03/10/install-name-on-os-x/
-         -->
-        <exec dir="${runtime.compile.prefix}/lib/php/extensions/no-debug-zts-20131226" executable="install_name_tool">
-            <arg line="-change &quot;libicui18n.53.dylib&quot; &quot;@executable_path/../lib/libicui18n.53.dylib&quot; intl.so"/>
-        </exec>
-        <exec dir="${runtime.compile.prefix}/lib/php/extensions/no-debug-zts-20131226" executable="install_name_tool">
-            <arg line="-change &quot;../lib/libicudata.53.1.dylib&quot; &quot;@executable_path/../lib/libicudata.53.1.dylib&quot; intl.so"/>
-        </exec>
-        <exec dir="${runtime.compile.prefix}/lib/php/extensions/no-debug-zts-20131226" executable="install_name_tool">
-            <arg line="-change &quot;libicuio.53.dylib&quot; &quot;@executable_path/../lib/libicuio.53.dylib&quot; intl.so"/>
-        </exec>
-
         <!-- build the PECL package's as shared library -->
         <antcall target="pecl-build-pthreads"/>
         <antcall target="pecl-build-memcached"/>
