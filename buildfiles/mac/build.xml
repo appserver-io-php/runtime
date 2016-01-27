@@ -237,6 +237,7 @@
             <arg value="runConfigureICU"/>
             <arg value="${libicu.target-env}"/>
             <arg value="--prefix=${runtime.compile.prefix}"/>
+            <arg value="--enable-rpath"/>
         </exec>
         <exec dir="${target.dir}/icu/source" executable="make"/>
         <exec dir="${target.dir}/icu/source" executable="make">
