@@ -1,3 +1,14 @@
+# Version 1.2.0-alpha1
+
+## Bugfixes
+
+* Add --enable-rpath configuration parameter when building libicu to add hardcoded dependencies (Mac OS X)
+
+## Features
+
+* Switch to PHP 5.6.17
+* Raise default value for max_execution_time in php-fpm-fcgi.ini from 30 to 300, e. g. to don't break Magento 2 installation
+
 # Version 1.1.1
 
 ## Bugfixes
