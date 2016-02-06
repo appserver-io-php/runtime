@@ -1,4 +1,4 @@
-# Version 1.1.2
+# Version 1.1.1
 
 ## Bugfixes
 
@@ -7,9 +7,10 @@
 ## Features
 
 * Switch to PHP 5.6.17
+* Enable intl extension by default on Linux
 * Raise default value for max_execution_time in php-fpm-fcgi.ini from 30 to 300, e. g. to don't break Magento 2 installation
 
-# Version 1.1.1
+# Version 1.1.0
 
 ## Bugfixes
 
@@ -17,8 +18,8 @@
 
 ## Features
 
-* Enable intl extension by default on Mac OS X
 * Switch to PHP 5.6.16
+* Enable intl extension by default on Mac OS X
 
 # Version 1.1.0-alpha2
 
