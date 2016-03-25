@@ -1,5 +1,5 @@
 #!/bin/bash
-OPENSSL_VERSION="1.0.0e"
+OPENSSL_VERSION="${openssl.version}"
  
 #curl -O http://www.openssl.org/source/openssl-$OPENSSL_VERSION.tar.gz
 tar -xvzf ../lib/openssl-$OPENSSL_VERSION.tar.gz

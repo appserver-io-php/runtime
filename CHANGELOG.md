@@ -1,3 +1,23 @@
+# Version 1.1.3
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Switch to OpenSSL 1.0.1s
+
+# Version 1.1.2
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Switch to PHP 5.6.19
+
 # Version 1.1.1
 
 ## Bugfixes
