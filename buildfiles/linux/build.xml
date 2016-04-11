@@ -37,11 +37,6 @@
         <move todir="${target.dir}/php-${runtime.php.version}/ext/appserver">
             <fileset dir="${target.dir}/appserver-${runtime.ext-appserver.version}"/>
         </move>
-        <!-- prepare PECL memcached sources sources for static compilation -->
-        <untar src="${lib.dir}/memcached-${runtime.memcached.version}.tgz" dest="${target.dir}" compression="gzip"/>
-        <move todir="${target.dir}/php-${runtime.php.version}/ext/memcached">
-            <fileset dir="${target.dir}/memcached-${runtime.memcached.version}"/>
-        </move>
         <!-- prepare PECL pthread sources for static compilation -->
         <untar src="${lib.dir}/pthreads-${runtime.pthreads.version}.tgz" dest="${target.dir}" compression="gzip"/>
         <move todir="${target.dir}/php-${runtime.php.version}/ext/pthreads">
@@ -176,7 +171,6 @@
 
         <!-- build the PECL package's as shared library -->
         <antcall target="pecl-build-pthreads"/>
-        <antcall target="pecl-build-memcached"/>
         <antcall target="pecl-build-redis"/>
         <antcall target="pecl-build-appserver"/>
         <antcall target="pecl-build-apcu"/>
@@ -231,25 +225,6 @@
             <arg value="-j2"/>
         </exec>
         <exec dir="${target.dir}/apcu-${runtime.apcu.version}" executable="make">
-            <arg value="install"/>
-        </exec>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Builds the PECL memcached as shared extension                        -->
-    <!-- ==================================================================== -->
-    <target name="pecl-build-memcached" description="Builds the PECL memcached as shared extension.">
-        <untar src="${lib.dir}/memcached-${runtime.memcached.version}.tgz" dest="${target.dir}" compression="gzip"/>
-        <exec dir="${target.dir}/memcached-${runtime.memcached.version}" executable="${runtime.compile.prefix}/bin/phpize"/>
-        <exec dir="${target.dir}/memcached-${runtime.memcached.version}" executable="sh">
-            <arg value="configure"/>
-            <arg value="--with-php-config=${runtime.compile.prefix}/bin/php-config"/>
-            <arg value="--with-libmemcached-dir=${libmemcached.dir}"/>
-        </exec>
-        <exec dir="${target.dir}/memcached-${runtime.memcached.version}" executable="make">
-            <arg value="-j2"/>
-        </exec>
-        <exec dir="${target.dir}/memcached-${runtime.memcached.version}" executable="make">
             <arg value="install"/>
         </exec>
     </target>

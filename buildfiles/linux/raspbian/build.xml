@@ -32,7 +32,6 @@
             <arg value="libpng-dev"/>
             <arg value="libfreetype6-dev"/>
             <arg value="libmcrypt-dev"/>
-            <arg value="libmemcached-dev"/>
             <arg value="git-core"/>
             <arg value="libxpm-dev"/>
             <arg value="libc-client2007e-dev"/>
