@@ -1,3 +1,14 @@
+# Version 1.1.4
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Switch to PHP 5.6.20
+* Remove libmemcache and PECL extension memcached from build process
+
 # Version 1.1.3
 
 ## Bugfixes

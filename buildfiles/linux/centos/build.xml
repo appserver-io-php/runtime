@@ -31,7 +31,6 @@
             <arg value="libpng-devel"/>
             <arg value="freetype-devel"/>
             <arg value="libmcrypt-devel"/>
-            <arg value="libmemcached-devel"/>
             <arg value="libXpm-devel"/>
             <arg value="pcre-devel"/>
             <arg value="libpng-devel"/>
