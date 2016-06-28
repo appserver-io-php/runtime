@@ -1,3 +1,14 @@
+# Version 1.1.5
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Switch to PHP 5.6.23
+* Set always_populate_raw_post_data to -1 in all PHP ini files
+
 # Version 1.1.4
 
 ## Bugfixes
