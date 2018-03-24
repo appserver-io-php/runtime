@@ -1,4 +1,4 @@
-# Version 1.1.6
+# Version 1.1.8
 
 ## Bugfixes
 
@@ -7,6 +7,26 @@
 ## Features
 
 * Switch to PHP 5.6.34
+
+# Version 1.1.7
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Switch to PHP 5.6.30
+
+# Version 1.1.6
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Switch to PHP 5.6.25
 
 # Version 1.1.5
 
