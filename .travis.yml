@@ -1,8 +1,10 @@
 os: osx
 
+osx_image: xcode6.4
+
 before_install:
   - brew update
-  - brew outdated ant || brew upgrade ant
+  - brew install ant
  
 script:
   - sudo chown $USER /opt
