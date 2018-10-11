@@ -3,7 +3,8 @@ os: osx
 osx_image: xcode6.4
 
 env:
-  - BUILD_NUMBER = $TRAVIS_BUILD_NUMBER
+  global:
+    - BUILD_NUMBER=${TRAVIS_BUILD_NUMBER}
 
 before_install:
   - brew update
