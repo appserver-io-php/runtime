@@ -1,3 +1,24 @@
+# Version 1.1.10
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Switch to Travis-CI build process
+* Switch to PHP 5.6.38
+
+# Version 1.1.9
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Switch to PHP 5.6.35
+
 # Version 1.1.8
 
 ## Bugfixes

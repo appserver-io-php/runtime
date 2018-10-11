@@ -1,12 +1,31 @@
-language: php
+os: osx
+
+osx_image: xcode6.4
+
+env:
+  global:
+    - BUILD_NUMBER=${TRAVIS_BUILD_NUMBER}
 
 before_install:
-  - wget https://scrutinizer-ci.com/ocular.phar
- 
+  - brew update
+  - brew install ant
+
 script:
   - sudo chown $USER /opt
-  - ant build
-  - php ocular.phar code-coverage:upload --format=php-clover $TRAVIS_BUILD_DIR/target/reports/unit/clover.xml
+  - ant dependencies-init
+  - ant local-build -Dos.family=mac
+  
+deploy:
+  provider: releases
+  api_key:
+    secure: lgqc8VZI7GcenyFh3udW67a9FGXfR4GUoaOV77nl17JB3+8CMpXmFozCECaXZFe6Bek9kr7wzIy68LJvR/GoIoFMmEiHRAzuE8+0eg7gpN0D+N/IlEUWU7AyKdL+7Ad1GrpQuulJIJNPgBkzcbVhKQnq5kFYog+SEFyl4s0aVF4=
+  file_glob: true
+  file: "build/*"
+  skip_cleanup: true
+  on:
+    tags: true
+    branch: '1.1'
+    repo: appserver-io-php/runtime
 
 notifications:
   email: tw@techdivision.com
