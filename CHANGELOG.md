@@ -1,3 +1,13 @@
+# Version 1.1.11
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Switch to PHP 5.6.40
+
 # Version 1.1.10
 
 ## Bugfixes
