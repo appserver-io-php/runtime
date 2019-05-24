@@ -1,20 +1,29 @@
-os: osx
-
-osx_image: xcode6.4
 
 env:
   global:
     - BUILD_NUMBER=${TRAVIS_BUILD_NUMBER}
 
-before_install:
-  - brew update
-  - brew install ant
+matrix:
+  include:
+    - os: osx
+      osx_image: xcode6.4
+      before_install:
+        - brew update
+        - brew install ant
+      script:
+        - sudo chown $USER /opt
+        - ant dependencies-init
+        - ant local-build -Dos.family=mac
+    - os: linux
+      dist: xenial
+      before_install:
+        - apt-get update
+        - apt-get install ant
+      script:
+        - sudo chown $USER /opt
+        - ant dependencies-init
+        - ant local-build
 
-script:
-  - sudo chown $USER /opt
-  - ant dependencies-init
-  - ant local-build -Dos.family=mac
-  
 deploy:
   provider: releases
   api_key:
