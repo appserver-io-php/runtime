@@ -17,8 +17,8 @@ matrix:
     - os: linux
       dist: xenial
       before_install:
-        - apt-get update
-        - apt-get install ant
+        - sudo apt-get update
+        - sudo apt-get install ant
       script:
         - sudo chown $USER /opt
         - ant dependencies-init
