@@ -21,8 +21,8 @@ matrix:
         - sudo apt-get install ant
       script:
         - sudo chown $USER /opt
-        - ant dependencies-init
-        - ant local-build
+        - sudo ant dependencies-init
+        - sudo ant local-build
 
 deploy:
   provider: releases
