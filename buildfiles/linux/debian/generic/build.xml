@@ -25,28 +25,31 @@
             <arg value="libssl-dev"/>
             <arg value="pkg-config"/>
             <arg value="libbz2-dev"/>
-            <arg value="libjpeg8-dev"/>
-            <arg value="libpng-dev"/>
+            <arg value="libjpeg62-turbo-dev"/>
             <arg value="libfreetype6-dev"/>
             <arg value="libmcrypt-dev"/>
             <arg value="git-core"/>
             <arg value="libxpm-dev"/>
             <arg value="libc-client2007e-dev"/>
             <arg value="libpcre3-dev"/>
-            <arg value="libpng12-dev"/>
             <arg value="libcurl4-openssl-dev"/>
-            <arg value="libpng12-dev"/>
+            <arg value="libsystemd-dev"/>
+            <arg value="libpng-dev"/>
             <arg value="libevent-dev"/>
             <arg value="libev-dev"/>
             <arg value="libldap2-dev"/>
             <arg value="libicu-dev"/>
-            <arg value="libxslt-dev"/>
+            <arg value="libxslt1-dev"/>
         </exec>
-        <!-- Bugfix for missing symlink -->
+        <!-- Bugfix for missing symlinks -->
         <exec dir="/usr/lib" executable="ln">
             <arg value="-sf"/>
             <arg value="${os.lib.dir}/libldap.so"/>
         </exec>
+        <exec dir="/usr/lib" executable="ln">
+            <arg line="-sf /lib/${os.lib.dir}/libsystemd-daemon.so.0 /lib/${os.lib.dir}/libsystemd-daemon.so"/>
+        </exec>
+        <exec dir="/usr/lib" executable="ldconfig" />
     </target>
 
 </project>
