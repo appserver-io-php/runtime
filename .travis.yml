@@ -6,7 +6,7 @@ env:
 matrix:
   include:
     - os: osx
-      osx_image: xcode8.3
+      osx_image: xcode6.4
       before_install:
         - brew update
         - brew install ant
@@ -35,7 +35,3 @@ deploy:
     tags: true
     branch: '1.1'
     repo: wick-ed/runtime
-
-notifications:
-  email: tw@techdivision.com
-  hipchat: 95d47a72c5372d4a0fef20048c3200@Appserver

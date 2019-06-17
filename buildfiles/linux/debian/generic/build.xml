@@ -34,7 +34,7 @@
             <arg value="libpcre3-dev"/>
             <arg value="libcurl4-openssl-dev"/>
             <arg value="libsystemd-dev"/>
-            <arg value="libpng-dev"/>
+            <arg value="libpng16-dev"/>
             <arg value="libevent-dev"/>
             <arg value="libev-dev"/>
             <arg value="libldap2-dev"/>
