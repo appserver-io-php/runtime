@@ -49,7 +49,7 @@
             <arg value="-o openssl-1.0.1t.tar.gz"/>
         </exec>
         <exec dir="/tmp" executable="tar">
-            <arg value="xzf openssl-1.0.1t.tar.gz"/>
+            <arg value="-xzf openssl-1.0.1t.tar.gz"/>
         </exec>
         <exec dir="/tmp/openssl-1.0.1t" executable="./config">
             <arg value="shared --prefix=/opt/openssl"/>
