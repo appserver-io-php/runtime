@@ -55,10 +55,10 @@
             <arg value="shared --prefix=/opt/openssl"/>
         </exec>
         <exec dir="/tmp/openssl-1.0.1t" executable="make">
-            <arg value="depends"/>
+            <arg value="depend"/>
         </exec>
-        <exec dir="/tmp/openssl-1.0.1t" executable="make">
-            <arg value="-j $(nproc)"/>
+        <exec dir="/tmp/openssl-1.0.1t" executable="bash">
+            <arg value="-c 'make -j $(nproc)'"/>
         </exec>
         <exec dir="/tmp/openssl-1.0.1t" executable="make">
             <arg value="install"/>
