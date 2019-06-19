@@ -22,7 +22,7 @@ matrix:
         - sudo apt-get update
         - sudo apt-get install ant
       script:
-        - docker run --rm -v `pwd`:/build -w /build debian:9 bash -c "apt-get update; apt-get install ant; ant dependencies-init; ant local-build"
+        - docker run --rm -v `pwd`:/build -w /build debian:9 bash -c "apt-get update; apt-get install -y ant; ant dependencies-init; ant local-build"
 
 deploy:
   provider: releases
