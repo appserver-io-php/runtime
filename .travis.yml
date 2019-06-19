@@ -16,13 +16,13 @@ matrix:
         - ant local-build -Dos.family=mac
     - os: linux
       dist: xenial
+      services:
+        - docker
       before_install:
         - sudo apt-get update
         - sudo apt-get install ant
       script:
-        - sudo chown $USER /opt
-        - sudo ant dependencies-init
-        - sudo ant local-build
+        - docker run --rm -v `pwd`:/build -w /build debian:9 bash -c "apt-get update; apt-get install ant; ant dependencies-init; ant local-build"
 
 deploy:
   provider: releases

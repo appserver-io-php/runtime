@@ -17,6 +17,8 @@
         <exec dir="${target.dir}" executable="apt-get" inputstring="Y">
             <arg value="install"/>
             <arg value="ant"/>
+            <arg value="gcc"/>
+            <arg value="g++"/>
             <arg value="autoconf"/>
             <arg value="make"/>
             <arg value="curl"/>
@@ -34,22 +36,62 @@
             <arg value="libpcre3-dev"/>
             <arg value="libcurl4-openssl-dev"/>
             <arg value="libsystemd-dev"/>
-            <arg value="libpng16-dev"/>
+            <arg value="libpng-dev"/>
             <arg value="libevent-dev"/>
             <arg value="libev-dev"/>
             <arg value="libldap2-dev"/>
             <arg value="libicu-dev"/>
             <arg value="libxslt1-dev"/>
         </exec>
+        <!-- seems we need to compile our own openssl version due to unmeetable dependencies in PHP5.6 -->
+        <exec dir="/tmp" executable="curl">
+            <arg value="https://www.openssl.org/source/old/1.0.1/openssl-1.0.1t.tar.gz"/>
+            <arg value="-o openssl-1.0.1t.tar.gz"/>
+        </exec>
+        <exec dir="/tmp" executable="tar">
+            <arg value="xzf openssl-1.0.1t.tar.gz"/>
+        </exec>
+        <exec dir="/tmp/openssl-1.0.1t" executable="./config">
+            <arg value="shared --prefix=/opt/openssl"/>
+        </exec>
+        <exec dir="/tmp/openssl-1.0.1t" executable="make">
+            <arg value="depends"/>
+        </exec>
+        <exec dir="/tmp/openssl-1.0.1t" executable="make">
+            <arg value="-j $(nproc)"/>
+        </exec>
+        <exec dir="/tmp/openssl-1.0.1t" executable="make">
+            <arg value="install"/>
+        </exec>
+        <exec dir="/tmp/openssl-1.0.1t" executable="curl">
+            <arg value="-o /opt/openssl/ssl/cert.pem"/>
+            <arg value="http://curl.haxx.se/ca/cacert.pem"/>
+        </exec>
+
         <!-- Bugfix for missing symlinks -->
         <exec dir="/usr/lib" executable="ln">
             <arg value="-sf"/>
             <arg value="${os.lib.dir}/libldap.so"/>
         </exec>
         <exec dir="/usr/lib" executable="ln">
+            <arg line="-sf /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl"/>
+        </exec>
+        <exec dir="/usr/lib" executable="ln">
             <arg line="-sf /lib/${os.lib.dir}/libsystemd-daemon.so.0 /lib/${os.lib.dir}/libsystemd-daemon.so"/>
         </exec>
         <exec dir="/usr/lib" executable="ldconfig" />
+        <exec dir="/" executable="ln">
+            <arg line="-sf /opt/openssl/lib /opt/openssl/lib/x86_64-linux-gnu"/>
+        </exec>
+        <exec dir="/" executable="ln">
+            <arg line="-sf /opt/openssl/lib/libcrypto.so.1.0.0 /usr/lib/x86_64-linux-gnu/"/>
+        </exec>
+        <exec dir="/" executable="ln">
+            <arg line="-sf /opt/openssl/lib/libssl.so.1.0.0 /usr/lib/x86_64-linux-gnu/"/>
+        </exec>
+        <exec dir="/" executable="ln">
+            <arg line="-sf /opt/openssl /usr/local/ssl"/>
+        </exec>
     </target>
 
 </project>
