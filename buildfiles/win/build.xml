@@ -301,7 +301,7 @@
         var suffixSeparator = attributes.get("suffix-separator");
         var versionSeparator = attributes.get("version-separator");
         var architectureSeparator = attributes.get("architecture-separator");
-        
+
         // the package name ALWAYS starts with the prefix
         packageName = prefix;
 
@@ -402,36 +402,12 @@
         <!-- install the build utilities (PHPUnit etc.) -->
         <exec dir="${basedir}" executable="${target.dir}/appserver/php/php">
             <arg line="${target.dir}/appserver/php/composer.phar install"/>
-        </exec> 
+        </exec>
         <!-- execute the integration tests for the runtime -->
         <exec executable="${target.dir}/appserver/php/php" dir="${basedir}" failonerror="true">
             <arg line="${basedir}/vendor/phpunit/phpunit/composer/bin/phpunit --bootstrap bootstrap.php --configuration phpunit.xml" />
         </exec>
         <!-- exectue PHP unit tests here -->
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Creates all RPM packages within an existing vagrant box              -->
-    <!-- ==================================================================== -->
-    <target name="vagrant-build">
-        <!-- map the vagrant name according to the expected environment -->
-        <property name="vagrant-box.name" value="${vagrant-box.prefix}Build" />
-        <!-- invoke original build target within vagrant box -->
-        <exec dir="${temp.dir}" executable="sh" errorproperty="build.failed">
-            <arg value="-c" />
-            <arg value='vagrant ssh-config | ssh -F /dev/stdin ${vagrant-box.name} "ant local-build -buildfile ${vagrant.basedir}/build.xml -Dwork.dir=/ -Dos.architecture=${os.architecture} -Dtarget.dir=/tmp/target -Dbuild.number=${build.number} -Dtarget-os.version=${target-os.version} -Dos.family=${os.family} -Dos.distribution=${os.distribution}"' />
-        </exec>
-        <!-- eliminate the possiblity of empty but existing error output -->
-        <property name="build.failed" value=""/>
-        <condition property="fatal-error.occured" value="${build.failed}">
-            <not>
-                <equals arg1="${build.failed}" arg2=""/>
-            </not>
-        </condition>
-        <!-- check for a specific build failure and make an emergency destroy -->
-        <antcall target="destroy-vagrant-box-on-error" />
-        <!-- tell them about any failures we might encountered -->
-        <fail if="fatal-error.occured" message="The build failed with message '${fatal-error.occured}', see log above." />
     </target>
 
 </project>
