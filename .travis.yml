@@ -19,7 +19,7 @@ matrix:
       services:
         - docker
       script:
-        - docker run --rm -v `pwd`:/build -w /build debian:9 bash -c "apt-get update; apt-get install -y ant git; ant dependencies-init; ant local-build -Dbuild.number=BUILD_NUMBER -Dtarget-os.major.version=9 -Dtarget-os.minor.version=9"
+        - docker run --rm -v `pwd`:/build -w /build debian:9 bash -c "apt-get update; apt-get install -y ant git; ant dependencies-init; ant local-build -Dbuild.number=$BUILD_NUMBER -Dtarget-os.major.version=9 -Dtarget-os.minor.version=9"
 
 deploy:
   provider: releases
