@@ -1,7 +1,7 @@
 {
     "name": "appserver-io-php/runtime",
     "type": "package",
-    "description": "Provides functionalit to build a system independent, multithreaded PHP runtime environment.",
+    "description": "Provides functionality to build a system independent, multi-threaded PHP runtime environment.",
     "homepage": "https://github.com/appserver-io-php/runtime",
     "license": "OSL-3.0",
     "require": {
