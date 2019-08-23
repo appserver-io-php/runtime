@@ -20,28 +20,4 @@
     <import file="${basedir}/buildfiles/${os.family}/${os.distribution}/${target-os.major.version}/build.xml" optional="true" />
     <import file="${basedir}/buildfiles/${os.family}/${os.distribution}/generic/build.xml" optional="true" />
 
-    <!-- ==================================================================== -->
-    <!-- Creates all RPM packages within an existing vagrant box              -->
-    <!-- ==================================================================== -->
-    <target name="vagrant-build">
-        <!-- map the vagrant name according to the expected environment -->
-        <property name="vagrant-box.name" value="${vagrant-box.prefix}Build" />
-        <!-- invoke original build target within vagrant box -->
-        <exec dir="${temp.dir}" executable="sh" errorproperty="build.failed">
-            <arg value="-c" />
-            <arg value='vagrant ssh-config | ssh -F /dev/stdin ${vagrant-box.name} "sudo ant local-build -buildfile ${vagrant.basedir}/build.xml -Dtarget.dir=/tmp/target -Dbuild.number=${build.number} -Dtarget-os.major.version=${target-os.major.version} -Dtarget-os.minor.version=${target-os.minor.version} -Dos.family=${os.family} -Dos.distribution=${os.distribution} -Dos.architecture=${os.architecture}"' />
-        </exec>
-        <!-- eliminate the possiblity of empty but existing error output -->
-        <property name="build.failed" value=""/>
-        <condition property="fatal-error.occured" value="${build.failed}">
-            <not>
-                <equals arg1="${build.failed}" arg2=""/>
-            </not>
-        </condition>
-        <!-- check for a specific build failure and make an emergency destroy -->
-        <antcall target="destroy-vagrant-box-on-error" />
-        <!-- tell them about any failures we might encountered -->
-        <fail if="fatal-error.occured" message="The build failed with message '${fatal-error.occured}', see log above." />
-    </target>
-
 </project>

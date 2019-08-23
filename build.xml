@@ -197,39 +197,7 @@
     </target>
 
     <!-- ==================================================================== -->
-    <!-- Will prepare the environment to run a vagrant box in                 -->
-    <!-- ==================================================================== -->
-    <target name="prepare-build-environment" depends="prepare, clean-build">
-        <copy todir="${temp.dir}" failonerror="true">
-            <fileset dir="${basedir}">
-               <include name="build.*"/>
-               <include name="buildfiles/**"/>
-            </fileset>
-        </copy>
-        <!-- expand the properties within our box configuration -->
-        <copy todir="${temp.dir}" failonerror="true">
-            <fileset dir="${basedir}/buildfiles/${os.family}">
-                <include name="Vagrantfile"/>
-            </fileset>
-            <filterchain>
-                <expandproperties/>
-            </filterchain>
-        </copy>
-        <!-- expand the properties within our provisioning -->
-        <copy todir="${temp.dir}">
-            <fileset dir="${basedir}/buildfiles/${os.family}/${os.distribution}">
-                <include name="provision.*"/>
-            </fileset>
-            <filterchain>
-                <expandproperties/>
-            </filterchain>
-        </copy>
-        <!-- prepare a tmp dir for work within the VM -->
-        <mkdir dir="${temp.dir}/tmp" />
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Builds the runtime locally without the use of vagrant                -->
+    <!-- Builds the runtime locally                                           -->
     <!-- ==================================================================== -->
     <target name="local-build" depends="prepare-build" description="Builds the runtime and creates a .tgz package.">
         <!-- do the actual building -->

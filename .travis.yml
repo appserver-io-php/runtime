@@ -1,20 +1,26 @@
-os: osx
-
-osx_image: xcode6.4
 
 env:
   global:
     - BUILD_NUMBER=${TRAVIS_BUILD_NUMBER}
 
-before_install:
-  - brew update
-  - brew install ant
+matrix:
+  include:
+    - os: osx
+      osx_image: xcode6.4
+      before_install:
+        - brew update
+        - brew install ant
+      script:
+        - sudo chown $USER /opt
+        - ant dependencies-init
+        - ant local-build -Dos.family=mac
+    - os: linux
+      dist: xenial
+      services:
+        - docker
+      script:
+        - docker run --rm -v `pwd`:/build -w /build debian:9 bash -c "apt-get update; apt-get install -y ant git; ant dependencies-init; ant local-build -Dbuild.number=$BUILD_NUMBER -Dtarget-os.major.version=9 -Dtarget-os.minor.version=9"
 
-script:
-  - sudo chown $USER /opt
-  - ant dependencies-init
-  - ant local-build -Dos.family=mac
-  
 deploy:
   provider: releases
   api_key:
@@ -29,4 +35,3 @@ deploy:
 
 notifications:
   email: tw@techdivision.com
-  hipchat: 95d47a72c5372d4a0fef20048c3200@Appserver
