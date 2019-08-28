@@ -252,7 +252,7 @@
             <arg line="installer -- --install-dir ${runtime.compile.prefix}/bin"/>
         </exec>
     </target>
-	
+
     <!-- ==================================================================== -->
     <!-- Compiles the appserver.io Linux runtime environment                  -->
     <!-- ==================================================================== -->
@@ -318,7 +318,7 @@
         <antcall target="pecl-build-ev"/>
         <antcall target="pecl-build-event"/>
         <antcall target="pecl-build-xdebug"/>
-        
+
         <!-- copy runtime files from src directory -->
         <antcall target="copy-buildfiles"/>
 
@@ -557,9 +557,14 @@
         // declare the package name
         var packageName = '';
 
-        // first we load the branch to extract the tag we're working on
-        gitBranch = project.getProperty("env.GIT_BRANCH");
-        gitTag = gitBranch.substring(gitBranch.lastIndexOf("/") + 1);
+        // if we do not have a proper tag provided (travis would do that for us), we load the branch to extract the tag we're working on manually
+        travisTag = project.getProperty("env.TRAVIS_TAG");
+        if (travisTag) {
+            gitTag = travisTag;
+        } else {
+            gitBranch = project.getProperty("env.GIT_BRANCH");
+            gitTag = gitBranch.substring(gitBranch.lastIndexOf("/") + 1);
+        }
 
         // declare version and version suffix
         var resultVersion = gitTag;
@@ -573,7 +578,7 @@
         var suffixSeparator = attributes.get("suffix-separator");
         var versionSeparator = attributes.get("version-separator");
         var architectureSeparator = attributes.get("architecture-separator");
-        
+
         // the package name ALWAYS starts with the prefix
         packageName = prefix;
 
@@ -620,7 +625,7 @@
     <!-- ==================================================================== -->
     <target name="prepare-package-name" description="Prepares the build property package.name">
         <!-- create the distribution specific package name -->
-        <create-package-name 
+        <create-package-name
             prefix="appserver-runtime"
             build="${build.number}"
             suffix-separator="+"
