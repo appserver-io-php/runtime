@@ -557,9 +557,14 @@
         // declare the package name
         var packageName = '';
 
-        // first we load the branch to extract the tag we're working on
-        gitBranch = project.getProperty("env.GIT_BRANCH");
-        gitTag = gitBranch.substring(gitBranch.lastIndexOf("/") + 1);
+        // if we do not have a proper tag provided (travis would do that for us), we load the branch to extract the tag we're working on manually
+        travisTag = project.getProperty("env.TRAVIS_TAG");
+        if (travisTag) {
+            gitTag = travisTag;
+        } else {
+            gitBranch = project.getProperty("env.GIT_BRANCH");
+            gitTag = gitBranch.substring(gitBranch.lastIndexOf("/") + 1);
+        }
 
         // declare version and version suffix
         var resultVersion = gitTag;

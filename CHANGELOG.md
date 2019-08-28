@@ -1,3 +1,13 @@
+# Version 1.1.12
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Travis-CI Debian 9 builds introduced
+
 # Version 1.1.11
 
 ## Bugfixes
