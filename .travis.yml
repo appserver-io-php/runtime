@@ -24,7 +24,7 @@ matrix:
 deploy:
   provider: releases
   api_key:
-    secure: "fDjFJMc3Rt312Da6LpBgH4SK7JhCppgRJZYiqHu1zkjLlCUi10rougJuA3BL+c531Udb0Ko1bjGrcRZVHmg1Grtn8lDwKAfSGC8x7Dc1gC788gA9hAHVIJ95WVgUOfALWFQ1e3re9cUhlCrRz0Pc6ZxgOaI9Krg9TwaisuXu/Lg="
+    secure: "qb7Xvv1hm0AK8g+WX8O/E/thc0ul5xFLJ5XlB1gpzS82Dohc3+rgKK0/Jl1hext2/Y7xSaBfjvpP4dgULS1F+PZPhwNQPTJdpxDy7mKcCWkZ4Gf5/Quncn23TFa8uR/WtyIoynQHHkb2QiIYoNn4Ovc+ySEVgQYEAX8dCxrPEOk="
   file_glob: true
   file: "build/*"
   skip_cleanup: true
